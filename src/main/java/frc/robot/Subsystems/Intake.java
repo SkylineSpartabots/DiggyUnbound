@@ -23,7 +23,7 @@ public class Intake extends SubsystemBase {
     private final Compressor compressor;
     private final Solenoid solenoid;
     
-    private TalonFX intakeMasterM, intakeFollowerM;
+    private TalonFX intakeM, pivotM;
 
     public IntakeStates intakeState = IntakeStates.RETRACTED;
 
@@ -56,13 +56,11 @@ public class Intake extends SubsystemBase {
             PneumaticsModuleType.REVPH, 
             Constants.HardwarePorts.intakeSolenoidChannel);
         
-        intakeMasterM = new TalonFX(0,"idk lmao");
-        intakeFollowerM = new TalonFX(0, "lol");
+        intakeM = new TalonFX(0,"idk lmao");
+        pivotM = new TalonFX(0, "lol");
 
-        intakeFollowerM.setControl(new Follower(0, MotorAlignmentValue.Aligned));
-        configMotor(intakeMasterM, NeutralModeValue.Brake);
+        configMotor(intakeM, NeutralModeValue.Brake);
 
-        //TODO: initialize motors with right ports n shit
     }
 
     private void configMotor(TalonFX motor, NeutralModeValue neutralModeValue) {
@@ -77,7 +75,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        intakeMasterM.set(speed);
+        intakeM.set(speed);
     }
 
     public boolean isIntakeDeployed() {

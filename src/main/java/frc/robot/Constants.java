@@ -14,5 +14,8 @@ public final class Constants {
     public static final class HardwarePorts {
         public static final int intakeSolenoidChannel = 0;
         public static final int pneumaticHub = 16;
+
+        public static final int intakeM = 43;
+        public static final int pivotM = 41;
     }
 }
