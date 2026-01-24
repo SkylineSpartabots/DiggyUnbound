@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -20,10 +20,11 @@ public class Intake extends SubsystemBase {
 
     private static Intake instance;
       
-    private final Compressor compressor;
-    private final Solenoid solenoid;
+    // private final Compressor compressor;
+    // private final Solenoid solenoid;
     
-    private TalonFX intakeM, pivotM;
+    private TalonFX intakeM;
+    // private TalonFX pivotM;
 
     public IntakeStates intakeState = IntakeStates.RETRACTED;
 
@@ -50,14 +51,14 @@ public class Intake extends SubsystemBase {
     }
 
     public Intake() {
-        compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
-        solenoid = new Solenoid(
-            Constants.HardwarePorts.pneumaticHub, 
-            PneumaticsModuleType.REVPH, 
-            Constants.HardwarePorts.intakeSolenoidChannel);
+        // compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
+        // solenoid = new Solenoid(
+        //     Constants.HardwarePorts.pneumaticHub, 
+        //     PneumaticsModuleType.REVPH, 
+        //     Constants.HardwarePorts.intakeSolenoidChannel);
         
-        intakeM = new TalonFX(0,"idk lmao");
-        pivotM = new TalonFX(0, "lol");
+        intakeM = new TalonFX(Constants.HardwarePorts.intakeM,"rio");
+        // pivotM = new TalonFX(0, "lol");
 
         configMotor(intakeM, NeutralModeValue.Brake);
 
@@ -65,11 +66,12 @@ public class Intake extends SubsystemBase {
 
     private void configMotor(TalonFX motor, NeutralModeValue neutralModeValue) {
         motor.setNeutralMode(neutralModeValue);
+        
     }
 
     public void setState(IntakeStates state) {
         this.intakeState = state;
-        solenoid.set(intakeState.deployed);
+        // solenoid.set(intakeState.deployed);
         // offset value for speed?
         setSpeed(intakeState.direction);
     }
