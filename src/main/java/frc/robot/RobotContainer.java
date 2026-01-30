@@ -12,13 +12,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Subsystems.CommandSwerveDrivetrain;
+import frc.robot.Subsystems.DriveControlSystems;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 
 public class RobotContainer {
 
   private CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
+  private DriveControlSystems control = new DriveControlSystems();
   public final CommandXboxController driver = new CommandXboxController(0);
+
 
 
   public RobotContainer() {
@@ -27,12 +30,12 @@ public class RobotContainer {
 
   private void configureBindings() {
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())) // Drive counterclockwise with negative X (left)
+        drivetrain.applyRequest(() -> control.drive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())) // Drive counterclockwise with negative X (left)
   );
 
     driver.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
     driver.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
-
+    
     driver.x().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
     driver.b().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
     driver.y().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));

@@ -20,12 +20,15 @@ public class Robot extends TimedRobot {
   private CommandSwerveDrivetrain drivetrain;
 
   public Robot() {
-    SignalLogger.setPath("/media/logs/ctre-logs/");
-
     drivetrain = CommandSwerveDrivetrain.getInstance(); 
-    m_robotContainer = new RobotContainer();
 
-    Intake.getInstance();
+    System.out.println(SignalLogger.setPath("/media/sdb1/ctre-logs/"));
+    SignalLogger.enableAutoLogging(false);
+    System.out.println("gurt");
+    // System.out.println(SignalLogger.start());
+
+    m_robotContainer = new RobotContainer();
+    // Intake.getInstance();
   }
 
   @Override
