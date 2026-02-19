@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Subsystems.CommandSwerveDrivetrain;
-import frc.robot.Subsystems.DriveControlSystems;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
+import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
 
 
 public class RobotContainer {
@@ -21,7 +21,6 @@ public class RobotContainer {
   private CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
   private DriveControlSystems control = new DriveControlSystems();
   public final CommandXboxController driver = new CommandXboxController(0);
-
 
 
   public RobotContainer() {
