@@ -3,6 +3,12 @@ package frc.robot;
 public class Constants {
     public static final class HardwarePorts {
         public static final int intakeID = 20;
+
+        public static final int shooterLT = 0;
+        public static final int shooterLB = 0;
+        public static final int shooterRT = 0;
+        public static final int shooterRB = 0;
+
     }
     
     public static final double stickDeadband = 0.075;
