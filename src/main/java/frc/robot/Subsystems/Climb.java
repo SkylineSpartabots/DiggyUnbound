@@ -10,23 +10,23 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Indexer extends SubsystemBase {
-    private static Indexer instance;
+public class Climb extends SubsystemBase {
+    private static Climb instance;
 
-    public static Indexer getInstance() {
+    public static Climb getInstance() {
         if(instance == null) {
-            instance = new Indexer();
+            instance = new Climb();
         }
         return instance;
     }
 
-    public enum IndexerStates{
+    public enum ClimbStates{
         ON(0.5),
         OFF(0),
         REVERSE(-0.5);
 
         double speed;
-        private IndexerStates(double speed) {
+        private ClimbStates(double speed) {
             this.speed = speed;
         }
 
@@ -35,11 +35,11 @@ public class Indexer extends SubsystemBase {
         }
     }
 
-    private TalonFX indexerMotor;
+    private TalonFX climbMotor;
 
-    public Indexer() {
-        indexerMotor = new TalonFX(Constants.HardwarePorts.indexer); //get real port
-        config(indexerMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
+    public Climb() {
+        climbMotor = new TalonFX(Constants.HardwarePorts.climbL); //get real port
+        config(climbMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){
@@ -56,10 +56,10 @@ public class Indexer extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        indexerMotor.set(speed);
+        climbMotor.set(speed);
     }
 
-    public Command setState(IndexerStates state){
+    public Command setState(ClimbStates state){
         return Commands.runOnce(() -> setSpeed(state.getSpeed()), this);
     }
 

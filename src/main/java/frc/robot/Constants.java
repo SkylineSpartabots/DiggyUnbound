@@ -8,7 +8,15 @@ import edu.wpi.first.math.geometry.Translation3d;
 
 public class Constants {
     public static final class HardwarePorts {
-        public static final int intakeID = 20;
+        public static final int intake = 20;
+
+        public static final int indexer= 20;
+
+        public static final int climbL = 20;
+        public static final int climbR = 20; // We should have 2 arms eventually
+
+        public static final int convayerL = 20;
+        public static final int convayerR = 20;
 
         public static final int shooterLT = 0;
         public static final int shooterLB = 0;
@@ -26,7 +34,7 @@ public class Constants {
     public static double MaxAngularVelocity = 2 * Math.PI;
 
     public static double shooterRadiusM = 0.0508;
-    public static double shooterAngleRad = 0.0508;
+    public static double shooterAngleRad = 0.40143;
     
     public static final class FieldConstants {
         public static Translation3d blueGoal = new Translation3d(4.6256,4.0345, 1.8288);

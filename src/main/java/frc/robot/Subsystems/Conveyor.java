@@ -1,8 +1,10 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,23 +12,23 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Indexer extends SubsystemBase {
-    private static Indexer instance;
+public class Conveyor extends SubsystemBase {
+    private static Conveyor instance;
 
-    public static Indexer getInstance() {
+    public static Conveyor getInstance() {
         if(instance == null) {
-            instance = new Indexer();
+            instance = new Conveyor();
         }
         return instance;
     }
 
-    public enum IndexerStates{
+    public enum ConvayerStates{
         ON(0.5),
         OFF(0),
         REVERSE(-0.5);
 
         double speed;
-        private IndexerStates(double speed) {
+        private ConvayerStates(double speed) {
             this.speed = speed;
         }
 
@@ -35,11 +37,17 @@ public class Indexer extends SubsystemBase {
         }
     }
 
-    private TalonFX indexerMotor;
+    private TalonFX conveyorMotorLeader;
+    private TalonFX conveyorMotorFollower;
 
-    public Indexer() {
-        indexerMotor = new TalonFX(Constants.HardwarePorts.indexer); //get real port
-        config(indexerMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
+    public Conveyor() {
+        conveyorMotorLeader = new TalonFX(Constants.HardwarePorts.convayerL); //get real port
+        conveyorMotorFollower = new TalonFX(Constants.HardwarePorts.convayerR); //get real port
+
+        config(conveyorMotorLeader, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
+        config(conveyorMotorFollower, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
+
+        conveyorMotorFollower.setControl(new Follower(conveyorMotorLeader.getDeviceID(), MotorAlignmentValue.Aligned));
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){
@@ -56,10 +64,10 @@ public class Indexer extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        indexerMotor.set(speed);
+        conveyorMotorLeader.set(speed);
     }
 
-    public Command setState(IndexerStates state){
+    public Command setState(ConvayerStates state){
         return Commands.runOnce(() -> setSpeed(state.getSpeed()), this);
     }
 

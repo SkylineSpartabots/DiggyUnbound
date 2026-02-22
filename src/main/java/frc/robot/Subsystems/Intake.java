@@ -38,8 +38,8 @@ public class Intake extends SubsystemBase {
     private TalonFX intakeMotor;
 
     public Intake() {
-        intakeMotor = new TalonFX(Constants.HardwarePorts.intakeID); //get real port
-        configureMotor(intakeMotor, InvertedValue.Clockwise_Positive, NeutralModeValue.Coast);
+        intakeMotor = new TalonFX(Constants.HardwarePorts.intake); //get real port
+        configureMotor(intakeMotor, InvertedValue.Clockwise_Positive, NeutralModeValue.Brake);
     }
 
     private void configureMotor(TalonFX motor, InvertedValue direction, NeutralModeValue neutralMode) {
@@ -55,7 +55,7 @@ public class Intake extends SubsystemBase {
         intakeMotor.set(speed);
     }
 
-    public Command setIntakeState(IntakeStates state){
+    public Command setState(IntakeStates state){
         return Commands.runOnce(() -> setSpeed(state.getSpeed()), this);
     }
 
