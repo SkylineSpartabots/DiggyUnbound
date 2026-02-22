@@ -24,13 +24,12 @@ public class SetIntake extends Command {
     }
 
     @Override
-    public boolean isFinished() {
-        return timer.hasElapsed(5);
+    public void end(boolean interrupted) {
+        s_intake.setSpeed(0);
     }
 
     @Override
-
-    public void end(boolean interrupted) {
-        s_intake.setSpeed(0);
+    public boolean isFinished() {
+        return timer.hasElapsed(5);
     }
 }

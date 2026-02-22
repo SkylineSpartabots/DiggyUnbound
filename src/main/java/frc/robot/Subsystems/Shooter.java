@@ -86,7 +86,15 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setRPM(int rpm) {
-        double rps = rpm / 60.0;
+    double rps = rpm / 60.0;
+    setVelocity(rps);
+    }
+
+    // theoretical 
+    double compensation = 1.05;
+    public void setExitVelocity(double exitVelocity) {
+        double rps = (Constants.shooterRadiusM * Math.PI * 2) * exitVelocity;
+        rps *= compensation;
         setVelocity(rps);
     }
 
