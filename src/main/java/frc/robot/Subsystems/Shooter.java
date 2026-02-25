@@ -85,15 +85,10 @@ public class Shooter extends SubsystemBase {
         L_top_leader.setControl(new VelocityVoltage(velocity));
     }
 
-    public void setRPM(int rpm) {
-    double rps = rpm / 60.0;
-    setVelocity(rps);
-    }
-
-    // theoretical 
+    // theoretical
     double compensation = 1.05;
     public void setExitVelocity(double exitVelocity) {
-        double rps = (Constants.shooterRadiusM * Math.PI * 2) * exitVelocity;
+        double rps = exitVelocity / (Constants.shooterRadiusM * Math.PI * 2);
         rps *= compensation;
         setVelocity(rps);
     }
