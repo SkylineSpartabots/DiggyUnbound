@@ -12,8 +12,8 @@ public class Constants {
 
         public static final int indexer= 20;
 
-        public static final int climbL = 20;
-        public static final int climbR = 20; // We should have 2 arms eventually
+        public static final int climbL = 14;
+        public static final int climbR = 4; // We should have 2 arms eventually
 
         public static final int convayerL = 20;
         public static final int convayerR = 20;
