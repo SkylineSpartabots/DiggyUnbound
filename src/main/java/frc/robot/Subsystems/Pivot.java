@@ -10,23 +10,23 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Intake extends SubsystemBase {
-    private static Intake instance;
+public class Pivot extends SubsystemBase {
+    private static Pivot instance;
 
-    public static Intake getInstance() {
+    public static Pivot getInstance() {
         if(instance == null) {
-            instance = new Intake();
+            instance = new Pivot();
         }
         return instance;
     }
 
-    public enum IntakeStates {
+    public enum PivotStates {
         ON(0.5),
         OFF(0),
         REVERSE(-0.5);
 
         double speed;
-        private IntakeStates(double speed) {
+        private PivotStates(double speed) {
             this.speed = speed;
         }
 
@@ -35,12 +35,12 @@ public class Intake extends SubsystemBase {
         }
     }
 
-    private TalonFX intakeMotor;
+    private TalonFX pivotMotor;
 
-    public Intake() {
-        intakeMotor = new TalonFX(Constants.HardwarePorts.intake); //get real port
-
-        configureMotor(intakeMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
+    public Pivot() {
+        pivotMotor = new TalonFX(Constants.HardwarePorts.intake); //get real port
+        
+        configureMotor(pivotMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
     }
 
     private void configureMotor(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction) {
@@ -53,10 +53,10 @@ public class Intake extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        intakeMotor.set(speed);
+        pivotMotor.set(speed);
     }
 
-    public Command setState(IntakeStates state){
+    public Command setState(PivotStates state){
         return Commands.runOnce(() -> setSpeed(state.getSpeed()), this);
     }
 

@@ -9,14 +9,14 @@ import edu.wpi.first.math.geometry.Translation3d;
 public class Constants {
     public static final class HardwarePorts {
         public static final int intake = 20;
+        public static final int pivot = 20;
 
         public static final int indexer= 20;
 
         public static final int climbL = 14;
         public static final int climbR = 4; // We should have 2 arms eventually
 
-        public static final int convayerL = 20;
-        public static final int convayerR = 20;
+        public static final int convayor = 20;
 
         public static final int shooterLT = 0;
         public static final int shooterLB = 0;

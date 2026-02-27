@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
 import frc.robot.Subsystems.Indexer;
-import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.Pivot;
 import frc.robot.Subsystems.Shooter;
 
 
@@ -24,7 +24,7 @@ public class RobotContainer {
 
     private CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private Indexer indexer = Indexer.getInstance();
-    private Intake intake = Intake.getInstance();
+    private Pivot intake = Pivot.getInstance();
     private Shooter shooter = Shooter.getInstance();
 
 

@@ -1,8 +1,10 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,11 +37,17 @@ public class Climb extends SubsystemBase {
         }
     }
 
-    private TalonFX climbMotor;
+    private TalonFX climbMotorLeader;
+    private TalonFX climbMotorFollower;
 
     public Climb() {
-        climbMotor = new TalonFX(Constants.HardwarePorts.climbL); //get real port
-        config(climbMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
+        climbMotorLeader = new TalonFX(Constants.HardwarePorts.climbL); //get real port
+        climbMotorFollower = new TalonFX(Constants.HardwarePorts.climbR); //get real port
+
+        config(climbMotorLeader, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
+        config(climbMotorFollower, NeutralModeValue.Brake, InvertedValue.CounterClockwise_Positive);
+
+        climbMotorFollower.setControl(new Follower(climbMotorLeader.getDeviceID(), MotorAlignmentValue.Aligned));
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){
@@ -56,7 +64,7 @@ public class Climb extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        climbMotor.set(speed);
+        climbMotorLeader.set(speed);
     }
 
     public Command setState(ClimbStates state){

@@ -1,10 +1,8 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,23 +10,23 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Conveyor extends SubsystemBase {
-    private static Conveyor instance;
+public class Convayor extends SubsystemBase {
+    private static Convayor instance;
 
-    public static Conveyor getInstance() {
+    public static Convayor getInstance() {
         if(instance == null) {
-            instance = new Conveyor();
+            instance = new Convayor();
         }
         return instance;
     }
 
-    public enum ConvayerStates{
+    public enum ConvayorStates{
         ON(0.5),
         OFF(0),
         REVERSE(-0.5);
 
         double speed;
-        private ConvayerStates(double speed) {
+        private ConvayorStates(double speed) {
             this.speed = speed;
         }
 
@@ -37,17 +35,11 @@ public class Conveyor extends SubsystemBase {
         }
     }
 
-    private TalonFX conveyorMotorLeader;
-    private TalonFX conveyorMotorFollower;
+    private TalonFX convayorMotor;
 
-    public Conveyor() {
-        conveyorMotorLeader = new TalonFX(Constants.HardwarePorts.convayerL); //get real port
-        conveyorMotorFollower = new TalonFX(Constants.HardwarePorts.convayerR); //get real port
-
-        config(conveyorMotorLeader, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
-        config(conveyorMotorFollower, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
-
-        conveyorMotorFollower.setControl(new Follower(conveyorMotorLeader.getDeviceID(), MotorAlignmentValue.Aligned));
+    public Convayor() {
+        convayorMotor = new TalonFX(Constants.HardwarePorts.climbL); //get real port
+        config(convayorMotor, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){
@@ -64,10 +56,10 @@ public class Conveyor extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        conveyorMotorLeader.set(speed);
+        convayorMotor.set(speed);
     }
 
-    public Command setState(ConvayerStates state){
+    public Command setState(ConvayorStates state){
         return Commands.runOnce(() -> setSpeed(state.getSpeed()), this);
     }
 

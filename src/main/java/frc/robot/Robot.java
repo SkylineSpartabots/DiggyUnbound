@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
-import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.Pivot;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
@@ -22,13 +22,10 @@ public class Robot extends TimedRobot {
     public Robot() {
         drivetrain = CommandSwerveDrivetrain.getInstance(); 
 
-        System.out.println(SignalLogger.setPath("/media/sdb1/ctre-logs/"));
-        SignalLogger.enableAutoLogging(false);
-        System.out.println("gurt");
-        // System.out.println(SignalLogger.start());
+        // System.out.println(SignalLogger.setPath("/media/sdb1/ctre-logs/"));
+        // SignalLogger.enableAutoLogging(false);
 
         m_robotContainer = new RobotContainer();
-        // Intake.getInstance();
   }
 
     @Override

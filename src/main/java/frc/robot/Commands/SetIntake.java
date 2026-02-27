@@ -2,14 +2,14 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.Pivot;
 
 public class SetIntake extends Command {
-    Intake s_intake;
+    Pivot s_intake;
     Timer timer = new Timer();
     
     public SetIntake() {
-        s_intake = Intake.getInstance();
+        s_intake = Pivot.getInstance();
     }
 
     @Override

@@ -2,21 +2,21 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.Climb.ClimbStates;
-import frc.robot.Subsystems.Climb;
+import frc.robot.Subsystems.Convayor.ConvayorStates;
+import frc.robot.Subsystems.Convayor;
 
 public class SetClimb extends Command {
-    Climb s_climb;
+    Convayor s_climb;
     Timer timer = new Timer();
 
     public SetClimb(){
-        s_climb = Climb.getInstance();
+        s_climb = Convayor.getInstance();
     }
 
     @Override
     public void initialize() {
         timer.restart();
-        s_climb.setState(ClimbStates.ON);
+        s_climb.setState(ConvayorStates.ON);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class SetClimb extends Command {
 
     @Override
     public void end (boolean interrupted){
-        s_climb.setState(ClimbStates.OFF);
+        s_climb.setState(ConvayorStates.OFF);
     }
 
     
