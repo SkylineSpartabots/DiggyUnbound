@@ -38,7 +38,7 @@ public class Indexer extends SubsystemBase {
     private TalonFX indexerMotor;
 
     public Indexer() {
-        indexerMotor = new TalonFX(Constants.HardwarePorts.indexer); //get real port
+        indexerMotor = new TalonFX(Constants.HardwarePorts.indexer, "mechbussy"); //get real port
         config(indexerMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
     }
 

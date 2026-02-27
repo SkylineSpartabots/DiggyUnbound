@@ -38,7 +38,7 @@ public class Pivot extends SubsystemBase {
     private TalonFX pivotMotor;
 
     public Pivot() {
-        pivotMotor = new TalonFX(Constants.HardwarePorts.intake); //get real port
+        pivotMotor = new TalonFX(Constants.HardwarePorts.pivot, "mechbussy"); //get real port
         
         configureMotor(pivotMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
     }

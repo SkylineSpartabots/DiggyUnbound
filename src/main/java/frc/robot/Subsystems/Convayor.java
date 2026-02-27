@@ -38,7 +38,7 @@ public class Convayor extends SubsystemBase {
     private TalonFX convayorMotor;
 
     public Convayor() {
-        convayorMotor = new TalonFX(Constants.HardwarePorts.climbL); //get real port
+        convayorMotor = new TalonFX(Constants.HardwarePorts.convayor, "mechbussy"); //get real port
         config(convayorMotor, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
     }
 

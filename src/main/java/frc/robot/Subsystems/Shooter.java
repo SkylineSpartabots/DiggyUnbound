@@ -27,22 +27,22 @@ public class Shooter extends SubsystemBase {
         return instance;
     }
 
-    private TalonFX L_top_leader, L_bot, R_top, R_bot;
+    private TalonFX topL_leader, botL, topR, botR;
 
     public Shooter() {
-        L_top_leader = new TalonFX(HardwarePorts.shooterLT, "mechinisms");
-        L_bot = new TalonFX(HardwarePorts.shooterLB, "mechinisms");
-        R_top = new TalonFX(HardwarePorts.shooterRT, "mechinisms");
-        R_bot = new TalonFX(HardwarePorts.shooterRB, "mechinisms");
+        topL_leader = new TalonFX(HardwarePorts.shooterTL, "mechbussy");
+        topR = new TalonFX(HardwarePorts.shooterTR, "mechbussy");
+        botL = new TalonFX(HardwarePorts.shooterBR, "mechbussy");
+        botR = new TalonFX(HardwarePorts.shooterBR, "mechbussy");
 
-        config(L_top_leader, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
-        config(L_bot, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
-        config(R_top, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
-        config(R_bot, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
+        config(topL_leader, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
+        config(topR, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
+        config(botL, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
+        config(botR, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
 
-        L_bot.setControl(new Follower(L_top_leader.getDeviceID(), MotorAlignmentValue.Aligned));
-        R_top.setControl(new Follower(L_top_leader.getDeviceID(), MotorAlignmentValue.Aligned));
-        R_bot.setControl(new Follower(L_top_leader.getDeviceID(), MotorAlignmentValue.Aligned));
+        botL.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Aligned));
+        topR.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Aligned));
+        botR.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Aligned));
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){
@@ -65,15 +65,15 @@ public class Shooter extends SubsystemBase {
 
     // returns rps
     public double getLeaderVelocity() {
-        return L_top_leader.getVelocity().getValueAsDouble();
+        return topL_leader.getVelocity().getValueAsDouble();
     }
     
     public double[] getAllVelocities() {
         return new double[] {
-            L_top_leader.getVelocity().getValueAsDouble(),
-            L_bot.getVelocity().getValueAsDouble(),
-            R_top.getVelocity().getValueAsDouble(),
-            R_bot.getVelocity().getValueAsDouble()
+            topL_leader.getVelocity().getValueAsDouble(),
+            botL.getVelocity().getValueAsDouble(),
+            topR.getVelocity().getValueAsDouble(),
+            botR.getVelocity().getValueAsDouble()
         };
     }
     
@@ -82,7 +82,7 @@ public class Shooter extends SubsystemBase {
      * @param velocity in rps
     */
     public void setVelocity(double velocity) {
-        L_top_leader.setControl(new VelocityVoltage(velocity));
+        topL_leader.setControl(new VelocityVoltage(velocity));
     }
 
     // theoretical
@@ -98,7 +98,7 @@ public class Shooter extends SubsystemBase {
      * @param percent from -1 to 1
     */
     public void setPercent(double percent) {
-        L_top_leader.set(percent);
+        topL_leader.set(percent);
     }
 
 }

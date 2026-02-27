@@ -38,7 +38,7 @@ public class Intake extends SubsystemBase {
     private TalonFX intakeMotor;
 
     public Intake() {
-        intakeMotor = new TalonFX(Constants.HardwarePorts.intake); //get real port
+        intakeMotor = new TalonFX(Constants.HardwarePorts.intake, "mechbussy"); //get real port
 
         configureMotor(intakeMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
     }
