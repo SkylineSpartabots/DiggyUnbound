@@ -30,6 +30,8 @@ public class Shooter extends SubsystemBase {
 
     private TalonFX topL_leader, botL, topR, botR;
 
+    private double airtime; // seconds
+
     public Shooter() {
         topL_leader = new TalonFX(HardwarePorts.shooterTL, "mechbussy");
         topR = new TalonFX(HardwarePorts.shooterTR, "mechbussy");
@@ -108,6 +110,14 @@ public class Shooter extends SubsystemBase {
     */
     public void setPercent(double percent) {
         topL_leader.set(percent);
+    }
+
+    public void updateAirtime(double airtime) {
+        this.airtime = airtime;
+    }
+
+    public double getAirtime() {
+        return airtime;
     }
 
 }

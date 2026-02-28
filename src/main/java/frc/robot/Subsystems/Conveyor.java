@@ -21,7 +21,7 @@ public class Conveyor extends SubsystemBase {
     }
 
     public enum ConveyorStates{
-        ON(0.2),
+        ON(0.75),
         OFF(0),
         
         REVERSE(-0.5);

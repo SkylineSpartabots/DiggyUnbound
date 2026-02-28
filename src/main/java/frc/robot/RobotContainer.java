@@ -66,8 +66,8 @@ public class RobotContainer {
         driver.b().onTrue(intake.setState(IntakeStates.ON)); // intake 
         driver.x().onTrue(conveyor.setState(ConveyorStates.ON));
         driver.y().onTrue(new SequentialCommandGroup(
-            new InstantCommand(() -> shooter.setVoltage(2)),
-            new InstantCommand(() -> indexer.setVoltage(1))
+            new InstantCommand(() -> shooter.setVoltage(3)),
+            new InstantCommand(() -> indexer.setVoltage(6))
         ));
 
 
