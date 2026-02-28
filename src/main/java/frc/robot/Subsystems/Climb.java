@@ -23,9 +23,9 @@ public class Climb extends SubsystemBase {
     }
 
     public enum ClimbStates{
-        ON(0.5),
+        ON(0.4),
         OFF(0),
-        REVERSE(-0.5);
+        REVERSE(-0.4);
 
         double speed;
         private ClimbStates(double speed) {
@@ -44,7 +44,7 @@ public class Climb extends SubsystemBase {
         climbMotorLeader = new TalonFX(Constants.HardwarePorts.climbL, "mechbussy"); //get real port
         climbMotorFollower = new TalonFX(Constants.HardwarePorts.climbR, "mechbussy"); //get real port
 
-        config(climbMotorLeader, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
+        config(climbMotorLeader, NeutralModeValue.Brake, InvertedValue.CounterClockwise_Positive);
         config(climbMotorFollower, NeutralModeValue.Brake, InvertedValue.CounterClockwise_Positive);
 
         climbMotorFollower.setControl(new Follower(climbMotorLeader.getDeviceID(), MotorAlignmentValue.Aligned));

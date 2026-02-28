@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
+import frc.robot.Commands.SetShooter;
+import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Indexer;
 import frc.robot.Subsystems.Pivot;
 import frc.robot.Subsystems.Shooter;
@@ -26,6 +28,7 @@ public class RobotContainer {
     private Indexer indexer = Indexer.getInstance();
     private Pivot intake = Pivot.getInstance();
     private Shooter shooter = Shooter.getInstance();
+    private Climb climb = Climb.getInstance();
 
 
     private DriveControlSystems control = new DriveControlSystems();
@@ -49,24 +52,12 @@ public class RobotContainer {
                 )
             ) // Drive counterclockwise with negative X (left)
         );
-
-        /* shitty bindings for lazy testing lmao */
-        driver.a().onTrue(new InstantCommand(() -> {
-            shooter.setPercent(0);
-            speed = 0;
-        }));
-
-        driver.y().onTrue(new InstantCommand(() -> {
-            shooter.setPercent(speed + 0.1);
-            speed += 0.1;
-        }));
-
-        driver.x().onTrue(new InstantCommand(() -> {
-            shooter.setPercent(speed - 0.1);
-            speed -= 0.1;
-        }));
+        
+        driver.a().onTrue(new SetShooter(2));
+        driver.b().onTrue(new SetShooter(0));
 
         /* Sysid Bindings IGNORE TS */
+
 
         // driver.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
         // driver.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
@@ -75,8 +66,6 @@ public class RobotContainer {
         // driver.b().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         // driver.y().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         // driver.a().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-
 
     }
 

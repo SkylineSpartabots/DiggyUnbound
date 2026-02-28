@@ -40,18 +40,18 @@ public class DriveControlSystems {
         //     driverLX = driverLX * -1;
         // }
 
-        // return new SwerveRequest.RobotCentric()
-        // .withVelocityX(driverLY)
-        // .withVelocityY(driverLX)
-        // .withRotationalRate(driverRX);
-        return new SwerveRequest.FieldCentricFacingAngle()
+        return new SwerveRequest.RobotCentric()
         .withVelocityX(driverLY)
-        .withVelocityY(-driverLX)
-        .withTargetRateFeedforward(driverRX)
-        .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
-        .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
-        .withSteerRequestType(com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType.MotionMagicExpo)
-        .withDesaturateWheelSpeeds(true);
+        .withVelocityY(driverLX)
+        .withRotationalRate(driverRX);
+        // return new SwerveRequest.FieldCentricFacingAngle()
+        // .withVelocityX(driverLY)
+        // .withVelocityY(-driverLX)
+        // .withTargetRateFeedforward(driverRX)
+        // .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
+        // .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
+        // .withSteerRequestType(com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType.MotionMagicExpo)
+        // .withDesaturateWheelSpeeds(true);
     }
 
     public double scaledDeadBand(double input) {
