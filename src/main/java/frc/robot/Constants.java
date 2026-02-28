@@ -11,7 +11,7 @@ public class Constants {
         public static final int intake = 20;
         public static final int pivot = 21;
 
-        public static final int convayor = 30;
+        public static final int conveyor = 30;
 
         public static final int indexer= 40;
 

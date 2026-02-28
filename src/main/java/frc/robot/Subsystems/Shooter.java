@@ -86,7 +86,7 @@ public class Shooter extends SubsystemBase {
         topL_leader.setControl(new VelocityVoltage(velocity));
     }
 
-        /**
+    /**
      * set velocity of motors
      * @param voltage
     */

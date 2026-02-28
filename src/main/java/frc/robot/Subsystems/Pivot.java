@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Subsystems.Intake.IntakeStates;
 
 public class Pivot extends SubsystemBase {
     private static Pivot instance;
@@ -56,8 +57,8 @@ public class Pivot extends SubsystemBase {
         pivotMotor.set(speed);
     }
 
-    public Command setState(PivotStates state){
-        return Commands.runOnce(() -> setSpeed(state.getSpeed()), this);
+    public Command setState(IntakeStates off){
+        return Commands.runOnce(() -> setSpeed(off.getSpeed()), this);
     }
 
     @Override

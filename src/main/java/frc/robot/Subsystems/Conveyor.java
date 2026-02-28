@@ -10,23 +10,23 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Convayor extends SubsystemBase {
-    private static Convayor instance;
+public class Conveyor extends SubsystemBase {
+    private static Conveyor instance;
 
-    public static Convayor getInstance() {
+    public static Conveyor getInstance() {
         if(instance == null) {
-            instance = new Convayor();
+            instance = new Conveyor();
         }
         return instance;
     }
 
-    public enum ConvayorStates{
-        ON(0.5),
+    public enum ConveyorStates{
+        ON(0.2),
         OFF(0),
+        
         REVERSE(-0.5);
-
         double speed;
-        private ConvayorStates(double speed) {
+        private ConveyorStates(double speed) {
             this.speed = speed;
         }
 
@@ -35,11 +35,11 @@ public class Convayor extends SubsystemBase {
         }
     }
 
-    private TalonFX convayorMotor;
+    private TalonFX conveyorMotor;
 
-    public Convayor() {
-        convayorMotor = new TalonFX(Constants.HardwarePorts.convayor, "mechbussy"); //get real port
-        config(convayorMotor, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
+    public Conveyor() {
+        conveyorMotor = new TalonFX(Constants.HardwarePorts.conveyor, "mechbussy"); //get real port
+        config(conveyorMotor, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){
@@ -56,10 +56,10 @@ public class Convayor extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        convayorMotor.set(speed);
+        conveyorMotor.set(speed);
     }
 
-    public Command setState(ConvayorStates state){
+    public Command setState(ConveyorStates state){
         return Commands.runOnce(() -> setSpeed(state.getSpeed()), this);
     }
 
