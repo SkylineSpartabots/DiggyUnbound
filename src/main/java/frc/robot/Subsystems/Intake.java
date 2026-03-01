@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        ON(0.5),
+        ON(0.3),
         OFF(0),
         REVERSE(-0.5);
 
@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
     public Intake() {
         intakeMotor = new TalonFX(Constants.HardwarePorts.intake, "mechbussy"); //get real port
 
-        configureMotor(intakeMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
+        configureMotor(intakeMotor, NeutralModeValue.Brake, InvertedValue.CounterClockwise_Positive);
     }
 
     private void configureMotor(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction) {

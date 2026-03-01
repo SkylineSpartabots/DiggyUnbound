@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -29,20 +30,22 @@ public class Shooter extends SubsystemBase {
 
     private TalonFX topL_leader, botL, topR, botR;
 
+    private double airtime; // seconds
+
     public Shooter() {
         topL_leader = new TalonFX(HardwarePorts.shooterTL, "mechbussy");
         topR = new TalonFX(HardwarePorts.shooterTR, "mechbussy");
-        botL = new TalonFX(HardwarePorts.shooterBR, "mechbussy");
+        botL = new TalonFX(HardwarePorts.shooterBL, "mechbussy");
         botR = new TalonFX(HardwarePorts.shooterBR, "mechbussy");
 
         config(topL_leader, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
-        config(topR, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
         config(botL, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
+        config(topR, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
         config(botR, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
 
         botL.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Aligned));
-        topR.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Aligned));
-        botR.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Aligned));
+        topR.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Opposed));
+        botR.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Opposed));
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){
@@ -85,6 +88,14 @@ public class Shooter extends SubsystemBase {
         topL_leader.setControl(new VelocityVoltage(velocity));
     }
 
+    /**
+     * set velocity of motors
+     * @param voltage
+    */
+    public void setVoltage(double voltage) {
+        topL_leader.setControl(new VoltageOut(voltage));
+    }
+
     // theoretical
     double compensation = 1.05;
     public void setExitVelocity(double exitVelocity) {
@@ -99,6 +110,14 @@ public class Shooter extends SubsystemBase {
     */
     public void setPercent(double percent) {
         topL_leader.set(percent);
+    }
+
+    public void updateAirtime(double airtime) {
+        this.airtime = airtime;
+    }
+
+    public double getAirtime() {
+        return airtime;
     }
 
 }

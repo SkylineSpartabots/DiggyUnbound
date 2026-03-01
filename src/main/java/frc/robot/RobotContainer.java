@@ -11,27 +11,39 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
+import frc.robot.Subsystems.Indexer.IndexerStates;
+import frc.robot.Subsystems.Intake.IntakeStates;
+import frc.robot.Commands.SetShooter;
+import frc.robot.Commands.Factories.CommandFactory;
+import frc.robot.Subsystems.Climb;
+import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
+import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Pivot;
 import frc.robot.Subsystems.Shooter;
+import frc.robot.Subsystems.Conveyor.ConveyorStates;
+
 
 
 public class RobotContainer {
 
     private CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private Indexer indexer = Indexer.getInstance();
-    private Pivot intake = Pivot.getInstance();
+    private Conveyor conveyor = Conveyor.getInstance();
+    private Pivot pivot = Pivot.getInstance();
+    private Intake intake = Intake.getInstance();
     private Shooter shooter = Shooter.getInstance();
+    private Climb climb = Climb.getInstance();
 
 
     private DriveControlSystems control = new DriveControlSystems();
     public final CommandXboxController driver = new CommandXboxController(0);
-
-    private double speed = 0; // just for testing
 
     public RobotContainer() {
         configureBindings();
@@ -49,24 +61,20 @@ public class RobotContainer {
                 )
             ) // Drive counterclockwise with negative X (left)
         );
+        
+        driver.a().onTrue(allOff()); // all off
+        driver.b().onTrue(intake.setState(IntakeStates.ON)); // intake 
+        driver.x().onTrue(conveyor.setState(ConveyorStates.ON));
+        driver.y().onTrue(new SequentialCommandGroup(
+            new InstantCommand(() -> shooter.setVoltage(3)),
+            new InstantCommand(() -> indexer.setVoltage(6))
+        ));
 
-        /* shitty bindings for lazy testing lmao */
-        driver.a().onTrue(new InstantCommand(() -> {
-            shooter.setPercent(0);
-            speed = 0;
-        }));
 
-        driver.y().onTrue(new InstantCommand(() -> {
-            shooter.setPercent(speed + 0.1);
-            speed += 0.1;
-        }));
-
-        driver.x().onTrue(new InstantCommand(() -> {
-            shooter.setPercent(speed - 0.1);
-            speed -= 0.1;
-        }));
+        // driver.y().onTrue(new SetShooter(0.5)); // add indexer 
 
         /* Sysid Bindings IGNORE TS */
+
 
         // driver.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
         // driver.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
@@ -75,8 +83,6 @@ public class RobotContainer {
         // driver.b().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         // driver.y().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         // driver.a().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-
 
     }
 
@@ -89,6 +95,15 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return Commands.print("No autonomous command configured");
+    }
+
+    public Command allOff() {
+        return new ParallelCommandGroup(
+            intake.setState(IntakeStates.OFF),
+            conveyor.setState(ConveyorStates.OFF),
+            indexer.setState(IndexerStates.OFF),
+            new InstantCommand(() -> shooter.setVoltage(0))
+        );
     }
 
 }
