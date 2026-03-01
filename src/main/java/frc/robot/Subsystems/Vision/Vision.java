@@ -10,6 +10,7 @@ public class Vision extends SubsystemBase{
 
     CommandSwerveDrivetrain s_Swerve;
     RobotState robotState;
+    // LimeLightHelpers does not need an object.
 
     public static Vision getInstance() {
         if (instance == null) instance = new Vision();
