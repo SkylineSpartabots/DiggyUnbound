@@ -14,13 +14,15 @@ public class Vision extends SubsystemBase {
     // **** FILL THESE OUT ****:
     private static final double limelightHeightMeters = 0.0; // height of limelight lens above floor
     private static final double limelightMountAngleDeg = 0.0; // tilt angle of limelight from horizontal (deg)
-    private static final double targetHeightMeters = 0.0; // height of target center above floor
+    private static final double targetHeightMeters = 0.075; // height of target center above floor
+    private static final double minimumConfidence = 0.75; // 0.0–1.0, skip detections below this threshold
 
     private LimelightTarget_Detector nearestTarget;
     private double nearestDistanceMeters;
 
     public static Vision getInstance() {
-        if (instance == null) instance = new Vision();
+        if (instance == null)
+            instance = new Vision();
         return instance;
     }
 
@@ -29,15 +31,12 @@ public class Vision extends SubsystemBase {
     @Override
     public void periodic() {
         updateNearestTarget();
-
-        // SmartDashboard.putBoolean("Vision/HasTarget", hasTarget());
-        // SmartDashboard.putNumber("Vision/NearestDistanceM", nearestDistanceMeters);
-        // if (nearestTarget != null) {
-        //     SmartDashboard.putNumber("Vision/NearestTX", nearestTarget.tx);
-        //     SmartDashboard.putNumber("Vision/NearestTY", nearestTarget.ty);
-        //     SmartDashboard.putString("Vision/NearestClass", nearestTarget.className);
-        //     SmartDashboard.putNumber("Vision/NearestConf", nearestTarget.confidence);
-        // }
+        //Shuffleboard for testing
+        SmartDashboard.putBoolean("Vision/HasTarget", hasTarget());
+        SmartDashboard.putNumber("Vision/NearestDistanceM", nearestDistanceMeters);
+        SmartDashboard.putNumber("Vision/NearestTX", getNearestTX());
+        SmartDashboard.putNumber("Vision/NearestTY", getNearestTY());
+        SmartDashboard.putNumber("Vision/TargetCount", getTargetCount());
     }
 
     private void updateNearestTarget() {
@@ -47,10 +46,13 @@ public class Vision extends SubsystemBase {
         LimelightResults results = LimelightHelpers.getLatestResults(limelightName);
         LimelightTarget_Detector[] targets = results.targets_Detector;
 
-        if (targets == null || targets.length == 0) return;
+        if (targets == null || targets.length == 0)
+            return;
         double minDistance = Double.MAX_VALUE;
 
         for (LimelightTarget_Detector target : targets) {
+            if (target.confidence < minimumConfidence)
+                continue; // skip weak detections
             double distance = calculateDistance(target.ty);
             if (distance > 0 && distance < minDistance) {
                 minDistance = distance;
@@ -60,7 +62,8 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    /** <§ CLAUDE MADE THE METADATA BELOW §>
+    /**
+     * <§ CLAUDE MADE THE METADATA BELOW §>
      * Estimates the ground-plane distance to a target using the standard limelight
      * trigonometry formula:
      * distance = (targetHeight - cameraHeight) / tan(mountAngle + ty)
@@ -78,13 +81,21 @@ public class Vision extends SubsystemBase {
         return distance > 0 ? distance : -1;
     }
 
-    public boolean hasTarget() { return nearestTarget != null; }
+    public boolean hasTarget() {
+        return nearestTarget != null;
+    }
 
-    public double getNearestTX() { return nearestTarget != null ? nearestTarget.tx : 0.0; }
-   
-    public double getNearestTY() { return nearestTarget != null ? nearestTarget.ty : 0.0; }
+    public double getNearestTX() {
+        return nearestTarget != null ? nearestTarget.tx : 0.0;
+    }
 
-    public double getNearestDistanceMeters() { return nearestDistanceMeters; }
+    public double getNearestTY() {
+        return nearestTarget != null ? nearestTarget.ty : 0.0;
+    }
+
+    public double getNearestDistanceMeters() {
+        return nearestDistanceMeters;
+    }
 
     public int getTargetCount() {
         LimelightResults results = LimelightHelpers.getLatestResults(limelightName);

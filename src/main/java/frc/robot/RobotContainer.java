@@ -12,14 +12,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
 import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
+import frc.robot.Commands.DriveToNearestYellow;
 import frc.robot.Commands.SetShooter;
+import frc.robot.Subsystems.Vision.Vision;
 import frc.robot.Commands.Factories.CommandFactory;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
@@ -28,8 +29,6 @@ import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Pivot;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Conveyor.ConveyorStates;
-
-
 
 public class RobotContainer {
 
@@ -40,7 +39,7 @@ public class RobotContainer {
     private Intake intake = Intake.getInstance();
     private Shooter shooter = Shooter.getInstance();
     private Climb climb = Climb.getInstance();
-
+    private Vision vision = Vision.getInstance();
 
     private DriveControlSystems control = new DriveControlSystems();
     public final CommandXboxController driver = new CommandXboxController(0);
@@ -50,31 +49,26 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        
+
         /* DT bindings */
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(
-                () -> control.drive(
-                    -driver.getLeftY(), 
-                    -driver.getLeftX(), 
-                    -driver.getRightX()
-                )
-            ) // Drive counterclockwise with negative X (left)
+                drivetrain.applyRequest(
+                        () -> control.drive(
+                                -driver.getLeftY(),
+                                -driver.getLeftX(),
+                                -driver.getRightX())) // Drive counterclockwise with negative X (left)
         );
-        
+
         driver.a().onTrue(allOff()); // all off
-        driver.b().onTrue(intake.setState(IntakeStates.ON)); // intake 
+        driver.b().onTrue(intake.setState(IntakeStates.ON)); // intake
         driver.x().onTrue(conveyor.setState(ConveyorStates.ON));
-        driver.y().onTrue(new SequentialCommandGroup(
-            new InstantCommand(() -> shooter.setVoltage(3)),
-            new InstantCommand(() -> indexer.setVoltage(6))
-        ));
+        // Y: toggle DriveToNearestYellow — press once to start, press again to cancel
+        driver.y().toggleOnTrue(new DriveToNearestYellow(vision, drivetrain));
+        // Shooter + indexer: no binds for now
 
-
-        // driver.y().onTrue(new SetShooter(0.5)); // add indexer 
+        // driver.y().onTrue(new SetShooter(0.5)); // add indexer
 
         /* Sysid Bindings IGNORE TS */
-
 
         // driver.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
         // driver.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
@@ -88,9 +82,9 @@ public class RobotContainer {
 
     public SwerveRequest drive(double driverLY, double driverLX, double driverRX) {
         return new SwerveRequest.FieldCentric()
-            .withVelocityX(driverLX)
-            .withVelocityY(driverLY)
-            .withRotationalRate(driverRX);
+                .withVelocityX(driverLX)
+                .withVelocityY(driverLY)
+                .withRotationalRate(driverRX);
     }
 
     public Command getAutonomousCommand() {
@@ -99,11 +93,10 @@ public class RobotContainer {
 
     public Command allOff() {
         return new ParallelCommandGroup(
-            intake.setState(IntakeStates.OFF),
-            conveyor.setState(ConveyorStates.OFF),
-            indexer.setState(IndexerStates.OFF),
-            new InstantCommand(() -> shooter.setVoltage(0))
-        );
+                intake.setState(IntakeStates.OFF),
+                conveyor.setState(ConveyorStates.OFF),
+                indexer.setState(IndexerStates.OFF),
+                new InstantCommand(() -> shooter.setVoltage(0)));
     }
 
 }
