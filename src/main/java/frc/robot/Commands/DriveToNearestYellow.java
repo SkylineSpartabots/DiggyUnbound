@@ -2,6 +2,7 @@ package frc.robot.Commands;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
@@ -59,9 +60,9 @@ public class DriveToNearestYellow extends Command {
         double angleRad = Math.toRadians(tx);
         double robotX = (distance * Math.sin(angleRad)) + CAMERA_OFFSET_X_METERS;
 
-        double forwardMPS = clamp(forwardPID.calculate(distance, 0), 0.05, DRIVE_SPEED_MPS);
-        double lateralMPS = clamp(lateralPID.calculate(robotX, 0), -0.5, 0.5);
-        double rotationRadS = clamp(rotationalPID.calculate(tx, 0), -TURN_SPEED_RAD_S, TURN_SPEED_RAD_S);
+        double forwardMPS = MathUtil.clamp(forwardPID.calculate(distance, 0), 0.05, DRIVE_SPEED_MPS);
+        double lateralMPS = MathUtil.clamp(lateralPID.calculate(robotX, 0), -0.5, 0.5);
+        double rotationRadS = MathUtil.clamp(rotationalPID.calculate(tx, 0), -TURN_SPEED_RAD_S, TURN_SPEED_RAD_S);
 
         drivetrain.setControl(
                 driveRequest
@@ -91,8 +92,8 @@ public class DriveToNearestYellow extends Command {
     }
 
     // Clamp method for keeping a value within 2 values.
-    private double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(max, value));
-    }
-    // <O> <O>
+    // lol realized MathUtil alr has this method
+    // private double clamp(double value, double min, double max) {
+    //     return Math.max(min, Math.min(max, value));
+    // }
 }
