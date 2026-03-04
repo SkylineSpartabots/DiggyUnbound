@@ -1,5 +1,10 @@
 package frc.robot.Subsystems;
 
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -12,9 +17,11 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.HardwarePorts;
 
@@ -54,16 +61,17 @@ public class Shooter extends SubsystemBase {
         config.MotorOutput.NeutralMode = neutralMode;
         config.MotorOutput.Inverted = direction;
 
-        // Slot0Configs slot0Configs = new Slot0Configs();
-        // slot0Configs.kS = kS;
-        // slot0Configs.kV = kV;
-
+        // sysid
+        config.Slot0.kS = 0.10374;
+        config.Slot0.kV = 0.11622;
+        config.Slot0.kA = 0.015229;
+        config.Slot0.kP = 0.068103;
+        config.Slot0.kD = 0;
 
         // 20 ms
-        motor.getVelocity().setUpdateFrequency(50);
-        
+        // motor.getVelocity().setUpdateFrequency(50);
+
         motor.getConfigurator().apply(config);  
-        motor.optimizeBusUtilization();
     }
 
     // returns rps
@@ -85,7 +93,7 @@ public class Shooter extends SubsystemBase {
      * @param velocity in rps
     */
     public void setVelocity(double velocity) {
-        topL_leader.setControl(new VelocityVoltage(velocity));
+        topL_leader.setControl(new VelocityVoltage(velocity).withSlot(0));
     }
 
     /**
@@ -104,20 +112,38 @@ public class Shooter extends SubsystemBase {
         setVelocity(rps);
     }
 
-    /**
-     * set speed percent output of motors
-     * @param percent from -1 to 1
-    */
-    public void setPercent(double percent) {
-        topL_leader.set(percent);
-    }
-
     public void updateAirtime(double airtime) {
         this.airtime = airtime;
     }
 
     public double getAirtime() {
         return airtime;
+    }
+
+    //sysid
+
+    private final SysIdRoutine sysIdRoutine = new SysIdRoutine(
+    new SysIdRoutine.Config(
+        Volts.of(1).div(Seconds.of(1)),
+        Volts.of(8),
+        Units.Seconds.of(8),
+        (state) -> SignalLogger.writeString("SysIdShooter_State", state.toString())
+    ),
+    new SysIdRoutine.Mechanism(
+        (volts) -> setVoltage(volts.in(Volts)),
+        log -> {log.motor("shooter_leader")
+            .voltage(topL_leader.getMotorVoltage().getValue())
+            .angularPosition(topL_leader.getPosition().getValue())
+            .angularVelocity(topL_leader.getVelocity().getValue()); },
+        this
+    ));
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysIdRoutine.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return sysIdRoutine.dynamic(direction);
     }
 
 }

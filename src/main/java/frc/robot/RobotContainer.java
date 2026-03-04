@@ -29,8 +29,6 @@ import frc.robot.Subsystems.Pivot;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Conveyor.ConveyorStates;
 
-
-
 public class RobotContainer {
 
     private CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
@@ -62,27 +60,27 @@ public class RobotContainer {
             ) // Drive counterclockwise with negative X (left)
         );
         
-        driver.a().onTrue(allOff()); // all off
-        driver.b().onTrue(intake.setState(IntakeStates.ON)); // intake 
-        driver.x().onTrue(conveyor.setState(ConveyorStates.ON));
-        driver.y().onTrue(new SequentialCommandGroup(
-            new InstantCommand(() -> shooter.setVoltage(3)),
-            new InstantCommand(() -> indexer.setVoltage(6))
-        ));
+        // driver.a().onTrue(allOff()); // all off
+        // driver.b().onTrue(intake.setState(IntakeStates.ON)); // intake 
+        // driver.x().onTrue(conveyor.setState(ConveyorStates.ON));
+        // driver.y().onTrue(indexer.setState(IndexerStates.ON));
 
+        // driver.y().onTrue(new SequentialCommandGroup(
+        //     new InstantCommand(() -> shooter.setVelocity(3)),
+        //     new InstantCommand(() -> indexer.setVoltage(6))
+        // ));
 
-        // driver.y().onTrue(new SetShooter(0.5)); // add indexer 
 
         /* Sysid Bindings IGNORE TS */
 
 
-        // driver.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
-        // driver.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
+        driver.leftBumper().onTrue(new InstantCommand(() -> SignalLogger.start()));
+        driver.rightBumper().onTrue(new InstantCommand(() -> SignalLogger.stop()));
 
-        // driver.x().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // driver.b().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // driver.y().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // driver.a().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        driver.x().whileTrue(shooter.sysIdDynamic(Direction.kForward));
+        driver.b().whileTrue(shooter.sysIdDynamic(Direction.kReverse));
+        driver.y().whileTrue(shooter.sysIdQuasistatic(Direction.kForward));
+        driver.a().whileTrue(shooter.sysIdQuasistatic(Direction.kReverse));
 
     }
 
