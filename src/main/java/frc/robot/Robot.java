@@ -21,9 +21,8 @@ public class Robot extends TimedRobot {
 
     public Robot() {
         drivetrain = CommandSwerveDrivetrain.getInstance(); 
-
-        // System.out.println(SignalLogger.setPath("/media/sdb1/ctre-logs/"));
-        // SignalLogger.enableAutoLogging(false);
+        
+        SignalLogger.setPath("/media/sdb1/ctre-logs/");
 
         m_robotContainer = new RobotContainer();
   }

@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,32 +30,42 @@ public class DriveControlSystems {
 
     private static DriveControlSystems controlSystems;
 
+    Boolean mode_AlignToGoal = false;
+
      // =======---===[ ⚙ Joystick processing ]===---========
     public SwerveRequest drive(double driverLY, double driverLX, double driverRX){
         driverLX = scaledDeadBand(driverLX) * Constants.MaxSpeed;
         driverLY = scaledDeadBand(driverLY) * Constants.MaxSpeed;
         driverRX = scaledDeadBand(driverRX) * Constants.MaxAngularRate;
 
-        // if(Constants.alliance == Alliance.Red){
-        //     driverLY = driverLY * -1;
-        //     driverLX = driverLX * -1;
+        if (DriverStation.getAlliance().equals(Alliance.Red)) {
+            driverLY = driverLY * -1;
+            driverLX = driverLX * -1;
+        }
+
+        // if (mode_AlignToGoal) {
+        //     driverRX = 
         // }
 
-        return new SwerveRequest.RobotCentric()
-        .withVelocityX(driverLY)
-        .withVelocityY(driverLX)
-        .withRotationalRate(driverRX);
-        // return new SwerveRequest.FieldCentricFacingAngle()
+        // return new SwerveRequest.RobotCentric()
         // .withVelocityX(driverLY)
-        // .withVelocityY(-driverLX)
-        // .withTargetRateFeedforward(driverRX)
-        // .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
-        // .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
-        // .withSteerRequestType(com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType.MotionMagicExpo)
-        // .withDesaturateWheelSpeeds(true);
+        // .withVelocityY(driverLX)
+        // .withRotationalRate(driverRX);
+        return new SwerveRequest.FieldCentricFacingAngle()
+        .withVelocityX(driverLY)
+        .withVelocityY(-driverLX)
+        .withTargetRateFeedforward(driverRX)
+        .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
+        .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
+        .withSteerRequestType(com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType.MotionMagicExpo)
+        .withDesaturateWheelSpeeds(true);
     }
 
-    public double scaledDeadBand(double input) {
+    // private double autoAimToGoal() {
+    //     return 
+    // }
+
+    private double scaledDeadBand(double input) {
         if(Math.abs(input) < Constants.stickDeadband) 
             return 0;
         else

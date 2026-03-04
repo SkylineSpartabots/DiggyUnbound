@@ -22,17 +22,17 @@ public class Indexer extends SubsystemBase {
     }
 
     public enum IndexerStates{
-        ON(0.5),
+        ON(3),
         OFF(0),
-        REVERSE(-0.5);
+        REVERSE(-3);
 
-        double speed;
+        double voltage;
         private IndexerStates(double speed) {
-            this.speed = speed;
+            this.voltage = speed;
         }
 
-        public double getSpeed() {
-            return speed;
+        public double getVoltage() {
+            return voltage;
         }
     }
 
@@ -56,16 +56,12 @@ public class Indexer extends SubsystemBase {
     motor.optimizeBusUtilization();
     }
 
-    public void setSpeed(double speed) {
-        indexerMotor.set(speed);
-    }
-
     public void setVoltage(double voltage) {
         indexerMotor.setControl(new VoltageOut(voltage));
     }
 
     public Command setState(IndexerStates state){
-        return Commands.runOnce(() -> setSpeed(state.getSpeed()), this);
+        return Commands.runOnce(() -> setVoltage(state.getVoltage()), this);
     }
 
     @Override

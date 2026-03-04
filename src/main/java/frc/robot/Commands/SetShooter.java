@@ -11,7 +11,6 @@ import frc.robot.Subsystems.Shooter;
 public class SetShooter extends Command {
     Shooter s_shooter;
     Indexer s_indexer;
-    Timer timer = new Timer();
 
     double voltage;
 

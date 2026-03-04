@@ -8,8 +8,6 @@ public class RobotState {
 
     CommandSwerveDrivetrain drivetrain;
 
-    private double calculatedAirTime = 0; //ms
-
     public static RobotState getInstance() {
         if (instance == null) {
             instance = new RobotState();

@@ -21,17 +21,17 @@ public class Conveyor extends SubsystemBase {
     }
 
     public enum ConveyorStates{
-        ON(0.75),
+        ON(3),
         OFF(0),
-        
-        REVERSE(-0.5);
-        double speed;
+        REVERSE(-3);
+
+        double voltage;
         private ConveyorStates(double speed) {
-            this.speed = speed;
+            this.voltage = speed;
         }
 
-        public double getSpeed() {
-            return speed;
+        public double getVoltage() {
+            return voltage;
         }
     }
 
@@ -55,12 +55,12 @@ public class Conveyor extends SubsystemBase {
     motor.optimizeBusUtilization();
     }
 
-    public void setSpeed(double speed) {
-        conveyorMotor.set(speed);
+    public void setVoltage(double voltage) {
+        conveyorMotor.setVoltage(voltage);
     }
 
     public Command setState(ConveyorStates state){
-        return Commands.runOnce(() -> setSpeed(state.getSpeed()), this);
+        return Commands.runOnce(() -> setVoltage(state.getVoltage()), this);
     }
 
     @Override
