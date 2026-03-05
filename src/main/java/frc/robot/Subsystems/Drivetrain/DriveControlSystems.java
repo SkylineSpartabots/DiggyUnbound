@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.generated.TunerConstants;
 
@@ -45,6 +46,16 @@ public class DriveControlSystems {
     Translation2d targetGoal;
     double targetHeading;
     double ffMinRadius = 0.2, ffMaxRadius = 1.2;
+
+    private static DriveControlSystems instance;
+
+
+    public static DriveControlSystems getInstance() {
+        if(instance == null) {
+            instance = new DriveControlSystems();
+        }
+        return instance;
+    }
 
     public DriveControlSystems() {
         s_Swerve = CommandSwerveDrivetrain.getInstance();
@@ -73,19 +84,16 @@ public class DriveControlSystems {
                 .withRotationalRate(autoAimToGoal());
         }
 
-        return new SwerveRequest.FieldCentricFacingAngle()
-        .withVelocityX(driverLY)
-        .withVelocityY(-driverLX)
-        .withTargetRateFeedforward(driverRX)
-        .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
-        .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
-        .withSteerRequestType(com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType.MotionMagicExpo)
-        .withDesaturateWheelSpeeds(true);
-
-        // return new SwerveRequest.RobotCentric()
+        // return new SwerveRequest.FieldCentricFacingAngle()
         // .withVelocityX(driverLY)
-        // .withVelocityY(driverLX)
-        // .withRotationalRate(driverRX);
+        // .withVelocityY(-driverLX)
+        // .withTargetRateFeedforward(driverRX)
+        // .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance);
+
+        return new SwerveRequest.RobotCentric()
+        .withVelocityX(driverLY)
+        .withVelocityY(driverLX)
+        .withRotationalRate(driverRX);
     }
 
     private double autoAimToGoal() {

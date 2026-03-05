@@ -18,6 +18,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,6 +37,9 @@ public class Shooter extends SubsystemBase {
     }
 
     private TalonFX topL_leader, botL, topR, botR;
+
+    VelocityVoltage rpsRequest = new VelocityVoltage(0).withSlot(0);
+    VoltageOut voltageRequest = new VoltageOut(0);
 
     private double airtime; // seconds
 
@@ -93,7 +97,7 @@ public class Shooter extends SubsystemBase {
      * @param velocity in rps
     */
     public void setVelocity(double velocity) {
-        topL_leader.setControl(new VelocityVoltage(velocity).withSlot(0));
+        topL_leader.setControl(rpsRequest.withVelocity(velocity));
     }
 
     /**
@@ -101,7 +105,7 @@ public class Shooter extends SubsystemBase {
      * @param voltage
     */
     public void setVoltage(double voltage) {
-        topL_leader.setControl(new VoltageOut(voltage));
+        topL_leader.setControl(voltageRequest.withOutput(voltage));
     }
 
     // theoretical

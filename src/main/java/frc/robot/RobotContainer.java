@@ -42,8 +42,7 @@ public class RobotContainer {
     private Pivot pivot = Pivot.getInstance();
     private Climb climb = Climb.getInstance();
 
-
-    private DriveControlSystems control = new DriveControlSystems();
+    private DriveControlSystems control = DriveControlSystems.getInstance();
     public final CommandXboxController driver = new CommandXboxController(0);
 
     public RobotContainer() {
@@ -51,7 +50,6 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        
         /* DT bindings */
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(
@@ -63,16 +61,12 @@ public class RobotContainer {
             ) // Drive counterclockwise with negative X (left)
         );
         
-        // driver.a().onTrue(allOff()); // all off
+        driver.a().onTrue(allOff()); // all off
         // driver.b().onTrue(intake.setState(IntakeStates.ON)); // intake 
-        // driver.x().onTrue(conveyor.setState(ConveyorStates.ON));
+        driver.x().onTrue(new InstantCommand(() -> shooter.setVelocity(75)));
         // driver.y().onTrue(indexer.setState(IndexerStates.ON));
 
-        // driver.y().onTrue(new SequentialCommandGroup(
-        //     new InstantCommand(() -> shooter.setVelocity(3)),
-        //     new InstantCommand(() -> indexer.setVoltage(6))
-        // ));
-
+        // driver.y().onTrue(new InstantCommand(() -> indexer.setVoltage(5)));
 
         /* Sysid Bindings IGNORE TS */
 

@@ -51,7 +51,7 @@ public class RampShooterWithDistance extends Command {
             d / (v * Math.cos(Constants.shooterAngleRad)) // seconds
         );
 
-        s_Shooter.setExitVelocity(v);
+        s_Shooter.setExitVelocity(Math.min(100, v)); // free speed max 106.3 rps
         SmartDashboard.putNumber("Exit velocity", v);
     }
 

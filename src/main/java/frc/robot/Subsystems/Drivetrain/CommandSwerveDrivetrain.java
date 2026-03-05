@@ -304,9 +304,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("BR", s_Swerve.getModule(3).getEncoder().getAbsolutePosition().getValueAsDouble());
         
 
-        // SmartDashboard.putNumber("ODO X", s_Swerve.getState().Pose.getX());
-        // SmartDashboard.putNumber("ODO Y", s_Swerve.getState().Pose.getY());
-        // SmartDashboard.putNumber("ODO ROT", s_Swerve.getState().Pose.getRotation().getDegrees());
+        SmartDashboard.putNumber("ODO X", s_Swerve.getState().Pose.getX());
+        SmartDashboard.putNumber("ODO Y", s_Swerve.getState().Pose.getY());
+        SmartDashboard.putNumber("ODO ROT", s_Swerve.getState().Pose.getRotation().getDegrees());
     }
 
     
