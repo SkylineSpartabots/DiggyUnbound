@@ -4,6 +4,7 @@
 
 package frc.robot.Commands;
 
+import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -49,32 +50,33 @@ public final class Autos {
                 );
     }
 
-    public static void FollowChoreoTrajectory(SwerveSample sample) {
-        SwerveRequest.ApplyRobotSpeeds drive = new SwerveRequest.ApplyRobotSpeeds();
+    public static Command FollowChoreoTrajectory(SwerveSample sample) {
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-                // Get the current pose of the robot
-        Pose2d pose = drivetrain.getState().Pose;
+        return Commands.run(() -> {
+            // Get the current pose of the robot
+            Pose2d pose = drivetrain.getState().Pose;
 
-        // Generate the next speeds for the robot
-        ChassisSpeeds speeds = new ChassisSpeeds(
-            sample.vx + xController.calculate(pose.getX(), sample.x),
-            sample.vy + yController.calculate(pose.getY(), sample.y),
-            sample.omega + thetaController.calculate(pose.getRotation().getRadians(), sample.heading)
-        );
+            // Generate the next speeds for the robot
+            ChassisSpeeds speeds = new ChassisSpeeds(
+                sample.vx + xController.calculate(pose.getX(), sample.x),
+                sample.vy + yController.calculate(pose.getY(), sample.y),
+                sample.omega + thetaController.calculate(pose.getRotation().getRadians(), sample.heading)
+            );
 
-        // Apply the generated speeds
-        drivetrain.applyRequest(SwerveRequest.FieldCentricFacingAngle
-        .withVelocityX(speeds.vxMetersPerSecond)
-        .withVelocityY(speeds.vyMetersPerSecond)
-        .withTargetRateFeedforward(speeds.omegaRadiansPerSecond)
-        .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
-        .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
-        .withSteerRequestType(com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType.MotionMagicExpo)
-        .withDesaturateWheelSpeeds(true);
-
-        )
-        };
+            // Apply the generated speeds
+            drivetrain.setControl(
+                new SwerveRequest.FieldCentric()
+                .withVelocityX(speeds.vxMetersPerSecond)
+                .withVelocityY(speeds.vyMetersPerSecond)
+                .withRotationalRate(speeds.omegaRadiansPerSecond)
+                .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
+                .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
+                .withSteerRequestType(com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType.MotionMagicExpo)
+                .withDesaturateWheelSpeeds(true)
+            );
+        }, drivetrain);
+    }
         // Trajectory<SwerveSample> traj = path;
         // thetaController.reset();
         // xController.reset();
@@ -98,15 +100,18 @@ public final class Autos {
         //         drivetrain);
 
         // return swerveCommand;
-    }
+    // }
     //FIXME: IF THE AUTO MOVEMENTS ARE ONE MOVEMENT EARLY, THEN JUST INCREASE TRAJECTORY #s BY ONE OR CHANGE IN CHOREO
     
     public static Command LeftTrenchNearSide(){
-        Trajectory traj = Choreo.loadTrajectory("LeftTrenchNearSide").get();
-        FollowChoreoTrajectory(traj.get().sampleAt(0, false))
-        return new Command() {
-            
-        };
+        Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("LeftTrenchNearSide");
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                System.out.println("yea we're cookedd lmaooooo");
+            }),
+
+            FollowChoreoTrajectory(traj.get().sampleAt(0, false).get())
+        );
     }
    
     /*
@@ -129,5 +134,5 @@ public final class Autos {
             this.autoCommand = autoCommand;
         }
     }
-
+    
 }
