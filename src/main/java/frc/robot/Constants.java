@@ -34,7 +34,7 @@ public class Constants {
     public static double MaxAngularVelocity = 2 * Math.PI;
 
     public static double shooterRadiusM = 0.0508;
-    public static double shooterAngleRad = 0.40143;
+    public static double shooterAngleRad = 1.1694;
     
     public static final class FieldConstants {
         public static Translation3d blueGoal = new Translation3d(4.6256,4.0345, 1.8288); // meters

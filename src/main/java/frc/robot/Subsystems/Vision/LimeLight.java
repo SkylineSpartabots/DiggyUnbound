@@ -77,17 +77,12 @@ public class LimeLight extends SubsystemBase {
     }
 
     public LimeLight() {
-        this("limelight");
+        this("limelight-alpha");
     }
 
     public LimeLight(String name) {
         this.limelightName = name;
         this.limelightTable = NetworkTableInstance.getDefault().getTable(name);
-    }
-
-    @Override
-    public void periodic() {
-        updateLimelight();
     }
 
     public void updateLimelight() {
@@ -99,36 +94,41 @@ public class LimeLight extends SubsystemBase {
             pigeon.getPitch().getValueAsDouble(), 
             pigeon.getAngularVelocityYDevice(true).getValueAsDouble(), 
             pigeon.getRoll().getValueAsDouble(), 
-            pigeon.getAngularVelocityXWorld(true).getValueAsDouble() );
-        
-        PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+            pigeon.getAngularVelocityXWorld(true).getValueAsDouble());
 
+        PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+        // System.out.println(mt2.pose.toString());
         if (isValidEstimate(mt2)) {
             drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, LIMELIGHT_STD_DEVS);
         }
     }
 
     public boolean isValidEstimate(PoseEstimate estimate) {
-        // boolean valid = false;
+        boolean valid = true;
 
 // mt2
         if (Math.abs(pigeon.getAngularVelocityZDevice().getValueAsDouble()) >= 360 || estimate.tagCount == 0) // choose some max angular accel in degree per sec
             return false;
 
-            // mt1
-        // if (estimate.tagCount == 1 && estimate.rawFiducials.length == 1) {
-        //     if (estimate.rawFiducials[0].ambiguity > .7) {
-        //         valid = false;
-        //     }
-        //     if (estimate.rawFiducials[0].distToCamera > 3) { // not sure what this measure is in porlly meters
-        //         valid = false;
-        //     }
-        // }
-        // if (estimate.tagCount == 0) {
-        //     valid = false;
-        // }
+            
+        if (estimate.tagCount == 1 && estimate.rawFiducials.length == 1) {
+            if (estimate.rawFiducials[0].ambiguity > .5) {
+                System.out.println("am");
+                valid = false;
+            }
+            if (estimate.rawFiducials[0].distToCamera > 3) { // not sure what this measure is in porlly meters
+                valid = false;
+                System.out.println("dist");
+            }
+        }
+        if (estimate.tagCount == 0) {
+            System.out.println("zero");
+            valid = false;
+        }
 
-        return true;
+        // System.out.println(valid);
+
+        return valid;
     }
 
     // Basic targeting data
@@ -232,5 +232,10 @@ public class LimeLight extends SubsystemBase {
 
     public String getLimelightName() {
         return limelightName;
+    }
+
+    @Override
+    public void periodic() {
+        updateLimelight();
     }
 }
