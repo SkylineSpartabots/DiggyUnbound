@@ -98,12 +98,15 @@ public class DriveControlSystems {
 
     private double autoAimToGoal() {
 
-        Pose2d currentPose = s_Swerve.getState().Pose;
+        var state = s_Swerve.getState();
 
-        double currentDistance = currentPose.getTranslation().getDistance(targetGoal);
+        double currentDistance = state.Pose.getTranslation().getDistance(targetGoal);
+        double airtime = s_Shooter.getAirtime();
+        ChassisSpeeds velocityOffset = state.Speeds.times(airtime);
         
         targetHeading = Math.atan2(
-            (targetGoal.getY() - currentPose.getY()), (targetGoal.getX() - currentPose.getX())); 
+            (velocityOffset.vyMetersPerSecond + targetGoal.getY() - state.Pose.getY()),
+            (velocityOffset.vxMetersPerSecond + targetGoal.getX() - state.Pose.getX())); 
 
         double ffScaler = MathUtil.clamp(
                 (currentDistance - ffMinRadius) / (ffMaxRadius - ffMinRadius),
@@ -113,7 +116,7 @@ public class DriveControlSystems {
         // Calculate theta speed
         double thetaVelocity = thetaController.getSetpoint().velocity * ffScaler
                 + thetaController.calculate(
-                        currentPose.getRotation().getRadians(), targetHeading);
+                        state.Pose.getRotation().getRadians(), targetHeading);
         
         return thetaVelocity;
     }

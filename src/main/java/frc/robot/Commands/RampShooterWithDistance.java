@@ -41,7 +41,7 @@ public class RampShooterWithDistance extends Command {
         Translation2d currPose = s_Swerve.getState().Pose.getTranslation();
 
         double d = currPose.getDistance(Constants.FieldConstants.blueGoal.toTranslation2d());
-        double h = Constants.FieldConstants.blueGoal.getZ(); //need shooter height
+        double h = Constants.FieldConstants.blueGoal.getZ() - Constants.shooterHeightM; //need shooter height
 
         double v = Math.sqrt( (g * d * d) / 
             (2 * Math.pow(Math.cos(Constants.shooterAngleRad), 2) *
