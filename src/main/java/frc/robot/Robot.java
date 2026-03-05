@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Vision.LimeLight;
+import frc.robot.Subsystems.Vision.Quest;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
@@ -36,8 +37,9 @@ public class Robot extends TimedRobot {
         Shooter.getInstance();
         Pivot.getInstance();
         Climb.getInstance();
+        Quest.getInstance();
         
-        SignalLogger.setPath("/media/sdb1/ctre-logs/");
+        // SignalLogger.setPath("/media/sdb1/ctre-logs/");
 
         m_robotContainer = new RobotContainer();
   }

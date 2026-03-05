@@ -17,7 +17,6 @@ import gg.questnav.questnav.QuestNav;
 
 public class Quest extends SubsystemBase {
     private static Quest instance;
-    CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
     public static Quest getInstance() {
         if(instance == null) {
@@ -26,19 +25,28 @@ public class Quest extends SubsystemBase {
         return instance;
     }
     private Transform3d ROBOT_TO_QUEST = new Transform3d(new Translation3d(11.97, -9.964, 5.04), new Rotation3d(0,0,180));
-    QuestNav questNav = new QuestNav();
+    
+    CommandSwerveDrivetrain drivetrain;
+    QuestNav questNav;
 
-Matrix<N3, N1> QUESTNAV_STD_DEVS =
-    VecBuilder.fill(
-        0.02, // Trust down to 2cm in X direction
-        0.02, // Trust down to 2cm in Y direction
-        0.035 // Trust down to 2 degrees rotational
-    );
+    public Quest() {
+        questNav = new QuestNav();
+        drivetrain = CommandSwerveDrivetrain.getInstance();
+    }
+
+    Matrix<N3, N1> QUESTNAV_STD_DEVS =
+        VecBuilder.fill(
+            0.02, // Trust down to 2cm in X direction
+            0.02, // Trust down to 2cm in Y direction
+            0.035 // Trust down to 2 degrees rotational
+        );
 
 
     public void anchorQuest(Pose3d robotPose){
         questNav.setPose(robotPose.transformBy(ROBOT_TO_QUEST));
     }
+
+PoseFrame[] questFrames;
 
 @Override
 public void periodic() {
@@ -46,12 +54,13 @@ public void periodic() {
     questNav.commandPeriodic();
 
     // Get the latest pose data frames from the Quest
-    PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
+    questFrames = questNav.getAllUnreadPoseFrames();
 
+    // System.out.println(questNav.isTracking() + " " + questNav.isConnected());
     // Loop over the pose data frames and send them to the pose estimator
     for (PoseFrame questFrame : questFrames) {
         // Make sure the Quest was tracking the pose for this frame
-        if (questFrame.isTracking()) {
+        if (questNav.isTracking() && questNav.isConnected()) {
             // Get the pose of the Quest
             Pose3d questPose = questFrame.questPose3d();
             // Get timestamp for when the data was sent
@@ -61,7 +70,8 @@ public void periodic() {
             Pose3d robotPose = questPose.transformBy(ROBOT_TO_QUEST.inverse());
 
             // You can put some sort of filtering here if you would like!
-
+            
+            // System.out.println(robotPose.toPose2d());
             // Add the measurement to our estimator
             drivetrain.addVisionMeasurement(robotPose.toPose2d(), timestamp, QUESTNAV_STD_DEVS);
         }
