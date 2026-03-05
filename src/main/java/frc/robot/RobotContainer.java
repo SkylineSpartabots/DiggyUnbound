@@ -19,6 +19,7 @@ import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
 import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
+import frc.robot.Subsystems.Pivot.PivotStates;
 import frc.robot.Commands.SetShooter;
 import frc.robot.Commands.Factories.CommandFactory;
 import frc.robot.Subsystems.Climb;
@@ -33,10 +34,12 @@ public class RobotContainer {
 
     private CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private Indexer indexer = Indexer.getInstance();
-    private Conveyor conveyor = Conveyor.getInstance();
-    private Pivot pivot = Pivot.getInstance();
     private Intake intake = Intake.getInstance();
+
+    private Conveyor conveyor = Conveyor.getInstance();
     private Shooter shooter = Shooter.getInstance();
+
+    private Pivot pivot = Pivot.getInstance();
     private Climb climb = Climb.getInstance();
 
 
@@ -73,22 +76,13 @@ public class RobotContainer {
 
         /* Sysid Bindings IGNORE TS */
 
+        // driver.povLeft().onTrue(new InstantCommand(() -> SignalLogger.start()));
+        // driver.povRight().onTrue(new InstantCommand(() -> SignalLogger.stop()));
 
-        driver.leftBumper().onTrue(new InstantCommand(() -> SignalLogger.start()));
-        driver.rightBumper().onTrue(new InstantCommand(() -> SignalLogger.stop()));
-
-        driver.x().whileTrue(shooter.sysIdDynamic(Direction.kForward));
-        driver.b().whileTrue(shooter.sysIdDynamic(Direction.kReverse));
-        driver.y().whileTrue(shooter.sysIdQuasistatic(Direction.kForward));
-        driver.a().whileTrue(shooter.sysIdQuasistatic(Direction.kReverse));
-
-    }
-
-    public SwerveRequest drive(double driverLY, double driverLX, double driverRX) {
-        return new SwerveRequest.FieldCentric()
-            .withVelocityX(driverLX)
-            .withVelocityY(driverLY)
-            .withRotationalRate(driverRX);
+        // driver.x().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // driver.b().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // driver.y().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // driver.a().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
     }
 
     public Command getAutonomousCommand() {

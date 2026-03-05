@@ -58,14 +58,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
         new SysIdRoutine.Config(
-            null,        // Use default ramp rate (1 V/s)
-            Volts.of(4), // Reduce dynamic step voltage to 4 V to prevent brownout
+            Volts.of(1.5).div(Seconds.of(1)),        // Use default ramp rate (1 V/s)
+            Volts.of(5), // Reduce dynamic step voltage to 4 V to prevent brownout
             null,        // Use default timeout (10 s)
-            // Log state with SignalLogger class
             state -> SignalLogger.writeString("SysIdTranslation_State", state.toString())
         ),
         new SysIdRoutine.Mechanism(
-            output -> setControl(m_translationCharacterization.withVolts(output)),
+            (volts) -> setControl(m_translationCharacterization.withVolts(volts)),
             null,
             this
         )
@@ -115,7 +114,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     );
 
     /* The SysId routine to test */
-    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
+    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineRotation;
 
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -303,6 +302,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("FR", s_Swerve.getModule(1).getEncoder().getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("BL", s_Swerve.getModule(2).getEncoder().getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("BR", s_Swerve.getModule(3).getEncoder().getAbsolutePosition().getValueAsDouble());
+        
+
+        // SmartDashboard.putNumber("ODO X", s_Swerve.getState().Pose.getX());
+        // SmartDashboard.putNumber("ODO Y", s_Swerve.getState().Pose.getY());
+        // SmartDashboard.putNumber("ODO ROT", s_Swerve.getState().Pose.getRotation().getDegrees());
     }
 
     
