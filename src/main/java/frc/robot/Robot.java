@@ -5,12 +5,14 @@
 package frc.robot;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.signals.UpdateModeValue;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
+import frc.robot.Subsystems.Vision.LimeLight;
 import frc.robot.Subsystems.Pivot;
 
 public class Robot extends TimedRobot {
@@ -18,9 +20,11 @@ public class Robot extends TimedRobot {
 
     private final RobotContainer m_robotContainer;
     private CommandSwerveDrivetrain drivetrain;
+    private LimeLight limeLight;
 
     public Robot() {
         drivetrain = CommandSwerveDrivetrain.getInstance(); 
+        limeLight = LimeLight.getInstance();
         
         SignalLogger.setPath("/media/sdb1/ctre-logs/");
 
@@ -36,7 +40,9 @@ public class Robot extends TimedRobot {
     public void disabledInit() {}
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        limeLight.updateLimelight();
+    }
 
     @Override
     public void disabledExit() {}
