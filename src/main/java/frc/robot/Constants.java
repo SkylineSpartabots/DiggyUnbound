@@ -35,7 +35,7 @@ public class Constants {
 
     public static double shooterRadiusM = 0.0508;
     public static double shooterAngleRad = 1.1694;
-    public static double shooterHeightM = 0.39149;
+    public static double shooterHeightM = 0.34069;
     
     public static final class FieldConstants {
         public static Translation3d blueGoal = new Translation3d(4.6256,4.0345, 1.8288); // meters

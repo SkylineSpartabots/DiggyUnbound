@@ -109,10 +109,12 @@ public class Shooter extends SubsystemBase {
     }
 
     // theoretical
-    double compensation = 1.05;
+    double efficiency = 0.5;
     public void setExitVelocity(double exitVelocity) {
+        exitVelocity /= efficiency;
         double rps = exitVelocity / (Constants.shooterRadiusM * Math.PI * 2);
-        rps *= compensation;
+        System.out.println("final exit " + rps);
+        // rps *= 1.1; //comp
         setVelocity(rps);
     }
 

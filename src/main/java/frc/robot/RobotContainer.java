@@ -15,13 +15,17 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Subsystems.Drivetrain.AlignToGoal;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
 import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
 import frc.robot.Subsystems.Pivot.PivotStates;
 import frc.robot.Commands.SetShooter;
+import frc.robot.Commands.Convayor.SetConveyor;
 import frc.robot.Commands.Factories.CommandFactory;
+import frc.robot.Commands.Indexer.SetIndexer;
+import frc.robot.Commands.Intake.SetIntake;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
@@ -54,19 +58,26 @@ public class RobotContainer {
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(
                 () -> control.drive(
-                    -driver.getLeftY(), 
-                    -driver.getLeftX(), 
+                    driver.getLeftY(), 
+                    driver.getLeftX(), 
                     -driver.getRightX()
                 )
             ) // Drive counterclockwise with negative X (left)
         );
         
         driver.a().onTrue(allOff()); // all off
-        // driver.b().onTrue(intake.setState(IntakeStates.ON)); // intake 
-        driver.x().onTrue(new InstantCommand(() -> shooter.setVelocity(75)));
-        // driver.y().onTrue(indexer.setState(IndexerStates.ON));
+        // driver.b().onTrue(new SetConveyor(ConveyorStates.ON)); // intake 
+        // driver.x().onTrue(chud2());
+        // driver.y().onTrue(new InstantCommand(() -> control.turnOnAutoAim()));
+        // driver.b().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
-        // driver.y().onTrue(new InstantCommand(() -> indexer.setVoltage(5)));
+        driver.start().onTrue(new InstantCommand(() -> drivetrain.resetOdo()));
+    
+        // driver.x().onTrue(new InstantCommand(() -> shooter.setVelocity(75)));
+
+        driver.povLeft().onTrue(CommandFactory.AutoAimShoot());
+
+        // driver.y().onTrue(new InstantCommand(() -> conveyor.setVoltage(7)));
 
         /* Sysid Bindings IGNORE TS */
 
@@ -79,16 +90,27 @@ public class RobotContainer {
         // driver.a().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
     }
 
-    public Command getAutonomousCommand() {
-        return Commands.print("No autonomous command configured");
-    }
-
     public Command allOff() {
         return new ParallelCommandGroup(
             intake.setState(IntakeStates.OFF),
             conveyor.setState(ConveyorStates.OFF),
             indexer.setState(IndexerStates.OFF),
             new InstantCommand(() -> shooter.setVoltage(0))
+        );
+    }
+
+    public Command chud() {
+        return new ParallelCommandGroup(
+            conveyor.setState(ConveyorStates.ON),
+            indexer.setState(IndexerStates.ON),
+            new InstantCommand(() -> shooter.setVelocity(15))
+        );
+    }
+
+    public Command chud2() {
+        return new ParallelCommandGroup(
+            conveyor.setState(ConveyorStates.ON),
+            intake.setState(IntakeStates.ON)
         );
     }
 

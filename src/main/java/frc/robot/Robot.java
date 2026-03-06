@@ -9,11 +9,15 @@ import com.ctre.phoenix6.signals.UpdateModeValue;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Vision.LimeLight;
 import frc.robot.Subsystems.Vision.Quest;
+import frc.robot.Autos.Autos;
+import frc.robot.Autos.Autos.AutoPath;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
@@ -27,7 +31,9 @@ public class Robot extends TimedRobot {
     private final RobotContainer m_robotContainer;
     private CommandSwerveDrivetrain drivetrain;
     private LimeLight limeLight;
-
+    
+    SendableChooser<Autos.AutoPath> autoChooser = new SendableChooser<Autos.AutoPath>();
+    
     public Robot() {
         drivetrain = CommandSwerveDrivetrain.getInstance(); 
         limeLight = LimeLight.getInstance();
@@ -38,6 +44,10 @@ public class Robot extends TimedRobot {
         Pivot.getInstance();
         Climb.getInstance();
         Quest.getInstance();
+
+        autoChooser.setDefaultOption("TestingAuto", Autos.AutoPath.TestingAuto);
+        autoChooser.addOption("depo_simple", AutoPath.Depo_Simple);
+        SmartDashboard.putData("Auto choices", autoChooser);
         
         // SignalLogger.setPath("/media/sdb1/ctre-logs/");
 
@@ -62,7 +72,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        m_autonomousCommand = Autos.getAutoCommand(autoChooser.getSelected());
 
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);

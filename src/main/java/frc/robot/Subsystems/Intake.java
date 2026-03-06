@@ -56,7 +56,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void setVoltage(double voltage) {
-        intakeMotor.setVoltage(voltage);
+        intakeMotor.setControl(voltageRequest.withOutput(voltage));
     }
 
     public Command setState(IntakeStates state){

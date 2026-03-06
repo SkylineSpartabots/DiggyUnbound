@@ -15,11 +15,13 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -54,6 +56,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+
+    private final Field2d field = new Field2d();
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -214,6 +218,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return run(() -> this.setControl(request.get()));
     }
 
+    public void resetOdo(Pose2d pose) {
+        s_Swerve.resetPose(pose);
+    }
+
+    public void resetOdo() {
+        s_Swerve.resetPose(new Pose2d());
+    }
+
     /**
      * Runs the SysId Quasistatic test in the given direction for the routine
      * specified by {@link #m_sysIdRoutineToApply}.
@@ -303,6 +315,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("BL", s_Swerve.getModule(2).getEncoder().getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("BR", s_Swerve.getModule(3).getEncoder().getAbsolutePosition().getValueAsDouble());
         
+        field.setRobotPose(new Pose2d(new Translation2d(s_Swerve.getState().Pose.getX(), s_Swerve.getState().Pose.getY()), new Rotation2d()));
+        SmartDashboard.putData("field", field);
 
         SmartDashboard.putNumber("ODO X", s_Swerve.getState().Pose.getX());
         SmartDashboard.putNumber("ODO Y", s_Swerve.getState().Pose.getY());

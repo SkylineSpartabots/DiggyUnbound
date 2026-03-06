@@ -23,12 +23,19 @@ import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 
 public class LimeLight extends SubsystemBase {
     private static LimeLight instance;
+    private static Quest quest;
     private static CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
-    Matrix<N3, N1> LIMELIGHT_STD_DEVS = VecBuilder.fill(
+    Matrix<N3, N1> LIMELIGHT_STD_DEVS_SINGLE = VecBuilder.fill(
+            0.04, // Trust down to 2cm in X direction
+            0.04, // Trust down to 2cm in Y direction
+            999 // Trust down to 2 degrees rotational
+    );
+
+    Matrix<N3, N1> LIMELIGHT_STD_DEVS_MULTI = VecBuilder.fill(
             0.02, // Trust down to 2cm in X direction
             0.02, // Trust down to 2cm in Y direction
-            0.035 // Trust down to 2 degrees rotational
+            999 // Trust down to 2 degrees rotational
     );
 
     public static LimeLight getInstance() {
@@ -83,6 +90,8 @@ public class LimeLight extends SubsystemBase {
     public LimeLight(String name) {
         this.limelightName = name;
         this.limelightTable = NetworkTableInstance.getDefault().getTable(name);
+
+        quest = Quest.getInstance();
     }
 
     public void updateLimelight() {
@@ -96,39 +105,34 @@ public class LimeLight extends SubsystemBase {
             pigeon.getRoll().getValueAsDouble(), 
             pigeon.getAngularVelocityXWorld(true).getValueAsDouble());
 
-        PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-        // System.out.println(mt2.pose.toString());
-        if (isValidEstimate(mt2)) {
-            drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, LIMELIGHT_STD_DEVS);
+        PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
+        
+        if (validSingleTag(mt2)) {
+            var STDS = mt2.isMegaTag2 ? LIMELIGHT_STD_DEVS_MULTI : LIMELIGHT_STD_DEVS_SINGLE;
+            drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, STDS);
+            quest.anchorQuest(new Pose3d(mt2.pose));
         }
+
     }
 
-    public boolean isValidEstimate(PoseEstimate estimate) {
-        boolean valid = true;
-
-// mt2
+    public boolean validSingleTag(PoseEstimate estimate) {
         if (Math.abs(pigeon.getAngularVelocityZDevice().getValueAsDouble()) >= 360 || estimate.tagCount == 0) // choose some max angular accel in degree per sec
             return false;
-
-            
+        
         if (estimate.tagCount == 1 && estimate.rawFiducials.length == 1) {
             if (estimate.rawFiducials[0].ambiguity > .5) {
-                System.out.println("am");
-                valid = false;
+                return false;
             }
             if (estimate.rawFiducials[0].distToCamera > 3) { // not sure what this measure is in porlly meters
-                valid = false;
-                System.out.println("dist");
+                return false;
             }
         }
         if (estimate.tagCount == 0) {
             System.out.println("zero");
-            valid = false;
+            return false;
         }
 
-        // System.out.println(valid);
-
-        return valid;
+        return true;
     }
 
     // Basic targeting data

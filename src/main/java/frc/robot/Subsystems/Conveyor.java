@@ -1,6 +1,7 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -20,8 +21,10 @@ public class Conveyor extends SubsystemBase {
         return instance;
     }
 
+    private final VoltageOut voltageRequest = new VoltageOut(0);
+
     public enum ConveyorStates{
-        ON(8),
+        ON(6), 
         OFF(0),
         REVERSE(-3);
 
@@ -51,12 +54,12 @@ public class Conveyor extends SubsystemBase {
     // 20 ms
     motor.getVelocity().setUpdateFrequency(50);
     
-    motor.getConfigurator().apply(config);  
-    motor.optimizeBusUtilization();
+    motor.getConfigurator().apply(config);
+    // motor.optimizeBusUtilization();
     }
 
     public void setVoltage(double voltage) {
-        conveyorMotor.setVoltage(voltage);
+        conveyorMotor.setControl(voltageRequest.withOutput(voltage));
     }
 
     public Command setState(ConveyorStates state){
