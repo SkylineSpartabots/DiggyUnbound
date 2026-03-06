@@ -61,8 +61,6 @@ public class DriveControlSystems {
         s_Shooter = Shooter.getInstance();
 
         thetaController.enableContinuousInput(-Math.PI, Math.PI);  
-
-        alliance = DriverStation.getAlliance().get();
     }
 
      // =======---===[ ⚙ Joystick processing ]===---========
@@ -71,7 +69,7 @@ public class DriveControlSystems {
         driverLY = scaledDeadBand(driverLY) * Constants.MaxSpeed;
         driverRX = scaledDeadBand(driverRX) * Constants.MaxAngularRate;
 
-        if (alliance.equals(Alliance.Blue)) {
+        if (DriverStation.getAlliance().equals(Alliance.Blue)) {
             driverLX *= -1;
             driverLY *= -1;
         }

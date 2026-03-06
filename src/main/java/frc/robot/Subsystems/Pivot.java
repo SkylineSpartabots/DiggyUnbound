@@ -38,7 +38,7 @@ public class Pivot extends SubsystemBase {
     }
 
     private TalonFX pivotMotor;
-    private final MotionMagicVoltage mmRequest = new MotionMagicVoltage(0);
+    private final MotionMagicVoltage mmRequest = new MotionMagicVoltage(0).withSlot(0);
 
     public Pivot() {
         pivotMotor = new TalonFX(Constants.HardwarePorts.pivot, "mechbussy"); //get real port
@@ -54,6 +54,7 @@ public class Pivot extends SubsystemBase {
         config.Slot0.kP = 0.01;
         config.Slot0.kG = 0.4;
 
+
         config.MotorOutput.Inverted = direction;
         config.MotorOutput.NeutralMode = neutralMode;
 
@@ -63,11 +64,11 @@ public class Pivot extends SubsystemBase {
     }
 
     public void setRotations(double rotations) {
-        pivotMotor.setControl(mmRequest.withPosition(rotations).withSlot(0));
+        pivotMotor.setControl(mmRequest.withPosition(rotations));
     }
 
     public Command setState(IntakeStates state){
-        return Commands.runOnce(() -> setRotations(state.getVoltage()), this);
+        return Commands.runOnce(() -> setRotations(state.getPosition()), this);
     }
 
     @Override

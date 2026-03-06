@@ -33,7 +33,7 @@ public class Intake extends SubsystemBase {
             this.voltage = speed;
         }
 
-        public double getVoltage() {
+        public double getPosition() {
             return voltage;
         }
     }
@@ -60,7 +60,7 @@ public class Intake extends SubsystemBase {
     }
 
     public Command setState(IntakeStates state){
-        return Commands.runOnce(() -> setVoltage(state.getVoltage()), this);
+        return Commands.runOnce(() -> setVoltage(state.getPosition()), this);
     }
 
     @Override
