@@ -29,13 +29,13 @@ public class LimeLight extends SubsystemBase {
     Matrix<N3, N1> LIMELIGHT_STD_DEVS_SINGLE = VecBuilder.fill(
             0.04, // Trust down to 2cm in X direction
             0.04, // Trust down to 2cm in Y direction
-            999 // Trust down to 2 degrees rotational
+            0.05 // Trust down to 2 degrees rotational
     );
 
     Matrix<N3, N1> LIMELIGHT_STD_DEVS_MULTI = VecBuilder.fill(
             0.02, // Trust down to 2cm in X direction
             0.02, // Trust down to 2cm in Y direction
-            999 // Trust down to 2 degrees rotational
+            0.05 // Trust down to 2 degrees rotational
     );
 
     public static LimeLight getInstance() {
@@ -97,7 +97,6 @@ public class LimeLight extends SubsystemBase {
     public void updateLimelight() {
 
         LimelightHelpers.SetRobotOrientation(limelightName, 
-        // might be better to use something else not hte pigeon. maybe ask the quest or the general robo pose container
             pigeon.getYaw().getValueAsDouble(),
             pigeon.getAngularVelocityZDevice(true).getValueAsDouble(), 
             pigeon.getPitch().getValueAsDouble(), 
@@ -110,7 +109,10 @@ public class LimeLight extends SubsystemBase {
         if (validSingleTag(mt2)) {
             var STDS = mt2.isMegaTag2 ? LIMELIGHT_STD_DEVS_MULTI : LIMELIGHT_STD_DEVS_SINGLE;
             drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, STDS);
-            quest.anchorQuest(new Pose3d(mt2.pose));
+
+            if (DriverStation.isDisabled()) {
+                quest.anchorQuest(new Pose3d(mt2.pose));
+            }
         }
 
     }
