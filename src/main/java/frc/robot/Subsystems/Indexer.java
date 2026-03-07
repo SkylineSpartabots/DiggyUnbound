@@ -22,7 +22,7 @@ public class Indexer extends SubsystemBase {
     }
 
     public enum IndexerStates{
-        ON(5),
+        ON(6),
         OFF(0),
         REVERSE(-3);
 

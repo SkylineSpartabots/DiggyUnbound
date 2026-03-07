@@ -36,26 +36,12 @@ public class RampShooterWithDistance extends Command {
 
     double g = 9.81;
     Transform2d ROBOT_TO_SHOOTER = new Transform2d(-0.1778, 0, new Rotation2d());
-
+    
     @Override
     public void execute() {
+        
         Translation2d currPose = s_Swerve.getState().Pose.transformBy(ROBOT_TO_SHOOTER).getTranslation();
-
-        // double h = Constants.FieldConstants.blueGoal.getZ() - Constants.shooterHeightM; //need shooter height
-        // // double d = 3;
         double d = currPose.getDistance(Constants.FieldConstants.blueGoal.toTranslation2d());
-        // // System.out.println("dist " + d);
-
-        // double v = Math.sqrt( (g * d * d) / 
-        //     (
-        //     2 * Math.pow( Math.cos(Constants.shooterAngleRad), 2 ) *
-        //     (d * Math.tan(Constants.shooterAngleRad) - h)
-        //     ));
-
-
-        // System.out.println(v);
-        // SmartDashboard.putNumber("Aimtime", d / (v * Math.cos(Constants.shooterAngleRad)));
-        // s_Shooter.setExitVelocity(Math.min(100, v)); // free speed max 106.3 rps
 
         double v = 3.786* d * d + -5.907*d + 38.02;
 
@@ -63,7 +49,7 @@ public class RampShooterWithDistance extends Command {
             d / (v * Math.cos(Constants.shooterAngleRad)) // seconds
         );
 
-        // s_Shooter.setExitVelocity(Math.min(100, v)); // free speed max 106.3 rps
+        s_Shooter.setVelocity(Math.min(100, v)); // free speed max 106.3 rps
     }
 
     @Override

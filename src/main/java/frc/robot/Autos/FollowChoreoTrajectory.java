@@ -5,6 +5,7 @@
 package frc.robot.Autos;
 
 import java.util.Optional;
+import java.util.Queue;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
@@ -14,6 +15,7 @@ import choreo.trajectory.Trajectory;
 import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,27 +24,32 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
+import frc.robot.Subsystems.Vision.Quest;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class FollowChoreoTrajectory extends Command {
-  private Trajectory trajectory;
+  private Optional<Trajectory<SwerveSample>> trajectoryOpt;
+  private Trajectory trajectory = null;
 
   private Optional<DriverStation.Alliance> alliance;
   private CommandSwerveDrivetrain s_Swerve;
+  private Quest quest;
   private Optional<Pose2d> startPose;
   private Timer timer;
   
   private PIDController xController = new PIDController(0.7, 0, 0);
   private PIDController yController = new PIDController(0.7, 0, 0);
-    private static final PIDController thetaController = new PIDController(0.1325, 0, 0); //tune?
+  private static final PIDController thetaController = new PIDController(0.1325, 0, 0); //tuned. -ethan
 
 
-  public FollowChoreoTrajectory(Trajectory traj) {
+  public FollowChoreoTrajectory(Optional<Trajectory<SwerveSample>> traj) {
 
+    s_Swerve = CommandSwerveDrivetrain.getInstance();
     s_Swerve = CommandSwerveDrivetrain.getInstance();
     alliance = DriverStation.getAlliance();
     timer = new Timer();
 
+    trajectoryOpt = traj;
     
     addRequirements(s_Swerve);
   }
@@ -54,9 +61,14 @@ public class FollowChoreoTrajectory extends Command {
     timer.reset();
     timer.start();
 
+    if (trajectoryOpt.isPresent()) {
+      trajectory = trajectoryOpt.get();
+    }
+
     if (trajectory != null){
       startPose = trajectory.getInitialPose(alliance.get() == DriverStation.Alliance.Red);
       s_Swerve.resetOdo(startPose.get());
+      quest.anchorQuest(new Pose3d(startPose.get()));
     }
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
     

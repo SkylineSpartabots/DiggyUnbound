@@ -26,7 +26,7 @@ import frc.robot.Commands.Convayor.SetConveyor;
 import frc.robot.Commands.Factories.CommandFactory;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
-import frc.robot.Commands.Pivot.ZeroPivot;
+import frc.robot.Commands.Pivot.ForcePivot;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
@@ -66,14 +66,29 @@ public class RobotContainer {
             ) // Drive counterclockwise with negative X (left)
         );
         
-        driver.a().onTrue(allOff()); // all off
-        driver.povLeft().onTrue(new SetIndexer(IndexerStates.ON)); // all off
-        driver.povRight().onTrue(new SetIndexer(IndexerStates.OFF)); // all off
-        driver.b().onTrue(CommandFactory.AutoAimShoot());
-        // driver.b().onTrue(new ZeroPivot()); // all off
-        // driver.x().onTrue(new SetConveyor(ConveyorStates.OFF)); // all off
-        
-        // driver.povLeft().onTrue(new AlignToGoal());
+        // final bindings
+
+        driver.leftBumper().onTrue(CommandFactory.IntakeBallsON());
+        driver.rightBumper().onTrue(CommandFactory.IntakeBallsOFF());
+
+        driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim()));
+        driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
+
+        driver.x().onTrue(CommandFactory.ShootAtDistance());
+
+        driver.a().onTrue(CommandFactory.AllOff());
+
+        driver.povLeft().onTrue(CommandFactory.LobAtMeter(1.5));
+        driver.povDown().onTrue(CommandFactory.LobAtMeter(3));
+        driver.povRight().onTrue(CommandFactory.LobAtMeter(4));
+        driver.povUp().onTrue(CommandFactory.LobAtMeter(4.5));
+
+
+
+
+
+
+
 
         // driver.b().onTrue(new SetConveyor(ConveyorStates.ON)); // intake 
         // driver.x().onTrue(chud2());

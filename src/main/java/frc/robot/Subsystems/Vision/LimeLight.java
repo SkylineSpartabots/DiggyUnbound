@@ -115,9 +115,9 @@ public class LimeLight extends SubsystemBase {
             var STDS = mt2.isMegaTag2 ? LIMELIGHT_STD_DEVS_MULTI : LIMELIGHT_STD_DEVS_SINGLE;
             drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, STDS);
             
-            if (DriverStation.isDisabled()) {
-                quest.anchorQuest(new Pose3d(mt2.pose));
-            }
+            // if (DriverStation.isDisabled()) {
+            //     quest.anchorQuest(new Pose3d(mt2.pose));
+            // }
         }
 
     }

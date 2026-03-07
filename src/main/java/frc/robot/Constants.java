@@ -39,6 +39,6 @@ public class Constants {
     
     public static final class FieldConstants {
         public static Translation3d blueGoal = new Translation3d(4.6256,4.0345, 1.8288); // meters
-        public static Translation3d redGoal = new Translation3d(0, 4.0345, 1.8288); // meters, double check coords at some point
+        public static Translation3d redGoal = new Translation3d(11.9079, 4.0345, 1.8288); // meters, double check coords at some point
     }
 }

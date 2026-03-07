@@ -8,20 +8,21 @@ import frc.robot.Subsystems.Indexer;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Shooter;
 
-public class SetShooter extends Command {
+public class SetShooterAtMeter extends Command {
     Shooter s_shooter;
-    double velocity;
+    double d;
 
-    public SetShooter(double velocity){
+    public SetShooterAtMeter(double d){
         s_shooter = Shooter.getInstance();
 
-        this.velocity = velocity;
+        this.d = d;
         addRequirements(s_shooter);
     }
 
     @Override
     public void initialize() {
-        s_shooter.setVelocity(velocity);
+        double vel = 3.786* d * d + -5.907*d + 38.02;
+        s_shooter.setVelocity(vel);
     }
 
     @Override

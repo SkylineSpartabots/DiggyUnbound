@@ -81,6 +81,7 @@ public class DriveControlSystems {
                 .withVelocityX(driverLY)
                 .withVelocityY(driverLX)
                 .withTargetRateFeedforward((calculateGoalHeading()));
+                
         } else {SmartDashboard.putBoolean("aiming", false);}
 
         return new SwerveRequest.FieldCentricFacingAngle()
@@ -104,7 +105,6 @@ public class DriveControlSystems {
         double currentDistance = state.Pose.getTranslation().getDistance(targetGoal);
 
         double airtime = s_Shooter.getAirtime();
-        System.out.println(airtime);
         ChassisSpeeds velocityOffset = state.Speeds.times(airtime);
 
         System.out.println(velocityOffset.toString());

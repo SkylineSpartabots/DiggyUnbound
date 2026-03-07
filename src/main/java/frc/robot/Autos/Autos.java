@@ -21,6 +21,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,8 +31,10 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.Commands.Factories.CommandFactory;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
+import frc.robot.Commands.Pivot.ForcePivot;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
@@ -45,48 +48,39 @@ public final class Autos {
     private static final PIDController yController = new PIDController(5, 1, 0);
     private static final PIDController thetaController = new PIDController(0.1325, 0, 0);
 
+    Timer path_time = new Timer();
+
     public static Command getAutoCommand(AutoPath autoPath) {
-        return TestingAuto();
+        return depo_simple();
     }
     
-    public static Command TestingAuto(){
-        // Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("TestingAuto");
-        
-        // Optional<Trajectory<SwerveSample>> part1 = traj.get().getSplit(0);
-        // Optional<Trajectory<SwerveSample>> part2 = traj.get().getSplit(1);
-
-        return new SequentialCommandGroup(
-
-            // new FollowChoreoTrajectory(part1.get()),
-            // new SetIndexer(IndexerStates.ON),
-            // new FollowChoreoTrajectory(part2.get()),
-            // new SetIndexer(IndexerStates.OFF)
-        );
-    }
-
-        public static Command TuningAuto(){
-        // Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("TuningTest");
-        
-        // Optional<Trajectory<SwerveSample>> part1 = traj.get().getSplit(0);
-        // Optional<Trajectory<SwerveSample>> part2 = traj.get().getSplit(1);
-        // Optional<Trajectory<SwerveSample>> part3 = traj.get().getSplit(2);
-
-        // AutoTrajectory autoTraj = Choreo.loadTrajectory("testing_auto").get();
-        return new SequentialCommandGroup(
-            // new FollowChoreoTrajectory(part1.get()),
-            // new SetIntake(IntakeStates.ON),
-            // new FollowChoreoTrajectory(part2.get()),
-            // new SetIndexer(IndexerStates.OFF)
-        );
-    }
-
-    public static Command Depo_Simple(){
+    public static Command depo_simple(){
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("depo_simple");
         return new SequentialCommandGroup(
-            new InstantCommand(() -> {
 
-            })
-            // new FollowChoreoTrajectory(traj.get())
+            new ForcePivot(),
+            CommandFactory.IntakeBallsON(),
+
+            new SequentialCommandGroup(
+                new WaitCommand(3.3),
+                CommandFactory.IntakeBallsOFF()
+            ).alongWith(new FollowChoreoTrajectory(traj)),
+
+            CommandFactory.AutoAimShoot().raceWith(new WaitCommand(6))
+        );
+    }
+
+    public static Command trench_right_right_mid_chill(){
+        Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("trench_right_right_mid_chill");
+        return new SequentialCommandGroup(
+            new SequentialCommandGroup(
+                new WaitCommand(0.65),
+                new ForcePivot(),
+                CommandFactory.IntakeBallsON(),
+                new WaitCommand(2.2),
+                CommandFactory.IntakeBallsOFF()
+            ).alongWith(new FollowChoreoTrajectory(traj)),
+            CommandFactory.AutoAimShoot().raceWith(new WaitCommand(6))
         );
     }
    
@@ -100,8 +94,7 @@ public final class Autos {
         //if you want those mechCommands to run in parallel, put them in a parallelCommandGroup
         //if you want to run a mechCommand or mechCommandGroup in parallel with a path, create a boolean array with true values corresponding to the mechCommands you want to run in parallel.
         
-        TestingAuto("TestingAuto", TestingAuto()),
-        Depo_Simple("Depo_Simple", Depo_Simple());
+        Depo_Simple("Depo_Simple", depo_simple());
 
         String name;
         Command autoCommand;

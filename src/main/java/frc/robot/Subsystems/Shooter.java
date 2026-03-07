@@ -108,15 +108,6 @@ public class Shooter extends SubsystemBase {
         topL_leader.setControl(voltageRequest.withOutput(voltage));
     }
 
-    // theoretical
-    double efficiency = 1;
-    public void setExitVelocity(double exitVelocity) {
-        // exitVelocity /= efficiency;
-        // double rps = exitVelocity / (Constants.shooterRadiusM * Math.PI * 2);
-        // System.out.println("final exit " + rps);
-        setVelocity(exitVelocity);
-    }
-
     public void updateAirtime(double airtime) {
         this.airtime = airtime;
     }

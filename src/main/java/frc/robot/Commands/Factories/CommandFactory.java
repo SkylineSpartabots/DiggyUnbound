@@ -11,8 +11,12 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Commands.RampShooterWithDistance;
+import frc.robot.Commands.SetShooter;
+import frc.robot.Commands.SetShooterAtMeter;
+import frc.robot.Commands.Automation.AlignToGoal;
 import frc.robot.Commands.Convayor.SetConveyor;
 import frc.robot.Commands.Indexer.SetIndexer;
+import frc.robot.Commands.Intake.SetIntake;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Conveyor.ConveyorStates;
@@ -28,16 +32,53 @@ public class CommandFactory {
     public static Command AutoAimShoot(){
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
-                // new AlignToGoal(),
-                new WaitCommand(1.5)
+                new AlignToGoal(),
+                new WaitCommand(0.5)
             ),
             new SetIndexer(IndexerStates.ON),
-            // new SetConveyor(ConveyorStates.ON),
-            new WaitCommand(5),
-            // new SetConveyor(ConveyorStates.OFF),
-            new SetIndexer(IndexerStates.OFF)
+            new SetConveyor(ConveyorStates.ON)
         ).alongWith(new RampShooterWithDistance());
     }
 
-    
+    public static Command ShootAtDistance(){
+        return new SequentialCommandGroup(
+            new WaitCommand(1.25),
+            new SetIndexer(IndexerStates.ON),
+            new SetConveyor(ConveyorStates.ON),
+            new SetIntake(IntakeStates.CYCLE)
+        ).alongWith(new RampShooterWithDistance());
+    }
+
+    public static Command AllOff(){
+        return new SequentialCommandGroup(
+            new SetIndexer(IndexerStates.OFF),
+            new SetConveyor(ConveyorStates.OFF),
+            new SetIntake(IntakeStates.OFF),
+            new SetShooter(0)
+        );
+    }
+
+    public static Command IntakeBallsON(){
+        return new ParallelCommandGroup(
+            new SetConveyor(ConveyorStates.ON),
+            new SetIntake(IntakeStates.ON)
+        );
+    }
+
+    public static Command IntakeBallsOFF(){
+        return new ParallelCommandGroup(
+            new SetConveyor(ConveyorStates.OFF),
+            new SetIntake(IntakeStates.OFF)
+        );
+    }
+
+    public static Command LobAtMeter(double distance){
+        return new SequentialCommandGroup(
+            new SetShooterAtMeter(distance),
+            new WaitCommand(1.25),
+            new SetIndexer(IndexerStates.ON),
+            new SetConveyor(ConveyorStates.ON),
+            new SetIntake(IntakeStates.CYCLE)
+        );
+    }
 }

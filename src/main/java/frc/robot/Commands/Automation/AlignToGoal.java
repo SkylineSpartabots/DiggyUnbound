@@ -44,7 +44,9 @@ public class AlignToGoal extends Command {
         this.s_Swerve = CommandSwerveDrivetrain.getInstance();
 
         thetaController.setTolerance(Math.toRadians(4));
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);       
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        
+        addRequirements(s_Swerve);
     }
 
     @Override
@@ -54,7 +56,7 @@ public class AlignToGoal extends Command {
 
         SwerveDriveState state = s_Swerve.getState();
 
-        thetaController.setTolerance(0.087266);
+        thetaController.setTolerance(Math.toRadians(4));
 
         thetaController.reset(state.Pose.getRotation().getRadians(),
                 state.Speeds.omegaRadiansPerSecond);
@@ -80,7 +82,10 @@ public class AlignToGoal extends Command {
                 + thetaController.calculate(
                         currentPose.getRotation().getRadians(), targetHeading);
 
-        s_Swerve.setControl(new SwerveRequest.FieldCentric().withRotationalRate(thetaVelocity));
+        s_Swerve.setControl(new SwerveRequest.FieldCentricFacingAngle()
+            .withVelocityX(0)
+            .withVelocityY(0)
+            .withTargetRateFeedforward((thetaVelocity)));
     }
 
     @Override

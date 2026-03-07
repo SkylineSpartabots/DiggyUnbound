@@ -45,8 +45,7 @@ public class Robot extends TimedRobot {
         Climb.getInstance();
         Quest.getInstance();
 
-        autoChooser.setDefaultOption("TestingAuto", Autos.AutoPath.TestingAuto);
-        autoChooser.addOption("depo_simple", AutoPath.Depo_Simple);
+        autoChooser.setDefaultOption("depo_simple", AutoPath.Depo_Simple);
         SmartDashboard.putData("Auto choices", autoChooser);
         
         // SignalLogger.setPath("/media/sdb1/ctre-logs/");

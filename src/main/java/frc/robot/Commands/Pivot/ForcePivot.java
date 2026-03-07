@@ -7,10 +7,11 @@ import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Pivot;
 import frc.robot.Subsystems.Intake.IntakeStates;;
 
-public class ZeroPivot extends Command {
+public class ForcePivot extends Command {
     private Pivot s_Pivot;
+    Timer timer = new Timer();
 
-    public ZeroPivot() {
+    public ForcePivot() {
         s_Pivot = Pivot.getInstance();
 
         addRequirements(s_Pivot);
@@ -18,7 +19,7 @@ public class ZeroPivot extends Command {
 
     @Override
     public void initialize() {
-        s_Pivot.setVoltage(2);
+        s_Pivot.setVoltage(-4);
     }
 
     @Override
@@ -27,12 +28,11 @@ public class ZeroPivot extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        s_Pivot.zeroPivot();
         s_Pivot.setVoltage(0);
     }
 
     @Override
     public boolean isFinished() {
-        return s_Pivot.getCurrent().getValueAsDouble() > 100;
+        return timer.hasElapsed(0.75);
     }
 }
