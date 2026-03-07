@@ -21,7 +21,6 @@ import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
 import frc.robot.Subsystems.Pivot;
 import frc.robot.Subsystems.Shooter;
-import frc.robot.Subsystems.Drivetrain.AlignToGoal;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 
 public class CommandFactory {

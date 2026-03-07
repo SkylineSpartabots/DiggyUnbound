@@ -109,13 +109,12 @@ public class Shooter extends SubsystemBase {
     }
 
     // theoretical
-    double efficiency = 0.5;
+    double efficiency = 1;
     public void setExitVelocity(double exitVelocity) {
-        exitVelocity /= efficiency;
-        double rps = exitVelocity / (Constants.shooterRadiusM * Math.PI * 2);
-        System.out.println("final exit " + rps);
-        // rps *= 1.1; //comp
-        setVelocity(rps);
+        // exitVelocity /= efficiency;
+        // double rps = exitVelocity / (Constants.shooterRadiusM * Math.PI * 2);
+        // System.out.println("final exit " + rps);
+        setVelocity(exitVelocity);
     }
 
     public void updateAirtime(double airtime) {

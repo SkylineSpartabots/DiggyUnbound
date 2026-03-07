@@ -15,17 +15,18 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.Subsystems.Drivetrain.AlignToGoal;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
 import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
 import frc.robot.Subsystems.Pivot.PivotStates;
 import frc.robot.Commands.SetShooter;
+import frc.robot.Commands.Automation.AlignToGoal;
 import frc.robot.Commands.Convayor.SetConveyor;
 import frc.robot.Commands.Factories.CommandFactory;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
+import frc.robot.Commands.Pivot.ZeroPivot;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
@@ -66,16 +67,24 @@ public class RobotContainer {
         );
         
         driver.a().onTrue(allOff()); // all off
+        driver.povLeft().onTrue(new SetIndexer(IndexerStates.ON)); // all off
+        driver.povRight().onTrue(new SetIndexer(IndexerStates.OFF)); // all off
+        driver.b().onTrue(CommandFactory.AutoAimShoot());
+        // driver.b().onTrue(new ZeroPivot()); // all off
+        // driver.x().onTrue(new SetConveyor(ConveyorStates.OFF)); // all off
+        
+        // driver.povLeft().onTrue(new AlignToGoal());
+
         // driver.b().onTrue(new SetConveyor(ConveyorStates.ON)); // intake 
         // driver.x().onTrue(chud2());
-        // driver.y().onTrue(new InstantCommand(() -> control.turnOnAutoAim()));
-        // driver.b().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
+        driver.povUp().onTrue(new InstantCommand(() -> control.turnOnAutoAim()));
+        driver.povDown().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
-        driver.start().onTrue(new InstantCommand(() -> drivetrain.resetOdo()));
+        // driver.start().onTrue(new InstantCommand(() -> drivetrain.resetOdo()));
     
         // driver.x().onTrue(new InstantCommand(() -> shooter.setVelocity(75)));
 
-        driver.povLeft().onTrue(CommandFactory.AutoAimShoot());
+        // driver.povLeft().onTrue(CommandFactory.AutoAimShoot());
 
         // driver.y().onTrue(new InstantCommand(() -> conveyor.setVoltage(7)));
 

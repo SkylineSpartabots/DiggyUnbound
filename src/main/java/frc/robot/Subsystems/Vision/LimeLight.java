@@ -27,15 +27,15 @@ public class LimeLight extends SubsystemBase {
     private static CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
     Matrix<N3, N1> LIMELIGHT_STD_DEVS_SINGLE = VecBuilder.fill(
-            0.04, // Trust down to 2cm in X direction
-            0.04, // Trust down to 2cm in Y direction
-            0.05 // Trust down to 2 degrees rotational
+            0.075, // Trust down to 2cm in X direction
+            0.075, // Trust down to 2cm in Y direction
+            0.2 // Trust down to 2 degrees rotational
     );
 
     Matrix<N3, N1> LIMELIGHT_STD_DEVS_MULTI = VecBuilder.fill(
-            0.02, // Trust down to 2cm in X direction
-            0.02, // Trust down to 2cm in Y direction
-            0.05 // Trust down to 2 degrees rotational
+            0.04, // Trust down to 2cm in X direction
+            0.04, // Trust down to 2cm in Y direction
+            0.15 // Trust down to 2 degrees rotational
     );
 
     public static LimeLight getInstance() {
@@ -96,9 +96,14 @@ public class LimeLight extends SubsystemBase {
 
     public void updateLimelight() {
 
+        var state = drivetrain.getState();
+
+        // System.out.println("pitch " + pigeon.getPitch().getValueAsDouble());
+        // System.out.println("roll " + pigeon.getRoll().getValueAsDouble());
+
         LimelightHelpers.SetRobotOrientation(limelightName, 
-            pigeon.getYaw().getValueAsDouble(),
-            pigeon.getAngularVelocityZDevice(true).getValueAsDouble(), 
+            state.Pose.getRotation().getDegrees(),
+            state.Speeds.omegaRadiansPerSecond, 
             pigeon.getPitch().getValueAsDouble(), 
             pigeon.getAngularVelocityYDevice(true).getValueAsDouble(), 
             pigeon.getRoll().getValueAsDouble(), 
@@ -106,10 +111,10 @@ public class LimeLight extends SubsystemBase {
 
         PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
         
-        if (validSingleTag(mt2)) {
+        if (validTag(mt2)) {
             var STDS = mt2.isMegaTag2 ? LIMELIGHT_STD_DEVS_MULTI : LIMELIGHT_STD_DEVS_SINGLE;
             drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, STDS);
-
+            
             if (DriverStation.isDisabled()) {
                 quest.anchorQuest(new Pose3d(mt2.pose));
             }
@@ -117,7 +122,7 @@ public class LimeLight extends SubsystemBase {
 
     }
 
-    public boolean validSingleTag(PoseEstimate estimate) {
+    public boolean validTag(PoseEstimate estimate) {
         if (Math.abs(pigeon.getAngularVelocityZDevice().getValueAsDouble()) >= 360 || estimate.tagCount == 0) // choose some max angular accel in degree per sec
             return false;
         
@@ -125,12 +130,11 @@ public class LimeLight extends SubsystemBase {
             if (estimate.rawFiducials[0].ambiguity > .5) {
                 return false;
             }
-            if (estimate.rawFiducials[0].distToCamera > 3) { // not sure what this measure is in porlly meters
+            if (estimate.rawFiducials[0].distToCamera > 4) { // not sure what this measure is in porlly meters
                 return false;
             }
         }
         if (estimate.tagCount == 0) {
-            System.out.println("zero");
             return false;
         }
 

@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Drivetrain;
+package frc.robot.Commands.Automation;
 
 import java.awt.Robot;
 import java.util.Vector;
@@ -21,6 +21,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
+import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -42,6 +43,7 @@ public class AlignToGoal extends Command {
     public AlignToGoal() {
         this.s_Swerve = CommandSwerveDrivetrain.getInstance();
 
+        thetaController.setTolerance(Math.toRadians(4));
         thetaController.enableContinuousInput(-Math.PI, Math.PI);       
     }
 
@@ -78,7 +80,7 @@ public class AlignToGoal extends Command {
                 + thetaController.calculate(
                         currentPose.getRotation().getRadians(), targetHeading);
 
-        s_Swerve.applyRequest(() -> new SwerveRequest.FieldCentricFacingAngle().withTargetRateFeedforward(thetaVelocity));
+        s_Swerve.setControl(new SwerveRequest.FieldCentric().withRotationalRate(thetaVelocity));
     }
 
     @Override

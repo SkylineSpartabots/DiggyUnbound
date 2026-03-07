@@ -1,12 +1,15 @@
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +18,7 @@ import frc.robot.Subsystems.Intake.IntakeStates;
 
 public class Pivot extends SubsystemBase {
     private static Pivot instance;
+    private final VoltageOut voltageRequest = new VoltageOut(0);
 
     public static Pivot getInstance() {
         if(instance == null) {
@@ -24,12 +28,12 @@ public class Pivot extends SubsystemBase {
     }
 
     public enum PivotStates {
-        DEPLOYED(0.5),
+        DEPLOYED(-4.07),
         STOWED(0);
 
         double position;
-        private PivotStates(double speed) {
-            this.position = speed;
+        private PivotStates(double position) {
+            this.position = position;
         }
 
         public double getPosition() {
@@ -54,7 +58,6 @@ public class Pivot extends SubsystemBase {
         config.Slot0.kP = 0.01;
         config.Slot0.kG = 0.4;
 
-
         config.MotorOutput.Inverted = direction;
         config.MotorOutput.NeutralMode = neutralMode;
 
@@ -67,8 +70,24 @@ public class Pivot extends SubsystemBase {
         pivotMotor.setControl(mmRequest.withPosition(rotations));
     }
 
+    public void setVoltage(double volts) {
+        pivotMotor.setControl(voltageRequest.withOutput(volts));
+    }
+
+    public void setSpeed(double speed) {
+        pivotMotor.set(speed);
+    }
+
     public Command setState(IntakeStates state){
         return Commands.runOnce(() -> setRotations(state.getPosition()), this);
+    }
+
+    public void zeroPivot() {
+        pivotMotor.setPosition(0);
+    }
+
+    public StatusSignal<Current> getCurrent() {
+        return pivotMotor.getStatorCurrent();
     }
 
     @Override

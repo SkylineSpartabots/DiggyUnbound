@@ -55,10 +55,9 @@ public final class Autos {
         // Optional<Trajectory<SwerveSample>> part1 = traj.get().getSplit(0);
         // Optional<Trajectory<SwerveSample>> part2 = traj.get().getSplit(1);
 
-        // AutoTrajectory autoTraj = Choreo.loadTrajectory("testing_auto").get();
         return new SequentialCommandGroup(
 
-            // new FollowChoreoTra?jectory(part1.get()),
+            // new FollowChoreoTrajectory(part1.get()),
             // new SetIndexer(IndexerStates.ON),
             // new FollowChoreoTrajectory(part2.get()),
             // new SetIndexer(IndexerStates.OFF)
