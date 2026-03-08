@@ -24,7 +24,7 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        ON(7),
+        ON(8.5),
         CYCLE(3),
         OFF(0),
         REVERSE(-3);
@@ -53,7 +53,8 @@ public class Intake extends SubsystemBase {
         config.MotorOutput.Inverted = direction;
         config.MotorOutput.NeutralMode = neutralMode;
 
-        config.CurrentLimits.StatorCurrentLimit = 65;
+        // bruhdignsu current limits goon
+        config.CurrentLimits.StatorCurrentLimit = 80;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         motor.getConfigurator().apply(config);

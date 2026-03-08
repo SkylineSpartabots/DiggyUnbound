@@ -25,11 +25,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
 import frc.robot.Subsystems.Vision.Quest;
+import gg.questnav.questnav.QuestNav;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class FollowChoreoTrajectory extends Command {
   private Optional<Trajectory<SwerveSample>> trajectoryOpt;
-  private Trajectory trajectory = null;
+  private Trajectory<SwerveSample> trajectory = null;
 
   private Optional<DriverStation.Alliance> alliance;
   private CommandSwerveDrivetrain s_Swerve;
@@ -43,6 +44,10 @@ public class FollowChoreoTrajectory extends Command {
 
 
   public FollowChoreoTrajectory(Optional<Trajectory<SwerveSample>> traj) {
+    System.out.println(traj);
+
+    this.quest = Quest.getInstance();
+
     s_Swerve = CommandSwerveDrivetrain.getInstance();
     alliance = DriverStation.getAlliance();
     timer = new Timer();
@@ -61,7 +66,9 @@ public class FollowChoreoTrajectory extends Command {
 
     if (trajectoryOpt.isPresent()) {
       trajectory = trajectoryOpt.get();
+      System.out.println(" trajectory optinal present");
     }
+
 
     if (trajectory != null){
       startPose = trajectory.getInitialPose(alliance.get() == DriverStation.Alliance.Red);
@@ -92,6 +99,7 @@ public class FollowChoreoTrajectory extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    System.out.println(trajectory);
     return trajectory != null ? timer.hasElapsed(trajectory.getTotalTime()+ 0.2) : true;
   }
 

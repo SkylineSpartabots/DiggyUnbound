@@ -38,12 +38,19 @@ public class Quest extends SubsystemBase {
     // private Transform3d QUEST_TO_FIELD = new Transform3d();
 
     CommandSwerveDrivetrain drivetrain;
-    QuestNav questNav;
+    static QuestNav questNav;
 
     public Quest() {
         questNav = new QuestNav();
         drivetrain = CommandSwerveDrivetrain.getInstance();
     }
+
+    // public static QuestNav getQuest() {
+    //     if(questNav == null) {
+    //         questNav = new QuestNav();
+    //     }
+    //     return questNav;
+    // }
 
     Matrix<N3, N1> QUESTNAV_STD_DEVS =
         VecBuilder.fill(

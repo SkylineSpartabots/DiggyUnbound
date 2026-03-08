@@ -65,10 +65,11 @@ public final class Autos {
 
     public static Command mid(){
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid");
+        System.out.println(traj);
         return new SequentialCommandGroup(
             new FollowChoreoTrajectory(traj),
             new ForcePivot(),
-            CommandFactory.LobAtMeter(1.5)
+            CommandFactory.LobAtMeter(1.5).raceWith(new WaitCommand(5))
             );
 
     }
