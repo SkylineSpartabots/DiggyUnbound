@@ -27,15 +27,15 @@ public class LimeLight extends SubsystemBase {
     private static CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
     Matrix<N3, N1> LIMELIGHT_STD_DEVS_SINGLE = VecBuilder.fill(
-            0.075, // Trust down to 2cm in X direction
-            0.075, // Trust down to 2cm in Y direction
+            0.07, // Trust down to 2cm in X direction
+            0.07, // Trust down to 2cm in Y direction
             0.2 // Trust down to 2 degrees rotational
     );
 
     Matrix<N3, N1> LIMELIGHT_STD_DEVS_MULTI = VecBuilder.fill(
-            0.04, // Trust down to 2cm in X direction
-            0.04, // Trust down to 2cm in Y direction
-            0.15 // Trust down to 2 degrees rotational
+            0.035, // Trust down to 2cm in X direction
+            0.035, // Trust down to 2cm in Y direction
+            0.2 // Trust down to 2 degrees rotational
     );
 
     public static LimeLight getInstance() {
@@ -96,12 +96,11 @@ public class LimeLight extends SubsystemBase {
 
     public void updateLimelight() {
 
-        var state = drivetrain.getState();
+        // if(DriverStation.isDisabled()) {
 
-        // System.out.println("pitch " + pigeon.getPitch().getValueAsDouble());
-        // System.out.println("roll " + pigeon.getRoll().getValueAsDouble());
+            var state = drivetrain.getState();
 
-        LimelightHelpers.SetRobotOrientation(limelightName, 
+            LimelightHelpers.SetRobotOrientation(limelightName, 
             state.Pose.getRotation().getDegrees(),
             state.Speeds.omegaRadiansPerSecond, 
             pigeon.getPitch().getValueAsDouble(), 
@@ -113,13 +112,13 @@ public class LimeLight extends SubsystemBase {
         
         if (validTag(mt2)) {
             var STDS = mt2.isMegaTag2 ? LIMELIGHT_STD_DEVS_MULTI : LIMELIGHT_STD_DEVS_SINGLE;
-            drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, STDS);
-            
+            // drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, STDS);
             // if (DriverStation.isDisabled()) {
             //     quest.anchorQuest(new Pose3d(mt2.pose));
             // }
         }
 
+        // }
     }
 
     public boolean validTag(PoseEstimate estimate) {

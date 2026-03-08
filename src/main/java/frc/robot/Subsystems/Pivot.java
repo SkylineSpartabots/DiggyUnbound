@@ -56,7 +56,7 @@ public class Pivot extends SubsystemBase {
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
         config.Slot0.kP = 0.01;
-        config.Slot0.kG = 0.4;
+        config.Slot0.kG = 0.5;
 
         config.MotorOutput.Inverted = direction;
         config.MotorOutput.NeutralMode = neutralMode;
@@ -79,7 +79,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public Command setState(IntakeStates state){
-        return Commands.runOnce(() -> setRotations(state.getPosition()), this);
+        return Commands.runOnce(() -> setRotations(state.getVoltage()), this);
     }
 
     public void zeroPivot() {

@@ -46,16 +46,22 @@ public class Conveyor extends SubsystemBase {
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){
-    TalonFXConfiguration config = new TalonFXConfiguration();
+        TalonFXConfiguration config = new TalonFXConfiguration();
 
-    config.MotorOutput.NeutralMode = neutralMode;
-    config.MotorOutput.Inverted = direction;
+        config.MotorOutput.NeutralMode = neutralMode;
+        config.MotorOutput.Inverted = direction;
 
-    // 20 ms
-    motor.getVelocity().setUpdateFrequency(50);
-    
-    motor.getConfigurator().apply(config);
-    // motor.optimizeBusUtilization();
+        // 20 ms
+        motor.getVelocity().setUpdateFrequency(50);
+        
+        // current limits
+        config.CurrentLimits.SupplyCurrentLimit = 40;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimit = 60;
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+
+        motor.getConfigurator().apply(config);
+        // motor.optimizeBusUtilization();
     }
 
     public void setVoltage(double voltage) {

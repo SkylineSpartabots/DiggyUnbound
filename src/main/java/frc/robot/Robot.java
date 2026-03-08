@@ -45,7 +45,9 @@ public class Robot extends TimedRobot {
         Climb.getInstance();
         Quest.getInstance();
 
-        autoChooser.setDefaultOption("depo_simple", AutoPath.Depo_Simple);
+        autoChooser.setDefaultOption("depo_simple", AutoPath.depo_pimple);
+        autoChooser.setDefaultOption("mid", AutoPath.mid);
+        autoChooser.setDefaultOption("trench_right_right_mid_chill", AutoPath.trench_right_right_mid_chill);
         SmartDashboard.putData("Auto choices", autoChooser);
         
         // SignalLogger.setPath("/media/sdb1/ctre-logs/");

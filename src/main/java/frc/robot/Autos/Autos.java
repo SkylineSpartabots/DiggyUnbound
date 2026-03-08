@@ -17,7 +17,6 @@ import choreo.auto.AutoTrajectory;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -42,16 +41,10 @@ import frc.robot.Subsystems.Intake.IntakeStates;
 
 
 public final class Autos {
-    private static CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();   
-
-    private static final PIDController xController = new PIDController(5, 1, 0);
-    private static final PIDController yController = new PIDController(5, 1, 0);
-    private static final PIDController thetaController = new PIDController(0.1325, 0, 0);
-
     Timer path_time = new Timer();
 
     public static Command getAutoCommand(AutoPath autoPath) {
-        return depo_simple();
+        return autoPath.autoCommand;
     }
     
     public static Command depo_simple(){
@@ -68,6 +61,16 @@ public final class Autos {
 
             CommandFactory.AutoAimShoot().raceWith(new WaitCommand(6))
         );
+    }
+
+    public static Command mid(){
+        Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid");
+        return new SequentialCommandGroup(
+            new FollowChoreoTrajectory(traj),
+            new ForcePivot(),
+            CommandFactory.LobAtMeter(1.5)
+            );
+
     }
 
     public static Command trench_right_right_mid_chill(){
@@ -94,7 +97,9 @@ public final class Autos {
         //if you want those mechCommands to run in parallel, put them in a parallelCommandGroup
         //if you want to run a mechCommand or mechCommandGroup in parallel with a path, create a boolean array with true values corresponding to the mechCommands you want to run in parallel.
         
-        Depo_Simple("Depo_Simple", depo_simple());
+        depo_pimple("depo_simple", depo_simple()),
+        mid("mid", mid()),
+        trench_right_right_mid_chill("trench_right_right_mid_chill", trench_right_right_mid_chill());
 
         String name;
         Command autoCommand;

@@ -14,6 +14,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
@@ -30,7 +31,9 @@ public class Quest extends SubsystemBase {
         return instance;
     }
 
-    public Transform3d ROBOT_TO_QUEST = new Transform3d(new Translation3d(0.30404, -0.25309, 0.12802), new Rotation3d(0,0,180));
+    private boolean questEnabled = true;
+
+    public Transform3d ROBOT_TO_QUEST = new Transform3d(new Translation3d(0.30404, -0.25309, 0.19152), new Rotation3d(0,0,180));
     
     // private Transform3d QUEST_TO_FIELD = new Transform3d();
 
@@ -76,10 +79,14 @@ public class Quest extends SubsystemBase {
             Pose3d robotPose = questPose.transformBy(ROBOT_TO_QUEST.inverse());
 
             // System.out.println(robotPose.toPose2d().toString());
-            // System.out.println("quest " + questPose.toString());
+            SmartDashboard.putString("Quest Pose", robotPose.toPose2d().toString());
             // System.out.println(robotPose.toString());
             drivetrain.addVisionMeasurement(robotPose.toPose2d(), timestamp, QUESTNAV_STD_DEVS);
         }
+    }
+
+    public void toggleQuestEnabled() {
+        questEnabled = !questEnabled;
     }
 
     @Override
@@ -87,8 +94,11 @@ public class Quest extends SubsystemBase {
 
         questNav.commandPeriodic();
 
-        if (DriverStation.isEnabled())
-            updateQuest();
+        SmartDashboard.putBoolean("Quest Enabled", questEnabled);
 
+        if (DriverStation.isEnabled() && questEnabled) {
+            updateQuest();
+        }
+        
     }
 }

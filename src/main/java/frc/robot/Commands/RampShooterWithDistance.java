@@ -35,12 +35,12 @@ public class RampShooterWithDistance extends Command {
     }
 
     double g = 9.81;
-    Transform2d ROBOT_TO_SHOOTER = new Transform2d(-0.1778, 0, new Rotation2d());
+    // Transform2d ROBOT_TO_SHOOTER = new Transform2d(-0.1778, 0, new Rotation2d());
     
     @Override
     public void execute() {
         
-        Translation2d currPose = s_Swerve.getState().Pose.transformBy(ROBOT_TO_SHOOTER).getTranslation();
+        Translation2d currPose = s_Swerve.getState().Pose.getTranslation();
         double d = currPose.getDistance(Constants.FieldConstants.blueGoal.toTranslation2d());
 
         double v = 3.786* d * d + -5.907*d + 38.02;

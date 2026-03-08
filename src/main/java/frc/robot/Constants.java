@@ -25,7 +25,7 @@ public class Constants {
 
     }
     
-    public static final double stickDeadband = 0.075;
+    public static final double stickDeadband = 0.1;
     public static final double triggerDeadzone = 0.2;
 
     public static double MaxSpeed = 6; //can be lowered during testing

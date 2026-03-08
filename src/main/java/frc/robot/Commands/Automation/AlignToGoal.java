@@ -32,7 +32,7 @@ public class AlignToGoal extends Command {
     
     //TODO tune
     private final ProfiledPIDController thetaController = new ProfiledPIDController(
-            1, 0, 0.01, new TrapezoidProfile.Constraints(Constants.MaxAngularVelocity, Constants.MaxAngularRate), 0.02);
+            3, 0, 0.02, new TrapezoidProfile.Constraints(Constants.MaxAngularVelocity, Constants.MaxAngularRate), 0.02);
 
     private CommandSwerveDrivetrain s_Swerve;
 

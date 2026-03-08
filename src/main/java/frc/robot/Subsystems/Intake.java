@@ -24,8 +24,8 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        ON(6),
-        CYCLE(2),
+        ON(7),
+        CYCLE(3),
         OFF(0),
         REVERSE(-3);
 
@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase {
             this.voltage = speed;
         }
 
-        public double getPosition() {
+        public double getVoltage() {
             return voltage;
         }
     }
@@ -53,6 +53,9 @@ public class Intake extends SubsystemBase {
         config.MotorOutput.Inverted = direction;
         config.MotorOutput.NeutralMode = neutralMode;
 
+        config.CurrentLimits.StatorCurrentLimit = 65;
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+
         motor.getConfigurator().apply(config);
     }
 
@@ -61,7 +64,7 @@ public class Intake extends SubsystemBase {
     }
 
     public Command setState(IntakeStates state){
-        return Commands.runOnce(() -> setVoltage(state.getPosition()), this);
+        return Commands.runOnce(() -> setVoltage(state.getVoltage()), this);
     }
 
     @Override

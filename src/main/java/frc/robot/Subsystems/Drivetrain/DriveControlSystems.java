@@ -39,7 +39,7 @@ public class DriveControlSystems {
     private static CommandSwerveDrivetrain s_Swerve;
     private static Shooter s_Shooter;
 
-        private final ProfiledPIDController thetaController = new ProfiledPIDController(
+    private final ProfiledPIDController thetaController = new ProfiledPIDController(
             3, 0, 0.02, new TrapezoidProfile.Constraints(Constants.MaxAngularVelocity, Constants.MaxAngularRate), 0.02);
 
     Boolean mode_AlignToGoal = false;
@@ -81,7 +81,7 @@ public class DriveControlSystems {
                 .withVelocityX(driverLY)
                 .withVelocityY(driverLX)
                 .withTargetRateFeedforward((calculateGoalHeading()));
-                
+
         } else {SmartDashboard.putBoolean("aiming", false);}
 
         return new SwerveRequest.FieldCentricFacingAngle()
@@ -104,18 +104,18 @@ public class DriveControlSystems {
 
         double currentDistance = state.Pose.getTranslation().getDistance(targetGoal);
 
-        double airtime = s_Shooter.getAirtime();
-        ChassisSpeeds velocityOffset = state.Speeds.times(airtime);
+        // double airtime = s_Shooter.getAirtime();
+        // ChassisSpeeds velocityOffset = state.Speeds.times(airtime);
 
-        System.out.println(velocityOffset.toString());
+        // System.out.println(velocityOffset.toString());
         
-        targetHeading = Math.atan2(
-            (velocityOffset.vyMetersPerSecond + targetGoal.getY() - state.Pose.getY()),
-            (velocityOffset.vxMetersPerSecond + targetGoal.getX() - state.Pose.getX())); 
-
         // targetHeading = Math.atan2(
-        //     (targetGoal.getY() - state.Pose.getY()),
-        //     (targetGoal.getX() - state.Pose.getX())); 
+        //     (velocityOffset.vyMetersPerSecond + targetGoal.getY() - state.Pose.getY()),
+        //     (velocityOffset.vxMetersPerSecond + targetGoal.getX() - state.Pose.getX())); 
+
+        targetHeading = Math.atan2(
+            (targetGoal.getY() - state.Pose.getY()),
+            (targetGoal.getX() - state.Pose.getX())); 
         
         double ffScaler = MathUtil.clamp(
                 (currentDistance - ffMinRadius) / (ffMaxRadius - ffMinRadius),

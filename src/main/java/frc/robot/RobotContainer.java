@@ -20,6 +20,7 @@ import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
 import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
 import frc.robot.Subsystems.Pivot.PivotStates;
+import frc.robot.Subsystems.Vision.Quest;
 import frc.robot.Commands.SetShooter;
 import frc.robot.Commands.Automation.AlignToGoal;
 import frc.robot.Commands.Convayor.SetConveyor;
@@ -27,6 +28,7 @@ import frc.robot.Commands.Factories.CommandFactory;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
 import frc.robot.Commands.Pivot.ForcePivot;
+import frc.robot.Commands.Pivot.JiggleBalls;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
@@ -47,8 +49,11 @@ public class RobotContainer {
     private Pivot pivot = Pivot.getInstance();
     private Climb climb = Climb.getInstance();
 
+    private Quest quest = Quest.getInstance();
+
     private DriveControlSystems control = DriveControlSystems.getInstance();
     public final CommandXboxController driver = new CommandXboxController(0);
+    public final CommandXboxController opp = new CommandXboxController(1);
 
     public RobotContainer() {
         configureBindings();
@@ -68,20 +73,26 @@ public class RobotContainer {
         
         // final bindings
 
-        driver.leftBumper().onTrue(CommandFactory.IntakeBallsON());
+        driver.leftBumper().onTrue(CommandFactory.IntakeBallsON()); // top buttons
         driver.rightBumper().onTrue(CommandFactory.IntakeBallsOFF());
 
-        driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim()));
+        driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim())); //bottom buttons
         driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
         driver.x().onTrue(CommandFactory.ShootAtDistance());
 
+        driver.b().onTrue(new ForcePivot());
+
         driver.a().onTrue(CommandFactory.AllOff());
 
-        driver.povLeft().onTrue(CommandFactory.LobAtMeter(1.5));
-        driver.povDown().onTrue(CommandFactory.LobAtMeter(3));
+        driver.povUp().onTrue(CommandFactory.LobAtMeter(2));
+        driver.povLeft().onTrue(CommandFactory.LobAtMeter(3));
         driver.povRight().onTrue(CommandFactory.LobAtMeter(4));
-        driver.povUp().onTrue(CommandFactory.LobAtMeter(4.5));
+        driver.povDown().onTrue(CommandFactory.LobAtMeter(4.5));
+        
+        driver.y().onTrue(new InstantCommand(() -> quest.toggleQuestEnabled()));
+        
+        // opp.b().onTrue(new ForcePivot());
 
 
 
@@ -92,8 +103,8 @@ public class RobotContainer {
 
         // driver.b().onTrue(new SetConveyor(ConveyorStates.ON)); // intake 
         // driver.x().onTrue(chud2());
-        driver.povUp().onTrue(new InstantCommand(() -> control.turnOnAutoAim()));
-        driver.povDown().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
+        // driver.povUp().onTrue(new InstantCommand(() -> control.turnOnAutoAim()));
+        // driver.povDown().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
         // driver.start().onTrue(new InstantCommand(() -> drivetrain.resetOdo()));
     

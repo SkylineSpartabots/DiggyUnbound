@@ -59,14 +59,14 @@ public class CommandFactory {
     }
 
     public static Command IntakeBallsON(){
-        return new ParallelCommandGroup(
+        return new SequentialCommandGroup(
             new SetConveyor(ConveyorStates.ON),
             new SetIntake(IntakeStates.ON)
         );
     }
 
     public static Command IntakeBallsOFF(){
-        return new ParallelCommandGroup(
+        return new SequentialCommandGroup(
             new SetConveyor(ConveyorStates.OFF),
             new SetIntake(IntakeStates.OFF)
         );

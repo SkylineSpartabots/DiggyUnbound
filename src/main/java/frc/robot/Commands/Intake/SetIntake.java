@@ -22,7 +22,7 @@ public class SetIntake extends Command {
 
     @Override
     public void initialize() {
-        s_Intake.setState(state);
+        s_Intake.setVoltage(state.getVoltage());
     }
 
     @Override

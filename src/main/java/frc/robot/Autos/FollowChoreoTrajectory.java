@@ -37,14 +37,12 @@ public class FollowChoreoTrajectory extends Command {
   private Optional<Pose2d> startPose;
   private Timer timer;
   
-  private PIDController xController = new PIDController(0.7, 0, 0);
-  private PIDController yController = new PIDController(0.7, 0, 0);
-  private static final PIDController thetaController = new PIDController(0.1325, 0, 0); //tuned. -ethan
+  private PIDController xController = new PIDController(0.76, 0, 0);
+  private PIDController yController = new PIDController(0.76, 0, 0);
+  private static final PIDController thetaController = new PIDController(3, 0, 0.02); //tuned. -ethan
 
 
   public FollowChoreoTrajectory(Optional<Trajectory<SwerveSample>> traj) {
-
-    s_Swerve = CommandSwerveDrivetrain.getInstance();
     s_Swerve = CommandSwerveDrivetrain.getInstance();
     alliance = DriverStation.getAlliance();
     timer = new Timer();
@@ -71,8 +69,6 @@ public class FollowChoreoTrajectory extends Command {
       quest.anchorQuest(new Pose3d(startPose.get()));
     }
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
-    
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -89,8 +85,9 @@ public class FollowChoreoTrajectory extends Command {
   public void end(boolean interrupted) {
     timer.stop();
     Pose2d pose = s_Swerve.getState().Pose;
-    Optional<Pose2d> goal = trajectory.getFinalPose(alliance.get() == DriverStation.Alliance.Red);
-  }
+    if (trajectory != null){
+      Optional<Pose2d> goal = trajectory.getFinalPose(alliance.get() == DriverStation.Alliance.Red);
+  }}
 
   // Returns true when the command should end.
   @Override

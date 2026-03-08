@@ -40,14 +40,23 @@ public class Indexer extends SubsystemBase {
 
     public Indexer() {
         indexerMotor = new TalonFX(Constants.HardwarePorts.indexer, "mechbussy"); //get real port
+
+
         config(indexerMotor, NeutralModeValue.Brake, InvertedValue.CounterClockwise_Positive);
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){
     TalonFXConfiguration config = new TalonFXConfiguration();
 
-    config.MotorOutput.NeutralMode = neutralMode;
-    config.MotorOutput.Inverted = direction;
+        config.MotorOutput.NeutralMode = neutralMode;
+        config.MotorOutput.Inverted = direction;
+
+
+        config.CurrentLimits.StatorCurrentLimit = 65;
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+
+        motor.getConfigurator().apply(config);
+
 
     // 20 ms
     motor.getVelocity().setUpdateFrequency(50);
