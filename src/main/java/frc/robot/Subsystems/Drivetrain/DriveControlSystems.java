@@ -4,19 +4,29 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Subsystems.Conveyor;
+import frc.robot.Subsystems.Shooter;
 import frc.robot.generated.TunerConstants;
 
 import static edu.wpi.first.units.Units.Radians;
@@ -25,39 +35,116 @@ public class DriveControlSystems {
 
     private double deadbandFactor = 0.8; // higher is more linear joystick controls
 
-    PIDController pidHeading = new PIDController(0, 0, 0);
+    private final ProfiledPIDController thetaController = new ProfiledPIDController(
+            0.1325, 0, 0, new TrapezoidProfile.Constraints(Constants.MaxAngularVelocity, Constants.MaxAngularRate), 0.02);
 
-    private static DriveControlSystems controlSystems;
+    private static CommandSwerveDrivetrain s_Swerve;
+    private static Shooter s_Shooter;
 
-     // =======---===[ ⚙ Joystick processing ]===---========
-    public SwerveRequest drive(double driverLY, double driverLX, double driverRX){
+    Boolean mode_AlignToGoal = false;
+    Alliance alliance;
+    Translation2d targetGoal;
+    double targetHeading;
+    double ffMinRadius = 0.2, ffMaxRadius = 1.2;
+
+    private static DriveControlSystems instance;
+
+    public static DriveControlSystems getInstance() {
+        if(instance == null) {
+            instance = new DriveControlSystems();
+        }
+        return instance;
+    }
+
+    public DriveControlSystems() {
+        s_Swerve = CommandSwerveDrivetrain.getInstance();
+        s_Shooter = Shooter.getInstance();
+
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);  
+    }
+    /**
+     * FATAL ERROR: Returning a new Swerve request each time creates a new object every 50 ms (50 objects per second)
+     * This screws up the memory on the Rio which is only 512 MB
+     * This implementation should prevent those jitters and freezes that keep happening, or at least aid in solving the issue.
+     */
+    private final SwerveRequest.FieldCentric fieldCentricSwerveRequest = new SwerveRequest.FieldCentric();
+    private final SwerveRequest.FieldCentricFacingAngle fieldCentricFacingAngle = new SwerveRequest.FieldCentricFacingAngle();
+
+    public SwerveRequest drive(double driverLY, double driverLX, double driverRX) {
         driverLX = scaledDeadBand(driverLX) * Constants.MaxSpeed;
         driverLY = scaledDeadBand(driverLY) * Constants.MaxSpeed;
         driverRX = scaledDeadBand(driverRX) * Constants.MaxAngularRate;
 
-        // if(Constants.alliance == Alliance.Red){
-        //     driverLY = driverLY * -1;
-        //     driverLX = driverLX * -1;
-        // }
+        if (DriverStation.getAlliance().equals(Alliance.Blue)) {
+            driverLX *= -1;
+            driverLY *= -1;
+        }
 
-        return new SwerveRequest.RobotCentric()
-        .withVelocityX(driverLY)
-        .withVelocityY(driverLX)
-        .withRotationalRate(driverRX);
-        // return new SwerveRequest.FieldCentricFacingAngle()
-        // .withVelocityX(driverLY)
-        // .withVelocityY(-driverLX)
-        // .withTargetRateFeedforward(driverRX)
-        // .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
-        // .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
-        // .withSteerRequestType(com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType.MotionMagicExpo)
-        // .withDesaturateWheelSpeeds(true);
+        if (mode_AlignToGoal) {
+            return fieldCentricSwerveRequest
+                .withVelocityX(driverLY)
+                .withVelocityY(driverLX)
+                .withRotationalRate(autoAimToGoal());
+        }
+
+        return fieldCentricFacingAngle
+            .withVelocityX(driverLY)
+            .withVelocityY(driverLX)
+            .withTargetRateFeedforward(driverRX)
+            .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance);
     }
 
-    public double scaledDeadBand(double input) {
+    private double autoAimToGoal() {
+
+        var state = s_Swerve.getState();
+
+        double currentDistance = state.Pose.getTranslation().getDistance(targetGoal);
+        // double airtime = s_Shooter.getAirtime();
+        // ChassisSpeeds velocityOffset = state.Speeds.times(airtime);
+        
+        // targetHeading = Math.atan2(
+        //     (velocityOffset.vyMetersPerSecond + targetGoal.getY() - state.Pose.getY()),
+        //     (velocityOffset.vxMetersPerSecond + targetGoal.getX() - state.Pose.getX())); 
+
+        targetHeading = Math.atan2(
+            (targetGoal.getY() - state.Pose.getY()),
+            (targetGoal.getX() - state.Pose.getX())); 
+
+        double ffScaler = MathUtil.clamp(
+                (currentDistance - ffMinRadius) / (ffMaxRadius - ffMinRadius),
+                0.0,
+                1.0);
+
+        // Calculate theta speed
+        double thetaVelocity = thetaController.getSetpoint().velocity * ffScaler
+                + thetaController.calculate(
+                        state.Pose.getRotation().getRadians(), targetHeading);
+        
+        return thetaVelocity;
+    }
+
+    private double scaledDeadBand(double input) {
         if(Math.abs(input) < Constants.stickDeadband) 
             return 0;
         else
             return (deadbandFactor * Math.pow(input, 3)) + (1 - deadbandFactor) * input;
+    }
+
+    // mode changing
+
+    public void turnOnAutoAim() {
+        mode_AlignToGoal = true;
+        
+        var state = s_Swerve.getState();
+
+        targetGoal = alliance.equals(Alliance.Blue)
+         ? Constants.FieldConstants.blueGoal.toTranslation2d() : Constants.FieldConstants.redGoal.toTranslation2d();
+
+        thetaController.reset(state.Pose.getRotation().getRadians(),
+            state.Speeds.omegaRadiansPerSecond);
+    }
+
+    public void turnOffAutoAim() {
+        mode_AlignToGoal = false;
     }
 }
