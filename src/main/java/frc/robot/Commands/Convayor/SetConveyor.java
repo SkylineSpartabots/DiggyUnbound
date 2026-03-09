@@ -20,7 +20,6 @@ public class SetConveyor extends Command {
         s_Conveyor = Conveyor.getInstance();
 
         this.state = state;
-
         addRequirements(s_Conveyor);
     }
 

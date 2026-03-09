@@ -24,7 +24,7 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        ON(8.5),
+        ON(5.75),
         CYCLE(3),
         OFF(0),
         REVERSE(-3);

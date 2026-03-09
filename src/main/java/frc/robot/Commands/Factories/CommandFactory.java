@@ -44,8 +44,7 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new WaitCommand(1.25),
             new SetIndexer(IndexerStates.ON),
-            new SetConveyor(ConveyorStates.ON),
-            new SetIntake(IntakeStates.CYCLE)
+            new SetConveyor(ConveyorStates.ON)
         ).alongWith(new RampShooterWithDistance());
     }
 
@@ -60,7 +59,7 @@ public class CommandFactory {
 
     public static Command IntakeBallsON(){
         return new SequentialCommandGroup(
-            new SetConveyor(ConveyorStates.ON),
+            new SetConveyor(ConveyorStates.CYCLE),
             new SetIntake(IntakeStates.ON)
         );
     }
@@ -75,10 +74,10 @@ public class CommandFactory {
     public static Command LobAtMeter(double distance){
         return new SequentialCommandGroup(
             new SetShooterAtMeter(distance),
-            new WaitCommand(1.25),
+            new WaitCommand(1),
             new SetIndexer(IndexerStates.ON),
-            new SetConveyor(ConveyorStates.ON),
-            new SetIntake(IntakeStates.CYCLE)
+            new SetConveyor(ConveyorStates.ON)
+            // new SetIntake(IntakeStates.CYCLE)
         );
     }
 }

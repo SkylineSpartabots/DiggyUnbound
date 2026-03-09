@@ -21,7 +21,7 @@ public class SetShooterAtMeter extends Command {
 
     @Override
     public void initialize() {
-        double vel = 3.786* d * d + -5.907*d + 38.02;
+        double vel = 3.786* d * d + -5.907*d + 37.02;
         s_shooter.setVelocity(vel);
     }
 

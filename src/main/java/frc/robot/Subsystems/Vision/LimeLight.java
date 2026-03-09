@@ -94,6 +94,8 @@ public class LimeLight extends SubsystemBase {
         quest = Quest.getInstance();
     }
 
+    double fov = 65; //63 limelight 3
+
     public void updateLimelight() {
 
         // if(DriverStation.isDisabled()) {
@@ -109,13 +111,16 @@ public class LimeLight extends SubsystemBase {
             pigeon.getAngularVelocityXWorld(true).getValueAsDouble());
 
         PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
-        
-        if (validTag(mt2)) {
-            var STDS = mt2.isMegaTag2 ? LIMELIGHT_STD_DEVS_MULTI : LIMELIGHT_STD_DEVS_SINGLE;
+
+        if (mt2.isMegaTag2 && validTag(mt2)) {
+            // var STDS = mt2.isMegaTag2 ? LIMELIGHT_STD_DEVS_MULTI : LIMELIGHT_STD_DEVS_SINGLE;
             // drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, STDS);
-            // if (DriverStation.isDisabled()) {
-            //     quest.anchorQuest(new Pose3d(mt2.pose));
-            // }
+            double tx = LimelightHelpers.getTX("limelight");
+            double vel = Math.hypot(state.Speeds.vxMetersPerSecond, state.Speeds.vyMetersPerSecond);
+            System.out.println("valid tag");
+            if (Math.abs(tx) <= fov/2)
+                System.out.println("wawa");
+                quest.anchorQuest(new Pose3d(mt2.pose));
         }
 
         // }

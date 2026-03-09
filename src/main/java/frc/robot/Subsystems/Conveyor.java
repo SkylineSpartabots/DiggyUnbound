@@ -24,7 +24,8 @@ public class Conveyor extends SubsystemBase {
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
     public enum ConveyorStates{
-        ON(5), 
+        ON(6.5), 
+        CYCLE(3), 
         OFF(0),
         REVERSE(-3);
 

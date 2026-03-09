@@ -33,7 +33,7 @@ public class Quest extends SubsystemBase {
 
     private boolean questEnabled = true;
 
-    public Transform3d ROBOT_TO_QUEST = new Transform3d(new Translation3d(0.30404, -0.25309, 0.19152), new Rotation3d(0,0,180));
+    public Transform3d ROBOT_TO_QUEST = new Transform3d(new Translation3d(0.153, -0.215, -0.458), new Rotation3d(0,0,180));
     
     // private Transform3d QUEST_TO_FIELD = new Transform3d();
 
@@ -85,7 +85,6 @@ public class Quest extends SubsystemBase {
             // System.out.println(QUEST_TO_FIELD.toString());
             Pose3d robotPose = questPose.transformBy(ROBOT_TO_QUEST.inverse());
 
-            // System.out.println(robotPose.toPose2d().toString());
             SmartDashboard.putString("Quest Pose", robotPose.toPose2d().toString());
             // System.out.println(robotPose.toString());
             drivetrain.addVisionMeasurement(robotPose.toPose2d(), timestamp, QUESTNAV_STD_DEVS);
@@ -102,6 +101,8 @@ public class Quest extends SubsystemBase {
         questNav.commandPeriodic();
 
         SmartDashboard.putBoolean("Quest Enabled", questEnabled);
+        SmartDashboard.putBoolean("Quest Tracking", questNav.isTracking());
+        SmartDashboard.putBoolean("Quest Connected", questNav.isConnected());
 
         if (DriverStation.isEnabled() && questEnabled) {
             updateQuest();

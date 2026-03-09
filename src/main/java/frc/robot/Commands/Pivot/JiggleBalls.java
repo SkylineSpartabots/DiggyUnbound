@@ -21,6 +21,7 @@ public class JiggleBalls extends Command {
 
     public JiggleBalls(CommandXboxController driver) {
         s_Swerve = CommandSwerveDrivetrain.getInstance();
+        this.driver = driver;
 
         addRequirements(s_Swerve);
     }
@@ -35,9 +36,9 @@ public class JiggleBalls extends Command {
     public void execute() {
         ChassisSpeeds speeds = new ChassisSpeeds();
         if ( (int)(timer.get() / 0.25) % 2 == 0 ) {
-            speeds.vxMetersPerSecond = 0.1;
+            speeds.vxMetersPerSecond = 0.35;
         } else {
-            speeds.vxMetersPerSecond = -0.1;
+            speeds.vxMetersPerSecond = -0.35;
         }
         s_Swerve.setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
     }

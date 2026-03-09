@@ -44,7 +44,7 @@ public class FollowChoreoTrajectory extends Command {
 
 
   public FollowChoreoTrajectory(Optional<Trajectory<SwerveSample>> traj) {
-    System.out.println(traj);
+    // System.out.println(traj);
 
     this.quest = Quest.getInstance();
 
@@ -92,6 +92,8 @@ public class FollowChoreoTrajectory extends Command {
   public void end(boolean interrupted) {
     timer.stop();
     Pose2d pose = s_Swerve.getState().Pose;
+    s_Swerve.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds()));
+
     if (trajectory != null){
       Optional<Pose2d> goal = trajectory.getFinalPose(alliance.get() == DriverStation.Alliance.Red);
   }}
@@ -113,8 +115,15 @@ public class FollowChoreoTrajectory extends Command {
         ChassisSpeeds speeds = new ChassisSpeeds(
             sample.vx + xController.calculate(pose.getX(), sample.x),
             sample.vy + yController.calculate(pose.getY(), sample.y),
-            sample.omega + thetaController.calculate(pose.getRotation().getRadians(), sample.heading)
-        );
+            0
+            );
+
+        // ff
+        // ChassisSpeeds speeds = new ChassisSpeeds(
+        //     sample.vx,
+        //     sample.vy,
+        //     0
+        // );
 
             // Apply the generated speeds
         s_Swerve.setControl(
@@ -124,8 +133,8 @@ public class FollowChoreoTrajectory extends Command {
             .withRotationalRate(speeds.omegaRadiansPerSecond)
             .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
             .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
-            .withSteerRequestType(com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType.MotionMagicExpo)
-            .withDesaturateWheelSpeeds(true)
+            // .withSteerRequestType(com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType.MotionMagicExpo)
+            // .withDesaturateWheelSpeeds(true)
         );
 
     }

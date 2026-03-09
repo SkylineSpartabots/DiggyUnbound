@@ -82,15 +82,15 @@ public class RobotContainer {
         driver.x().onTrue(CommandFactory.ShootAtDistance());
 
         driver.b().onTrue(new ForcePivot());
-
+        driver.y().onTrue(new ForcePivot(3));
+        
         driver.a().onTrue(CommandFactory.AllOff());
 
         driver.povUp().onTrue(CommandFactory.LobAtMeter(2));
         driver.povLeft().onTrue(CommandFactory.LobAtMeter(3));
         driver.povRight().onTrue(CommandFactory.LobAtMeter(4));
-        driver.povDown().onTrue(CommandFactory.LobAtMeter(4.5));
+        driver.povDown().onTrue(new JiggleBalls(driver));
         
-        driver.y().onTrue(new InstantCommand(() -> quest.toggleQuestEnabled()));
         
         // opp.b().onTrue(new ForcePivot());
 
