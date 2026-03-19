@@ -81,7 +81,6 @@ public class DriveControlSystems {
                 .withVelocityX(driverLY)
                 .withVelocityY(driverLX)
                 .withTargetRateFeedforward((calculateGoalHeading()));
-
         } else {SmartDashboard.putBoolean("aiming", false);}
 
         return new SwerveRequest.FieldCentricFacingAngle()

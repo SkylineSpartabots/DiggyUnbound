@@ -38,25 +38,25 @@ public class Shooter extends SubsystemBase {
 
     private TalonFX topL_leader, botL, topR, botR;
 
-    VelocityVoltage rpsRequest = new VelocityVoltage(0).withSlot(0);
+    private final VelocityVoltage rpsRequest = new VelocityVoltage(0).withSlot(0);
     VoltageOut voltageRequest = new VoltageOut(0);
 
     private double airtime; // seconds
 
     public Shooter() {
         topL_leader = new TalonFX(HardwarePorts.shooterTL, "mechbussy");
-        topR = new TalonFX(HardwarePorts.shooterTR, "mechbussy");
         botL = new TalonFX(HardwarePorts.shooterBL, "mechbussy");
-        botR = new TalonFX(HardwarePorts.shooterBR, "mechbussy");
+        topR = new TalonFX(HardwarePorts.shooterTR, "mechbussy");
+        // botR = new TalonFX(HardwarePorts.shooterBR, "mechbussy");
 
         config(topL_leader, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
         config(botL, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
         config(topR, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
-        config(botR, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
+        // config(botR, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
 
         botL.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Aligned));
         topR.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Opposed));
-        botR.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Opposed));
+        // botR.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Opposed));
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){
@@ -66,10 +66,10 @@ public class Shooter extends SubsystemBase {
         config.MotorOutput.Inverted = direction;
 
         // sysid
-        config.Slot0.kS = 0.10374;
-        config.Slot0.kV = 0.11622;
-        config.Slot0.kA = 0.015229;
-        config.Slot0.kP = 0.068103;
+        config.Slot0.kS = 0.13602;
+        config.Slot0.kV = 0.1172976;
+        config.Slot0.kA = 0.016254;
+        config.Slot0.kP = 0.072976;
         config.Slot0.kD = 0;
 
         // 20 ms
@@ -103,7 +103,10 @@ public class Shooter extends SubsystemBase {
      * @param velocity in rps
     */
     public void setVelocity(double velocity) {
-        topL_leader.setControl(rpsRequest.withVelocity(velocity));
+        if (velocity == 0)
+            topL_leader.setControl(voltageRequest.withOutput(0));
+        else
+            topL_leader.setControl(rpsRequest.withVelocity(velocity));
     }
 
     /**

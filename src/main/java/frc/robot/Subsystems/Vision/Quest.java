@@ -35,8 +35,6 @@ public class Quest extends SubsystemBase {
 
     public Transform3d ROBOT_TO_QUEST = new Transform3d(new Translation3d(0.153, -0.215, -0.458), new Rotation3d(0,0,180));
     
-    // private Transform3d QUEST_TO_FIELD = new Transform3d();
-
     CommandSwerveDrivetrain drivetrain;
     static QuestNav questNav;
 
@@ -45,12 +43,12 @@ public class Quest extends SubsystemBase {
         drivetrain = CommandSwerveDrivetrain.getInstance();
     }
 
-    // public static QuestNav getQuest() {
-    //     if(questNav == null) {
-    //         questNav = new QuestNav();
-    //     }
-    //     return questNav;
-    // }
+    public static QuestNav getQuest() {
+        if(questNav == null) {
+            questNav = new QuestNav();
+        }
+        return questNav;
+    }
 
     Matrix<N3, N1> QUESTNAV_STD_DEVS =
         VecBuilder.fill(
@@ -62,15 +60,6 @@ public class Quest extends SubsystemBase {
     PoseFrame[] questFrames;
 
     public void anchorQuest(Pose3d robotPose){
-        // questNav.setPose(robotPose);
-        // questFrames = questNav.getAllUnreadPoseFrames();
-        // if (questFrames.length > 1 && questNav.isTracking() && questNav.isConnected()) {
-        //     // System.out.println(questFrames[questFrames.length - 1].questPose3d());
-        //     // System.out.println("robot " + robotPose.toString());
-        //     // QUEST_TO_FIELD = new Transform3d(questFrames[questFrames.length - 1].questPose3d(), robotPose);
-        //     // System.out.println("qtf " + QUEST_TO_FIELD.toString());
-        // }
-
         questNav.setPose(robotPose.transformBy(ROBOT_TO_QUEST));
     }
 

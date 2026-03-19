@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-import frc.robot.Commands.Factories.CommandFactory;
+import frc.robot.Commands.CommandFactory;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
 import frc.robot.Commands.Pivot.ForcePivot;
@@ -111,7 +111,7 @@ public final class Autos {
         // create a boolean array with true values corresponding to the mechCommands you
         // want to run in parallel.
 
-        depo_pimple("depo_simple", depo_simple()),
+        depo_simple("depo_simple", depo_simple()),
         mid("mid", mid()),
         mid_to_depo("mid_to_depo", mid_to_depo()),
         trench_right_right_mid_chill("trench_right_right_mid_chill", trench_right_right_mid_chill());

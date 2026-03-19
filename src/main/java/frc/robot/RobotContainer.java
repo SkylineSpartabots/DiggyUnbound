@@ -21,14 +21,14 @@ import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
 import frc.robot.Subsystems.Pivot.PivotStates;
 import frc.robot.Subsystems.Vision.Quest;
-import frc.robot.Commands.SetShooter;
+import frc.robot.Commands.CommandFactory;
 import frc.robot.Commands.Automation.AlignToGoal;
 import frc.robot.Commands.Convayor.SetConveyor;
-import frc.robot.Commands.Factories.CommandFactory;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
 import frc.robot.Commands.Pivot.ForcePivot;
 import frc.robot.Commands.Pivot.JiggleBalls;
+import frc.robot.Commands.Shooter.SetShooter;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
@@ -49,8 +49,6 @@ public class RobotContainer {
     private Pivot pivot = Pivot.getInstance();
     private Climb climb = Climb.getInstance();
 
-    private Quest quest = Quest.getInstance();
-
     private DriveControlSystems control = DriveControlSystems.getInstance();
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController opp = new CommandXboxController(1);
@@ -61,6 +59,7 @@ public class RobotContainer {
 
     private void configureBindings() {
         /* DT bindings */
+
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(
                 () -> control.drive(
@@ -71,37 +70,38 @@ public class RobotContainer {
             ) // Drive counterclockwise with negative X (left)
         );
         
-        // final bindings
+        // final bindings -----------------------------------------------
 
-        driver.leftBumper().onTrue(CommandFactory.IntakeBallsON()); // top buttons
-        driver.rightBumper().onTrue(CommandFactory.IntakeBallsOFF());
+        // driver.leftBumper().onTrue(CommandFactory.IntakeBallsON()); // top buttons
+        // driver.rightBumper().onTrue(CommandFactory.IntakeBallsOFF());
 
-        driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim())); //bottom buttons
-        driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
+        // driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim())); //bottom buttons
+        // driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
-        driver.x().onTrue(CommandFactory.ShootAtDistance());
+        // driver.x().onTrue(CommandFactory.ShootAtDistance());
 
-        driver.b().onTrue(new ForcePivot());
-        driver.y().onTrue(new ForcePivot(3));
+        // driver.b().onTrue(new ForcePivot());
+        // driver.y().onTrue(new ForcePivot(3));
         
-        driver.a().onTrue(CommandFactory.AllOff());
+        // driver.a().onTrue(CommandFactory.AllOff());
 
-        driver.povUp().onTrue(CommandFactory.LobAtMeter(2));
-        driver.povLeft().onTrue(CommandFactory.LobAtMeter(3));
-        driver.povRight().onTrue(CommandFactory.LobAtMeter(4));
-        driver.povDown().onTrue(new JiggleBalls(driver));
+        // driver.povUp().onTrue(CommandFactory.LobAtMeter(2));
+        // driver.povLeft().onTrue(CommandFactory.LobAtMeter(3));
+        // driver.povRight().onTrue(CommandFactory.LobAtMeter(4));
+        // driver.povDown().onTrue(new JiggleBalls(driver));
         
+
+        // testing bindings -----------------------------------------------
         
-        // opp.b().onTrue(new ForcePivot());
 
+        // driver.b().onTrue(new InstantCommand(() -> intake.setVelocity(30))); // intake 
+        // driver.a().onTrue(new InstantCommand(() -> intake.setVoltage(0))); // intake 
+        driver.a().onTrue(allOff()); // intake 
+        driver.povUp().onTrue(CommandFactory.LobAtRps(25)); // intake 
+        driver.povLeft().onTrue(CommandFactory.LobAtRps(50)); // intake 
+        driver.povRight().onTrue(CommandFactory.LobAtRps(75)); // intake 
+        driver.povDown().onTrue(CommandFactory.LobAtRps(90)); // intake 
 
-
-
-
-
-
-
-        // driver.b().onTrue(new SetConveyor(ConveyorStates.ON)); // intake 
         // driver.x().onTrue(chud2());
         // driver.povUp().onTrue(new InstantCommand(() -> control.turnOnAutoAim()));
         // driver.povDown().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));

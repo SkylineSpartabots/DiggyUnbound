@@ -310,10 +310,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         @Override
     public void periodic() {
-        SmartDashboard.putNumber("FL", s_Swerve.getModule(0).getEncoder().getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("FR", s_Swerve.getModule(1).getEncoder().getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("BL", s_Swerve.getModule(2).getEncoder().getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("BR", s_Swerve.getModule(3).getEncoder().getAbsolutePosition().getValueAsDouble());
+        // SmartDashboard.putNumber("FL", s_Swerve.getModule(0).getEncoder().getAbsolutePosition().getValueAsDouble());
+        // SmartDashboard.putNumber("FR", s_Swerve.getModule(1).getEncoder().getAbsolutePosition().getValueAsDouble());
+        // SmartDashboard.putNumber("BL", s_Swerve.getModule(2).getEncoder().getAbsolutePosition().getValueAsDouble());
+        // SmartDashboard.putNumber("BR", s_Swerve.getModule(3).getEncoder().getAbsolutePosition().getValueAsDouble());
         
         field.setRobotPose(new Pose2d(new Translation2d(s_Swerve.getState().Pose.getX(), s_Swerve.getState().Pose.getY()), new Rotation2d()));
         SmartDashboard.putData("field", field);

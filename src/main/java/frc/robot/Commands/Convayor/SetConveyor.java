@@ -14,8 +14,6 @@ public class SetConveyor extends Command {
     private Conveyor s_Conveyor;
     ConveyorStates state;
 
-
-    // Overloaded Constructor
     public SetConveyor(ConveyorStates state) {
         s_Conveyor = Conveyor.getInstance();
 

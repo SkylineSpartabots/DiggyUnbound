@@ -22,7 +22,6 @@ public class Constants {
 
         public static final int climbL = 60;
         public static final int climbR = 61; 
-
     }
     
     public static final double stickDeadband = 0.1;

@@ -1,6 +1,7 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -15,6 +16,7 @@ public class Intake extends SubsystemBase {
     private static Intake instance;
 
     private final VoltageOut voltageRequest = new VoltageOut(0);
+    private final VelocityVoltage rpsRequest = new VelocityVoltage(0).withSlot(0);
 
     public static Intake getInstance() {
         if(instance == null) {
@@ -24,7 +26,7 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        ON(5.75),
+        ON(5),
         CYCLE(3),
         OFF(0),
         REVERSE(-3);
@@ -53,7 +55,9 @@ public class Intake extends SubsystemBase {
         config.MotorOutput.Inverted = direction;
         config.MotorOutput.NeutralMode = neutralMode;
 
-        // bruhdignsu current limits goon
+        config.Slot0.kP = 0.5;
+
+        // bruhdignsu current limits goons
         config.CurrentLimits.StatorCurrentLimit = 80;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
@@ -62,6 +66,10 @@ public class Intake extends SubsystemBase {
 
     public void setVoltage(double voltage) {
         intakeMotor.setControl(voltageRequest.withOutput(voltage));
+    }
+
+    public void setVelocity(double velocity) {
+        intakeMotor.setControl(rpsRequest.withVelocity(velocity));
     }
 
     public Command setState(IntakeStates state){
