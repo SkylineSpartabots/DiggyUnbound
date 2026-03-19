@@ -29,6 +29,7 @@ public class Pivot extends SubsystemBase {
 
     public enum PivotStates {
         DEPLOYED(-4.07),
+        MIDDLE(-2), //TODO
         STOWED(0);
 
         double position;
@@ -60,6 +61,12 @@ public class Pivot extends SubsystemBase {
 
         config.MotorOutput.Inverted = direction;
         config.MotorOutput.NeutralMode = neutralMode;
+
+
+        config.CurrentLimits.SupplyCurrentLimit = Constants.CurrentLimits.pivotSupply;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimit = Constants.CurrentLimits.pivotStator;
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         motor.getConfigurator().apply(config);
 

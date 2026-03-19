@@ -76,9 +76,9 @@ public class Shooter extends SubsystemBase {
         // motor.getVelocity().setUpdateFrequency(50);
 
         // Current Limits
-        config.CurrentLimits.SupplyCurrentLimit = 50;
+        config.CurrentLimits.SupplyCurrentLimit = Constants.CurrentLimits.shooterSupply;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 95;
+        config.CurrentLimits.StatorCurrentLimit = Constants.CurrentLimits.shooterStator;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         motor.getConfigurator().apply(config);  

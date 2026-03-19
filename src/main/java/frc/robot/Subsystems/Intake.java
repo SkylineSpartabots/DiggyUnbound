@@ -57,8 +57,7 @@ public class Intake extends SubsystemBase {
 
         config.Slot0.kP = 0.5;
 
-        // bruhdignsu current limits goons
-        config.CurrentLimits.StatorCurrentLimit = 80;
+        config.CurrentLimits.StatorCurrentLimit = Constants.CurrentLimits.intakeStator;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         motor.getConfigurator().apply(config);

@@ -23,11 +23,11 @@ import frc.robot.Subsystems.Pivot.PivotStates;
 import frc.robot.Subsystems.Vision.Quest;
 import frc.robot.Commands.CommandFactory;
 import frc.robot.Commands.Automation.AlignToGoal;
+import frc.robot.Commands.Automation.JiggleBallsDrivetrain;
 import frc.robot.Commands.Convayor.SetConveyor;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
 import frc.robot.Commands.Pivot.ForcePivot;
-import frc.robot.Commands.Pivot.JiggleBalls;
 import frc.robot.Commands.Shooter.SetShooter;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
@@ -72,23 +72,23 @@ public class RobotContainer {
         
         // final bindings -----------------------------------------------
 
-        // driver.leftBumper().onTrue(CommandFactory.IntakeBallsON()); // top buttons
-        // driver.rightBumper().onTrue(CommandFactory.IntakeBallsOFF());
+        driver.leftBumper().onTrue(CommandFactory.IntakeBallsON()); // top buttons
+        driver.rightBumper().onTrue(CommandFactory.IntakeBallsOFF());
 
-        // driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim())); //bottom buttons
-        // driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
+        driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim())); //bottom buttons
+        driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
-        // driver.x().onTrue(CommandFactory.ShootAtDistance());
+        driver.x().onTrue(CommandFactory.ShootAtDistance());
 
-        // driver.b().onTrue(new ForcePivot());
-        // driver.y().onTrue(new ForcePivot(3));
+        driver.b().onTrue(new ForcePivot());
+        driver.y().onTrue(new ForcePivot(3));
         
-        // driver.a().onTrue(CommandFactory.AllOff());
+        driver.a().onTrue(CommandFactory.AllOff());
 
-        // driver.povUp().onTrue(CommandFactory.LobAtMeter(2));
-        // driver.povLeft().onTrue(CommandFactory.LobAtMeter(3));
-        // driver.povRight().onTrue(CommandFactory.LobAtMeter(4));
-        // driver.povDown().onTrue(new JiggleBalls(driver));
+        driver.povUp().onTrue(CommandFactory.LobAtMeter(2));
+        driver.povLeft().onTrue(CommandFactory.LobAtMeter(3));
+        driver.povRight().onTrue(CommandFactory.LobAtMeter(4));
+        driver.povDown().onTrue(new JiggleBallsDrivetrain(driver));
         
 
         // testing bindings -----------------------------------------------

@@ -52,7 +52,7 @@ public class Indexer extends SubsystemBase {
         config.MotorOutput.Inverted = direction;
 
 
-        config.CurrentLimits.StatorCurrentLimit = 65;
+        config.CurrentLimits.StatorCurrentLimit = Constants.CurrentLimits.indexerStator;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         motor.getConfigurator().apply(config);

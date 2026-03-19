@@ -23,6 +23,23 @@ public class Constants {
         public static final int climbL = 60;
         public static final int climbR = 61; 
     }
+
+    public static final class CurrentLimits {
+        public static final int shooterSupply = 50;
+        public static final int shooterStator = 95;
+
+        public static final int pivotSupply = 100;
+        public static final int pivotStator = 140;
+
+        // public static final int intakeSupply = 0;
+        public static final int intakeStator = 80;
+
+        // public static final int indexerSupply = 0;
+        public static final int indexerStator = 85;
+
+        public static final int conveyorSupply = 40;
+        public static final int conveyorStator = 60;
+     }
     
     public static final double stickDeadband = 0.1;
     public static final double triggerDeadzone = 0.2;

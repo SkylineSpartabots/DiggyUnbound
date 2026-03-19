@@ -56,9 +56,9 @@ public class Conveyor extends SubsystemBase {
         motor.getVelocity().setUpdateFrequency(50);
         
         // current limits
-        config.CurrentLimits.SupplyCurrentLimit = 40;
+        config.CurrentLimits.SupplyCurrentLimit = Constants.CurrentLimits.conveyorSupply;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 60;
+        config.CurrentLimits.StatorCurrentLimit = Constants.CurrentLimits.conveyorStator;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         motor.getConfigurator().apply(config);

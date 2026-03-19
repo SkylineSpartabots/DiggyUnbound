@@ -1,5 +1,5 @@
 
-package frc.robot.Commands.Pivot;
+package frc.robot.Commands.Automation;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -14,12 +14,12 @@ import frc.robot.Subsystems.Pivot;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Intake.IntakeStates;;
 
-public class JiggleBalls extends Command {
+public class JiggleBallsDrivetrain extends Command {
     private CommandSwerveDrivetrain s_Swerve;
     Timer timer = new Timer();
     CommandXboxController driver;
 
-    public JiggleBalls(CommandXboxController driver) {
+    public JiggleBallsDrivetrain(CommandXboxController driver) {
         s_Swerve = CommandSwerveDrivetrain.getInstance();
         this.driver = driver;
 
