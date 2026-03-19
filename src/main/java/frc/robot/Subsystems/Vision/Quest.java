@@ -33,7 +33,7 @@ public class Quest extends SubsystemBase {
 
     private boolean questEnabled = true;
 
-    public Transform3d ROBOT_TO_QUEST = new Transform3d(new Translation3d(0.153, -0.215, -0.458), new Rotation3d(0,0,180));
+    public Transform3d ROBOT_TO_QUEST = new Transform3d(new Translation3d(-0.25, -0.1956, 0.4067), new Rotation3d(0,0, -Math.toRadians(150)));
     
     CommandSwerveDrivetrain drivetrain;
     static QuestNav questNav;
@@ -54,7 +54,7 @@ public class Quest extends SubsystemBase {
         VecBuilder.fill(
             0.02,// Trust down to 2cm in X direction 0.2
             0.02, // Trust down to 2cm in Y direction 0.2
-            0.035 // Trust down to 2 degrees rotational 0.035
+            0.1 // dnc  
         );
 
     PoseFrame[] questFrames;
@@ -66,8 +66,9 @@ public class Quest extends SubsystemBase {
     public void updateQuest() {
         questFrames = questNav.getAllUnreadPoseFrames();
 
-        if (questFrames.length > 1 && questNav.isTracking() && questNav.isConnected()) {
+        if (questFrames.length > 0 && questNav.isTracking() && questNav.isConnected()) {
             PoseFrame frame = questFrames[questFrames.length - 1];
+
             Pose3d questPose = frame.questPose3d();
             double timestamp = frame.dataTimestamp();
 

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Vision.LimeLight;
 import frc.robot.Subsystems.Vision.Quest;
+import gg.questnav.questnav.QuestNav;
 import frc.robot.Autos.Autos;
 import frc.robot.Autos.Autos.AutoPath;
 import frc.robot.Subsystems.Climb;
@@ -33,6 +34,8 @@ public class Robot extends TimedRobot {
     private LimeLight limeLight;
     
     SendableChooser<Autos.AutoPath> autoChooser = new SendableChooser<Autos.AutoPath>();
+
+    Quest quest;
     
     public Robot() {
         drivetrain = CommandSwerveDrivetrain.getInstance(); 
@@ -43,7 +46,7 @@ public class Robot extends TimedRobot {
         Shooter.getInstance();
         Pivot.getInstance();
         Climb.getInstance();
-        Quest.getInstance();
+        quest = Quest.getInstance();
 
         autoChooser.setDefaultOption("mid", AutoPath.mid);
         autoChooser.addOption("depo_simple", AutoPath.depo_simple);
@@ -66,6 +69,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledPeriodic() {
         limeLight.updateLimelight();
+        // quest.anchorQuest();
     }
 
     @Override

@@ -37,8 +37,8 @@ public class Constants {
         // public static final int indexerSupply = 0;
         public static final int indexerStator = 85;
 
-        public static final int conveyorSupply = 40;
-        public static final int conveyorStator = 60;
+        public static final int conveyorSupply = 45;
+        public static final int conveyorStator = 65;
      }
     
     public static final double stickDeadband = 0.1;

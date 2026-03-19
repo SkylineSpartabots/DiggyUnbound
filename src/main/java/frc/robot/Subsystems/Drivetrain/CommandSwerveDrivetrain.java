@@ -197,11 +197,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
+    private static Matrix<N3, N1> odo_sdv = VecBuilder.fill(0.1, 0.1, 0.005);
+    private static Matrix<N3, N1> vis_sdv = VecBuilder.fill(0.05, 0.05, 0.1);
+
     public static CommandSwerveDrivetrain getInstance(){
         if(s_Swerve == null){
             s_Swerve = new CommandSwerveDrivetrain(TunerConstants.DrivetrainConstants,
              250,
-            TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);  
+             odo_sdv,
+             vis_sdv,
+            TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);
         }
         
         return s_Swerve;
