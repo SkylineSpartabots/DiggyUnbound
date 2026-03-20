@@ -92,21 +92,16 @@ public class RobotContainer {
 
         // testing bindings -----------------------------------------------
         
-        driver.b().onTrue(new InstantCommand(() -> intake.setVelocity(35))); // intake 
-        driver.a().onTrue(new InstantCommand(() -> intake.setVoltage(0))); // intake
+        // driver.b().onTrue(new InstantCommand(() -> intake.setVelocity(35))); // intake 
+        // driver.a().onTrue(new InstantCommand(() -> intake.setVoltage(0))); // intake
         
-        driver.a().onTrue(allOff()); // intake
+        // driver.a().onTrue(allOff()); // intake
 
         // driver.x().onTrue(new SetIntake(IntakeStates.ON)); // intake 
         // driver.b().onTrue(new SetIntake(IntakeStates.OFF)); // intake 
 
-        driver.povLeft().onTrue(new SetConveyor(ConveyorStates.ON)); // intake 
-        driver.povRight().onTrue(new SetConveyor(ConveyorStates.OFF)); // intake 
-
-
-
-
-
+        // driver.povLeft().onTrue(new SetConveyor(ConveyorStates.ON)); // intake 
+        // driver.povRight().onTrue(new SetConveyor(ConveyorStates.OFF)); // intake 
 
         // driver.povUp().onTrue(CommandFactory.LobAtRps(25)); // intake 
         // driver.povLeft().onTrue(CommandFactory.LobAtRps(50)); // intake 
@@ -130,10 +125,10 @@ public class RobotContainer {
         // driver.povLeft().onTrue(new InstantCommand(() -> SignalLogger.start()));
         // driver.povRight().onTrue(new InstantCommand(() -> SignalLogger.stop()));
 
-        // driver.x().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // driver.b().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // driver.y().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // driver.a().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // driver.x().whileTrue(intake.sysIdDynamic(Direction.kForward));
+        // driver.b().whileTrue(intake.sysIdDynamic(Direction.kReverse));
+        // driver.y().whileTrue(intake.sysIdQuasistatic(Direction.kForward));
+        // driver.a().whileTrue(intake.sysIdQuasistatic(Direction.kReverse));
     }
 
     public Command allOff() {
