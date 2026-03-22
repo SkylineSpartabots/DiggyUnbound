@@ -70,7 +70,7 @@ public class DriveControlSystems {
         driverLY = scaledDeadBand(driverLY) * Constants.MaxSpeed;
         driverRX = scaledDeadBand(driverRX) * Constants.MaxAngularRate;
 
-        if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+        if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
             driverLX *= -1;
             driverLY *= -1;
         }

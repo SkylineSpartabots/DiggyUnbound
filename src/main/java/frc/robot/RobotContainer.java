@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import javax.tools.DocumentationTool.Location;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -17,10 +19,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
+import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain.resetPose;
 import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
 import frc.robot.Subsystems.Pivot.PivotStates;
 import frc.robot.Subsystems.Vision.Quest;
+import pabeles.concurrency.ConcurrencyOps.Reset;
 import frc.robot.Commands.CommandFactory;
 import frc.robot.Commands.Automation.AlignToGoal;
 import frc.robot.Commands.Automation.JiggleBallsDrivetrain;
@@ -63,8 +67,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(
                 () -> control.drive(
-                    driver.getLeftY(), 
-                    driver.getLeftX(), 
+                    -driver.getLeftY(), 
+                    -driver.getLeftX(), 
                     -driver.getRightX()
                 )
             ) // Drive counterclockwise with negative X (left)
@@ -72,23 +76,31 @@ public class RobotContainer {
         
         // final bindings -----------------------------------------------
 
-        // driver.leftBumper().onTrue(CommandFactory.IntakeBallsON()); // top buttons
-        // driver.rightBumper().onTrue(CommandFactory.IntakeBallsOFF());
+        driver.leftBumper().onTrue(CommandFactory.IntakeBallsON());// FIX COMMAND // top buttons
+        driver.rightBumper().onTrue(CommandFactory.IntakeBallsOFF());
 
-        // driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim())); //bottom buttons
-        // driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
+        driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim())); //bottom buttons
+        driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
-        // driver.x().onTrue(CommandFactory.ShootAtDistance());
+        driver.povDown().onTrue(new JiggleBallsDrivetrain(driver));
+        // driver.povDown().onTrue(CommandFactory.LobAtRps(15));
 
-        // driver.y().onTrue(new ForcePivot());
-        // driver.y().onTrue(new ForcePivot(3));
+        driver.start().onTrue(new InstantCommand(() -> drivetrain.resetOdo()));
+
+        driver.a().onTrue(CommandFactory.AllOff());
+        driver.y().onTrue(new ForcePivot());
+        driver.x().onTrue(new ForcePivot(4));
+
+        driver.b().onTrue(CommandFactory.ShootAtDistance());
         
-        // driver.a().onTrue(CommandFactory.AllOff());
+        driver.povLeft().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_LEFT)));
+        driver.povRight().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_RIGHT)));
+        driver.povUp().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.MIDDLE)));
 
-        // driver.povUp().onTrue(CommandFactory.LobAtMeter(2));
-        // driver.povLeft().onTrue(CommandFactory.LobAtMeter(3));
+
         // driver.povRight().onTrue(CommandFactory.LobAtMeter(4));
-        // driver.povDown().onTrue(new JiggleBallsDrivetrain(driver));
+
+
 
         // testing bindings -----------------------------------------------
         
@@ -97,8 +109,11 @@ public class RobotContainer {
         
         // driver.a().onTrue(allOff()); // intake
 
-        // driver.x().onTrue(new SetIntake(IntakeStates.ON)); // intake 
+        // driver.x().onTrue(CommandFactory.IntakeBallsON()); // intake 
+        // driver.a().onTrue(CommandFactory.IntakeBallsOFF()); // intake 
         // driver.b().onTrue(new SetIntake(IntakeStates.OFF)); // intake 
+
+        // driver.a().onTrue(new InstantCommand(() -> drivetrain.resetOdo())); // intake 
 
         // driver.povLeft().onTrue(new SetConveyor(ConveyorStates.ON)); // intake 
         // driver.povRight().onTrue(new SetConveyor(ConveyorStates.OFF)); // intake 
@@ -112,11 +127,9 @@ public class RobotContainer {
         // driver.povUp().onTrue(new InstantCommand(() -> control.turnOnAutoAim()));
         // driver.povDown().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
-        // driver.start().onTrue(new InstantCommand(() -> drivetrain.resetOdo()));
     
         // driver.x().onTrue(new InstantCommand(() -> shooter.setVelocity(75)));
 
-        // driver.povLeft().onTrue(CommandFactory.AutoAimShoot());
 
         // driver.y().onTrue(new InstantCommand(() -> conveyor.setVoltage(7)));
 
@@ -125,10 +138,10 @@ public class RobotContainer {
         // driver.povLeft().onTrue(new InstantCommand(() -> SignalLogger.start()));
         // driver.povRight().onTrue(new InstantCommand(() -> SignalLogger.stop()));
 
-        // driver.x().whileTrue(intake.sysIdDynamic(Direction.kForward));
-        // driver.b().whileTrue(intake.sysIdDynamic(Direction.kReverse));
-        // driver.y().whileTrue(intake.sysIdQuasistatic(Direction.kForward));
-        // driver.a().whileTrue(intake.sysIdQuasistatic(Direction.kReverse));
+        // driver.x().whileTrue(shooter.sysIdDynamic(Direction.kForward));
+        // driver.b().whileTrue(shooter.sysIdDynamic(Direction.kReverse));
+        // driver.y().whileTrue(shooter.sysIdQuasistatic(Direction.kForward));
+        // driver.a().whileTrue(shooter.sysIdQuasistatic(Direction.kReverse));
     }
 
     public Command allOff() {

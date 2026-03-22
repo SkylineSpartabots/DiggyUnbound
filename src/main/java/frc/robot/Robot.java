@@ -32,24 +32,25 @@ public class Robot extends TimedRobot {
     private final RobotContainer m_robotContainer;
     private CommandSwerveDrivetrain drivetrain;
     private LimeLight limeLight;
+    private Quest quest;
     
     SendableChooser<Autos.AutoPath> autoChooser = new SendableChooser<Autos.AutoPath>();
-
-    Quest quest;
     
     public Robot() {
         drivetrain = CommandSwerveDrivetrain.getInstance(); 
         limeLight = LimeLight.getInstance();
+        quest = Quest.getInstance();
         Indexer.getInstance();
         Intake.getInstance();
         Conveyor.getInstance();
         Shooter.getInstance();
         Pivot.getInstance();
         Climb.getInstance();
-        quest = Quest.getInstance();
 
         autoChooser.setDefaultOption("mid", AutoPath.mid);
-        autoChooser.addOption("depo_simple", AutoPath.depo_simple);
+        autoChooser.addOption("mid_to_depo", AutoPath.mid_to_depo);
+        autoChooser.addOption("trench_left_left_mid_chill", AutoPath.trench_left_left_mid_chill);
+        autoChooser.addOption("mid_right", AutoPath.mid_right);
         
         SmartDashboard.putData("Auto choices", autoChooser);
         

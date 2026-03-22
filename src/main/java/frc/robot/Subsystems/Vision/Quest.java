@@ -31,8 +31,6 @@ public class Quest extends SubsystemBase {
         return instance;
     }
 
-    private boolean questEnabled = true;
-
     public Transform3d ROBOT_TO_QUEST = new Transform3d(new Translation3d(-0.25, -0.1956, 0.4067), new Rotation3d(0,0, -Math.toRadians(150)));
     
     CommandSwerveDrivetrain drivetrain;
@@ -81,20 +79,15 @@ public class Quest extends SubsystemBase {
         }
     }
 
-    public void toggleQuestEnabled() {
-        questEnabled = !questEnabled;
-    }
-
     @Override
     public void periodic() {
 
         questNav.commandPeriodic();
 
-        SmartDashboard.putBoolean("Quest Enabled", questEnabled);
         SmartDashboard.putBoolean("Quest Tracking", questNav.isTracking());
         SmartDashboard.putBoolean("Quest Connected", questNav.isConnected());
 
-        if (DriverStation.isEnabled() && questEnabled) {
+        if (DriverStation.isEnabled()) {
             updateQuest();
         }
         

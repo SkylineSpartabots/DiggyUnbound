@@ -22,7 +22,7 @@ public class SetPivot extends Command {
 
     @Override
     public void initialize() {
-        s_Pivot.setRotations(state.getPosition());
+        s_Pivot.setVoltage(state.getVolts());
     }
 
     @Override

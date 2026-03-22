@@ -41,12 +41,12 @@ public class ForcePivot extends Command {
     @Override
     public void end(boolean interrupted) {
         s_Pivot.setVoltage(0);
-        s_Pivot.zeroPivot();
-        s_Pivot.setRotations(0);
+        // s_Pivot.zeroPivot();
+        // s_Pivot.setRotations(0);
     }
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(0.75);
+        return timer.hasElapsed(0.5);
     }
 }

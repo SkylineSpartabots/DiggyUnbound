@@ -2,11 +2,24 @@ package frc.robot;
 
 import org.opencv.core.Point;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation3d;
 
 public class Constants {
+
+    public static final class ResetPoses {
+        public static final Pose2d blue_TrenchLeft = new Pose2d(4.4, 7.17, new Rotation2d());
+        public static final Pose2d blue_TrenchRight = new Pose2d(4.4, 0.89, new Rotation2d());
+        public static final Pose2d blue_TrenchMid = new Pose2d(3.6, 4.04, new Rotation2d());
+
+        public static final Pose2d red_TrenchLeft = new Pose2d(3.6, 4.04, new Rotation2d());
+        public static final Pose2d red_TrenchRight = new Pose2d(3.6, 4.04, new Rotation2d());
+        public static final Pose2d red_TrenchMid = new Pose2d(3.6, 4.04, new Rotation2d());
+    }
+
     public static final class HardwarePorts {
         public static final int intake = 20;
         public static final int pivot = 21;
@@ -32,7 +45,7 @@ public class Constants {
         public static final int pivotStator = 140;
 
         // public static final int intakeSupply = 0;
-        public static final int intakeStator = 80;
+        public static final int intakeStator = 100;
 
         // public static final int indexerSupply = 0;
         public static final int indexerStator = 85;

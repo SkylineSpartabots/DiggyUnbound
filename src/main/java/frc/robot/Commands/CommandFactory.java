@@ -33,7 +33,7 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
                 new AlignToGoal(),
-                new WaitCommand(0.5)
+                new WaitCommand(0.75)
             ),
             new SetIndexer(IndexerStates.ON),
             new SetConveyor(ConveyorStates.ON)
@@ -42,7 +42,7 @@ public class CommandFactory {
 
     public static Command ShootAtDistance(){
         return new SequentialCommandGroup(
-            new WaitCommand(1.25),
+            new WaitCommand(1),
             new SetIndexer(IndexerStates.ON),
             new SetConveyor(ConveyorStates.ON)
         ).alongWith(new RampShooterWithDistance());
@@ -59,14 +59,12 @@ public class CommandFactory {
 
     public static Command IntakeBallsON(){
         return new SequentialCommandGroup(
-            new SetConveyor(ConveyorStates.CYCLE),
             new SetIntake(IntakeStates.ON)
         );
     }
 
     public static Command IntakeBallsOFF(){
         return new SequentialCommandGroup(
-            new SetConveyor(ConveyorStates.OFF),
             new SetIntake(IntakeStates.OFF)
         );
     }
@@ -75,9 +73,8 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new SetShooterAtMeter(distance),
             new WaitCommand(1),
-            new SetIndexer(IndexerStates.ON)
-            // new SetConveyor(ConveyorStates.ON)
-            // new SetIntake(IntakeStates.CYCLE)
+            new SetIndexer(IndexerStates.ON),
+            new SetConveyor(ConveyorStates.ON)
         );
     }
 
@@ -85,10 +82,9 @@ public class CommandFactory {
     public static Command LobAtRps(double rps){
         return new SequentialCommandGroup(
             new SetShooter(rps),
-            new WaitCommand(2.25),
-            new SetIndexer(IndexerStates.ON)
-            // new SetConveyor(ConveyorStates.ON)
-            // new SetIntake(IntakeStates.CYCLE)
+            new WaitCommand(1.25),
+            new SetIndexer(IndexerStates.ON),
+            new SetConveyor(ConveyorStates.ON)
         );
     }
 }

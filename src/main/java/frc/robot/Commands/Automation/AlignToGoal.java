@@ -5,7 +5,9 @@ import java.util.Vector;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
@@ -83,13 +85,15 @@ public class AlignToGoal extends Command {
                         currentPose.getRotation().getRadians(), targetHeading);
 
         s_Swerve.setControl(new SwerveRequest.FieldCentricFacingAngle()
-            .withVelocityX(0)
-            .withVelocityY(0)
-            .withTargetRateFeedforward((thetaVelocity)));
+            .withTargetRateFeedforward((thetaVelocity))
+        .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
+        .withDesaturateWheelSpeeds(true)
+        .withSteerRequestType(SteerRequestType.MotionMagicExpo));
     }
 
     @Override
     public void end(boolean interrupted) {
+        s_Swerve.setControl(new SwerveRequest.FieldCentricFacingAngle());
     }
 
     @Override

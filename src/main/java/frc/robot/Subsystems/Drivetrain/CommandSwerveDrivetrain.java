@@ -14,6 +14,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.Odometry;
@@ -28,6 +29,9 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
+import frc.robot.Constants.ResetPoses;
+import frc.robot.Subsystems.Vision.Quest;
 import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
@@ -225,10 +229,49 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public void resetOdo(Pose2d pose) {
         s_Swerve.resetPose(pose);
+        Quest.getInstance().anchorQuest(new Pose3d(pose));
+    }
+
+    public void resetOdoDynamic(resetPose location) {
+        if(DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+            Pose2d pose = this.getState().Pose;
+
+                if (location.equals(resetPose.TRENCH_LEFT)) {
+                pose = new Pose2d(
+                    Constants.ResetPoses.blue_TrenchLeft.getX(),
+                    Constants.ResetPoses.blue_TrenchLeft.getY(),
+                    pose.getRotation());
+                }
+
+                if (location.equals(resetPose.TRENCH_RIGHT)) {
+                pose = new Pose2d(
+                    Constants.ResetPoses.blue_TrenchRight.getX(),
+                    Constants.ResetPoses.blue_TrenchRight.getY(),
+                    pose.getRotation());
+                }
+
+                if (location.equals(resetPose.MIDDLE)) {
+                pose = new Pose2d(
+                    Constants.ResetPoses.blue_TrenchMid.getX(),
+                    Constants.ResetPoses.blue_TrenchMid.getY(),
+                    pose.getRotation());
+                }
+
+            s_Swerve.resetOdo(pose);
+        } else{
+            s_Swerve.resetOdo();
+        }
+    }
+
+    public enum resetPose {
+        TRENCH_LEFT,
+        TRENCH_RIGHT,
+        MIDDLE
     }
 
     public void resetOdo() {
         s_Swerve.resetPose(new Pose2d());
+        Quest.getInstance().anchorQuest(new Pose3d());
     }
 
     /**

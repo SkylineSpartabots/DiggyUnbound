@@ -38,9 +38,9 @@ public class FollowChoreoTrajectory extends Command {
   private Optional<Pose2d> startPose;
   private Timer timer;
   
-  private PIDController xController = new PIDController(0.76, 0, 0);
-  private PIDController yController = new PIDController(0.76, 0, 0);
-  private static final PIDController thetaController = new PIDController(3, 0, 0.02); //tuned. -ethan
+  private PIDController xController = new PIDController(0.67, 0, 0);
+  private PIDController yController = new PIDController(0.67, 0, 0);
+  private static final PIDController thetaController = new PIDController(2.7, 0, 0.02); //tuned. -ethan
 
 
   public FollowChoreoTrajectory(Optional<Trajectory<SwerveSample>> traj) {
@@ -115,7 +115,7 @@ public class FollowChoreoTrajectory extends Command {
         ChassisSpeeds speeds = new ChassisSpeeds(
             sample.vx + xController.calculate(pose.getX(), sample.x),
             sample.vy + yController.calculate(pose.getY(), sample.y),
-            0
+            sample.omega + thetaController.calculate(pose.getRotation().getRadians(), sample.heading)
             );
 
         // ff

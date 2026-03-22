@@ -28,22 +28,22 @@ public class Pivot extends SubsystemBase {
     }
 
     public enum PivotStates {
-        DEPLOYED(-4.07),
+        DEPLOYED(-4),
         MIDDLE(-2), //TODO
         STOWED(0);
 
-        double position;
-        private PivotStates(double position) {
-            this.position = position;
+        double volts;
+        private PivotStates(double volts) {
+            this.volts = volts;
         }
 
-        public double getPosition() {
-            return position;
+        public double getVolts() {
+            return volts;
         }   
     }
 
     private TalonFX pivotMotor;
-    private final MotionMagicVoltage mmRequest = new MotionMagicVoltage(0).withSlot(0);
+    // private final MotionMagicVoltage mmRequest = new MotionMagicVoltage(0).withSlot(0);
 
     public Pivot() {
         pivotMotor = new TalonFX(Constants.HardwarePorts.pivot, "mechbussy"); //get real port
@@ -56,9 +56,9 @@ public class Pivot extends SubsystemBase {
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
-        config.Slot0.kP = 0.01;
-        config.Slot0.kD = 0.01;
-        config.Slot0.kG = 0.5;
+        // config.Slot0.kP = 0.01;
+        // config.Slot0.kD = 0.01;
+        // config.Slot0.kG = 0.5;
 
         config.MotorOutput.Inverted = direction;
         config.MotorOutput.NeutralMode = neutralMode;
@@ -74,9 +74,9 @@ public class Pivot extends SubsystemBase {
         motor.setPosition(0);
     }
 
-    public void setRotations(double rotations) {
-        pivotMotor.setControl(mmRequest.withPosition(rotations));
-    }
+    // public void setRotations(double rotations) {
+    //     pivotMotor.setControl(mmRequest.withPosition(rotations));
+    // }
 
     public void setVoltage(double volts) {
         pivotMotor.setControl(voltageRequest.withOutput(volts));
@@ -86,8 +86,8 @@ public class Pivot extends SubsystemBase {
         pivotMotor.set(speed);
     }
 
-    public Command setState(IntakeStates state){
-        return Commands.runOnce(() -> setRotations(state.getRps()), this);
+    public Command setState(PivotStates state){
+        return Commands.runOnce(() -> setVoltage(state.getVolts()), this);
     }
 
     public void zeroPivot() {

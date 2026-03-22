@@ -35,7 +35,7 @@ public class JiggleBallsDrivetrain extends Command {
     @Override
     public void execute() {
         ChassisSpeeds speeds = new ChassisSpeeds();
-        if ( (int)(timer.get() / 0.25) % 2 == 0 ) {
+        if ( (int)(timer.get() / 0.15) % 2 == 0 ) {
             speeds.vxMetersPerSecond = 0.35;
         } else {
             speeds.vxMetersPerSecond = -0.35;

@@ -22,7 +22,6 @@ public class Intake extends SubsystemBase {
     private static Intake instance;
 
     private final VoltageOut voltageRequest = new VoltageOut(0);
-    private final VelocityVoltage rpsRequest = new VelocityVoltage(0).withSlot(0);
 
     public static Intake getInstance() {
         if(instance == null) {
@@ -32,18 +31,18 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        ON(35),
-        CYCLE(10),
+        ON(4.5),
+        CYCLE(2),
         OFF(0),
-        REVERSE(-15);
+        REVERSE(-2);
 
-        double rps;
-        private IntakeStates(double rps) {
-            this.rps = rps;
+        double voltage;
+        private IntakeStates(double voltage) {
+            this.voltage = voltage;
         }
 
-        public double getRps() {
-            return rps;
+        public double getVoltage() {
+            return voltage;
         }
     }
 
@@ -52,7 +51,7 @@ public class Intake extends SubsystemBase {
     public Intake() {
         intakeMotor = new TalonFX(Constants.HardwarePorts.intake, "mechbussy"); //get real port
 
-        configureMotor(intakeMotor, NeutralModeValue.Brake, InvertedValue.CounterClockwise_Positive);
+        configureMotor(intakeMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
     }
 
     private void configureMotor(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction) {
@@ -60,12 +59,6 @@ public class Intake extends SubsystemBase {
 
         config.MotorOutput.Inverted = direction;
         config.MotorOutput.NeutralMode = neutralMode;
-
-        config.Slot0.kP = 1.4038E-06;
-        config.Slot0.kS = 0.70247;
-        config.Slot0.kV = 0.14462;
-        config.Slot0.kA = 0.031355;
-
 
         config.CurrentLimits.StatorCurrentLimit = Constants.CurrentLimits.intakeStator;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -77,12 +70,8 @@ public class Intake extends SubsystemBase {
         intakeMotor.setControl(voltageRequest.withOutput(voltage));
     }
 
-    public void setVelocity(double velocity) {
-        intakeMotor.setControl(rpsRequest.withVelocity(velocity));
-    }
-
     public Command setState(IntakeStates state){
-        return Commands.runOnce(() -> setVelocity(state.getRps()), this);
+        return Commands.runOnce(() -> setVoltage(state.getVoltage()), this);
     }
 
     @Override

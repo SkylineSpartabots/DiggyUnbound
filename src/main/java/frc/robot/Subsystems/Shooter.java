@@ -66,10 +66,10 @@ public class Shooter extends SubsystemBase {
         config.MotorOutput.Inverted = direction;
 
         // sysid
-        config.Slot0.kS = 0.13602;
-        config.Slot0.kV = 0.1172976;
-        config.Slot0.kA = 0.016254;
-        config.Slot0.kP = 0.072976;
+        config.Slot0.kS = 0.3004;
+        config.Slot0.kV = 0.11613;
+        config.Slot0.kA = 0.02206;
+        config.Slot0.kP = 0.047173;
         config.Slot0.kD = 0;
 
         // 20 ms

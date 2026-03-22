@@ -29,17 +29,20 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.Commands.CommandFactory;
+import frc.robot.Commands.Automation.JiggleBallsDrivetrain;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
 import frc.robot.Commands.Pivot.ForcePivot;
+import frc.robot.Commands.Shooter.RampShooterWithDistance;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
 
 public final class Autos {
-    Timer path_time = new Timer();
+    static Timer path_time = new Timer();
 
     public static Command getAutoCommand(AutoPath autoPath) {
         return autoPath.autoCommand;
@@ -48,50 +51,87 @@ public final class Autos {
     public static Command depo_simple() {
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("depo_simple");
         return new SequentialCommandGroup(
-
                 new ForcePivot(),
                 CommandFactory.IntakeBallsON(),
-
                 new SequentialCommandGroup(
                         new WaitCommand(3.3),
                         CommandFactory.IntakeBallsOFF()).alongWith(new FollowChoreoTrajectory(traj)),
 
-                CommandFactory.AutoAimShoot().raceWith(new WaitCommand(6)));
+                CommandFactory.AutoAimShoot().raceWith(new WaitCommand(6))
+            );
     }
 
     public static Command mid() {
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid");
         return new SequentialCommandGroup(
-                // new WaitCommand(0.75),
-                // new ForcePivot(),
-                // CommandFactory.LobAtMeter(1.6).raceWith(new WaitCommand(5))
+                new WaitCommand(2.5),
+                new ForcePivot(),
+                CommandFactory.ShootAtDistance()
         ).alongWith(new FollowChoreoTrajectory(traj));
     }
 
     public static Command mid_to_depo() {
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid_to_depo");
-        return new SequentialCommandGroup();
-        // System.out.println(traj);
-        // return new SequentialCommandGroup(
-        //     new SequentialCommandGroup(
-        //         new WaitCommand(2),
-        //         new ForcePivot(),
-        //         new SetIntake(IntakeStates.ON)
-        //     ).alongWith(new FollowChoreoTrajectory(traj),
-        //     CommandFactory.ShootAtDistance()
-        // ));
+        return new SequentialCommandGroup(
+                new WaitCommand(2),
+                new ForcePivot(), //2.5
+                new SetIntake(IntakeStates.ON),
+                new WaitCommand(3), //5.5
+                CommandFactory.ShootAtDistance()
+        ).alongWith(new FollowChoreoTrajectory(traj));
+    }
+
+    public static Command mid_right() {
+        Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid_right");
+        return new SequentialCommandGroup(
+                new WaitCommand(2.25),
+                new ForcePivot(),
+                CommandFactory.ShootAtDistance()
+        ).alongWith(new FollowChoreoTrajectory(traj));
+    }
+
+    public static Command mid_tuning() {
+        Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid_tuning");
+        return new SequentialCommandGroup(
+            new FollowChoreoTrajectory(traj)
+            // CommandFactory.IntakeBallsON(),
+            // new WaitCommand(1),
+            // CommandFactory.IntakeBallsOFF()
+        );
+
+
     }
 
     public static Command trench_right_right_mid_chill() {
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("trench_right_right_mid_chill");
         return new SequentialCommandGroup(
-                new SequentialCommandGroup(
-                        new WaitCommand(0.65),
-                        new ForcePivot(),
-                        CommandFactory.IntakeBallsON(),
+            new SequentialCommandGroup(
+                new WaitCommand(0.65),
+                new ForcePivot(),
+                CommandFactory.IntakeBallsON(),
                         new WaitCommand(2.2),
                         CommandFactory.IntakeBallsOFF()).alongWith(new FollowChoreoTrajectory(traj)),
-                CommandFactory.AutoAimShoot().raceWith(new WaitCommand(6)));
+                        CommandFactory.AutoAimShoot().raceWith(new WaitCommand(6)));
+    }
+                    
+    public static Command trench_left_left_mid_chill() {
+        // Timer timer = new Timer();
+        Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("trench_left_left_mid_chill");
+        return new SequentialCommandGroup(
+
+                new SequentialCommandGroup(
+                    new WaitCommand(0.8),
+                    // Commands.runOnce(timer::restart),
+                    // new WaitUntilCommand(() -> timer.hasElapsed(0.8)),
+                    new ForcePivot(), //1.3
+                    CommandFactory.IntakeBallsON(),
+                    new WaitCommand(2.6), //
+                    // new WaitUntilCommand(() -> timer.hasElapsed(4.4)),
+                    CommandFactory.IntakeBallsOFF()
+                    ).alongWith(new FollowChoreoTrajectory(traj)),
+
+                CommandFactory.AutoAimShoot()
+            );
     }
 
     /*
@@ -114,6 +154,9 @@ public final class Autos {
         depo_simple("depo_simple", depo_simple()),
         mid("mid", mid()),
         mid_to_depo("mid_to_depo", mid_to_depo()),
+        mid_tuning("mid_tuning", mid_tuning()),
+        mid_right("mid_right", mid_right()),
+        trench_left_left_mid_chill("trench_left_left_mid_chill", trench_left_left_mid_chill()),
         trench_right_right_mid_chill("trench_right_right_mid_chill", trench_right_right_mid_chill());
 
         String name;

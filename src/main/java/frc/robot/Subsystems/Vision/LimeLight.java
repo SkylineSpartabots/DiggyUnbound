@@ -26,17 +26,17 @@ public class LimeLight extends SubsystemBase {
     private static Quest quest;
     private static CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
-    Matrix<N3, N1> LIMELIGHT_STD_DEVS_SINGLE = VecBuilder.fill(
-            0.07, // Trust down to 2cm in X direction
-            0.07, // Trust down to 2cm in Y direction
-            0.2 // Trust down to 2 degrees rotational
-    );
+    // Matrix<N3, N1> LIMELIGHT_STD_DEVS_SINGLE = VecBuilder.fill(
+    //         0.05, // Trust down to 2cm in X direction
+    //         0.05, // Trust down to 2cm in Y direction
+    //         0.2 // Trust down to 2 degrees rotational
+    // );
 
-    Matrix<N3, N1> LIMELIGHT_STD_DEVS_MULTI = VecBuilder.fill(
-            0.035, // Trust down to 2cm in X direction
-            0.035, // Trust down to 2cm in Y direction
-            0.2 // Trust down to 2 degrees rotational
-    );
+    // Matrix<N3, N1> LIMELIGHT_STD_DEVS_MULTI = VecBuilder.fill(
+    //         0.035, // Trust down to 2cm in X direction
+    //         0.035, // Trust down to 2cm in Y direction
+    //         0.2 // Trust down to 2 degrees rotational
+    // );
 
     public static LimeLight getInstance() {
         if (instance == null) {
@@ -100,35 +100,26 @@ public class LimeLight extends SubsystemBase {
 
         // if(DriverStation.isDisabled()) {
 
-            var state = drivetrain.getState();
+        var state = drivetrain.getState();
 
-            LimelightHelpers.SetRobotOrientation(limelightName, 
-            state.Pose.getRotation().getDegrees(),
-            state.Speeds.omegaRadiansPerSecond, 
-            pigeon.getPitch().getValueAsDouble(), 
-            pigeon.getAngularVelocityYDevice(true).getValueAsDouble(), 
-            pigeon.getRoll().getValueAsDouble(), 
-            pigeon.getAngularVelocityXWorld(true).getValueAsDouble());
+        LimelightHelpers.SetRobotOrientation(limelightName, 
+        state.Pose.getRotation().getDegrees(),
+        state.Speeds.omegaRadiansPerSecond, 
+        pigeon.getPitch().getValueAsDouble(), 
+        pigeon.getAngularVelocityYDevice(true).getValueAsDouble(), 
+        pigeon.getRoll().getValueAsDouble(), 
+        pigeon.getAngularVelocityXWorld(true).getValueAsDouble());
 
         PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
 
         if (mt2.isMegaTag2 && validTag(mt2)) {
-            // var STDS = mt2.isMegaTag2 ? LIMELIGHT_STD_DEVS_MULTI : LIMELIGHT_STD_DEVS_SINGLE;
-            // drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, STDS);
-            double tx = LimelightHelpers.getTX("limelight");
-            double vel = Math.hypot(state.Speeds.vxMetersPerSecond, state.Speeds.vyMetersPerSecond);
-            System.out.println("valid tag");
-            if (Math.abs(tx) <= fov/2)
-                System.out.println("wawa");
-                quest.anchorQuest(new Pose3d(mt2.pose));
+            quest.anchorQuest(new Pose3d(mt2.pose));
         }
-
-        // }
     }
 
     public boolean validTag(PoseEstimate estimate) {
-        if (Math.abs(pigeon.getAngularVelocityZDevice().getValueAsDouble()) >= 360 || estimate.tagCount == 0) // choose some max angular accel in degree per sec
-            return false;
+        // if (Math.abs(pigeon.getAngularVelocityZDevice().getValueAsDouble()) >= 360 || estimate.tagCount == 0) // choose some max angular accel in degree per sec
+        //     return false;
         
         if (estimate.tagCount == 1 && estimate.rawFiducials.length == 1) {
             if (estimate.rawFiducials[0].ambiguity > .5) {
