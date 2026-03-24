@@ -43,7 +43,7 @@ public class RampShooterWithDistance extends Command {
         Translation2d currPose = s_Swerve.getState().Pose.getTranslation();
         double d = currPose.getDistance(Constants.FieldConstants.blueGoal.toTranslation2d());
 
-        double v = 3.52976 * d * d + -5*d + 38;
+        double v = 3.52976 * d * d + -5*d + 36;
 
         s_Shooter.updateAirtime(
             d / (v * Math.cos(Constants.shooterAngleRad)) // seconds

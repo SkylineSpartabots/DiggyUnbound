@@ -82,20 +82,22 @@ public class RobotContainer {
         driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim())); //bottom buttons
         driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
-        driver.povDown().onTrue(new JiggleBallsDrivetrain(driver));
-        // driver.povDown().onTrue(CommandFactory.LobAtRps(15));
+        // driver.povDown().onTrue(new JiggleBallsDrivetrain(driver));
+        driver.povDown().onTrue(CommandFactory.LobAtRps(15));
 
         driver.start().onTrue(new InstantCommand(() -> drivetrain.resetOdo()));
 
         driver.a().onTrue(CommandFactory.AllOff());
         driver.y().onTrue(new ForcePivot());
-        driver.x().onTrue(new ForcePivot(4));
+        driver.x().onTrue(new ForcePivot(5));
 
         driver.b().onTrue(CommandFactory.ShootAtDistance());
         
         driver.povLeft().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_LEFT)));
-        driver.povRight().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_RIGHT)));
-        driver.povUp().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.MIDDLE)));
+        
+        // driver.povLeft().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_LEFT)));
+        // driver.povRight().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_RIGHT)));
+        // driver.povUp().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.MIDDLE)));
 
 
         // driver.povRight().onTrue(CommandFactory.LobAtMeter(4));

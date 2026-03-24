@@ -32,8 +32,8 @@ public class CommandFactory {
     public static Command AutoAimShoot(){
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
-                new AlignToGoal(),
-                new WaitCommand(0.75)
+                // new AlignToGoal(),
+                new WaitCommand(1)
             ),
             new SetIndexer(IndexerStates.ON),
             new SetConveyor(ConveyorStates.ON)

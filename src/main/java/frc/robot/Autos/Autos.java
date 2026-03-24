@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.Commands.CommandFactory;
 import frc.robot.Commands.Automation.JiggleBallsDrivetrain;
+import frc.robot.Commands.Automation.JiggleBallsDrivetrainNoRolla;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
 import frc.robot.Commands.Pivot.ForcePivot;
@@ -130,7 +131,8 @@ public final class Autos {
                     CommandFactory.IntakeBallsOFF()
                     ).alongWith(new FollowChoreoTrajectory(traj)),
 
-                CommandFactory.AutoAimShoot()
+                CommandFactory.AutoAimShoot(),
+                new JiggleBallsDrivetrainNoRolla()
             );
     }
 

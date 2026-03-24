@@ -233,8 +233,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public void resetOdoDynamic(resetPose location) {
+        Pose2d pose = this.getState().Pose;
         if(DriverStation.getAlliance().get().equals(Alliance.Blue)) {
-            Pose2d pose = this.getState().Pose;
 
                 if (location.equals(resetPose.TRENCH_LEFT)) {
                 pose = new Pose2d(
@@ -259,7 +259,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
             s_Swerve.resetOdo(pose);
         } else{
-            s_Swerve.resetOdo();
+                if (location.equals(resetPose.TRENCH_LEFT)) {
+                pose = new Pose2d(
+                    Constants.ResetPoses.red_TrenchLeft.getX(),
+                    Constants.ResetPoses.red_TrenchLeft.getY(),
+                    pose.getRotation());
+                }
+
+                if (location.equals(resetPose.TRENCH_RIGHT)) {
+                pose = new Pose2d(
+                    Constants.ResetPoses.red_TrenchRight.getX(),
+                    Constants.ResetPoses.red_TrenchRight.getY(),
+                    pose.getRotation());
+                }
+
+                if (location.equals(resetPose.MIDDLE)) {
+                pose = new Pose2d(
+                    Constants.ResetPoses.red_TrenchMid.getX(),
+                    Constants.ResetPoses.red_TrenchMid.getY(),
+                    pose.getRotation());
+                }
+
+            s_Swerve.resetOdo(pose);
         }
     }
 

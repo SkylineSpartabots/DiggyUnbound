@@ -98,23 +98,23 @@ public class LimeLight extends SubsystemBase {
 
     public void updateLimelight() {
 
-        // if(DriverStation.isDisabled()) {
+        // // if(DriverStation.isDisabled()) {
 
-        var state = drivetrain.getState();
+        // var state = drivetrain.getState();
 
-        LimelightHelpers.SetRobotOrientation(limelightName, 
-        state.Pose.getRotation().getDegrees(),
-        state.Speeds.omegaRadiansPerSecond, 
-        pigeon.getPitch().getValueAsDouble(), 
-        pigeon.getAngularVelocityYDevice(true).getValueAsDouble(), 
-        pigeon.getRoll().getValueAsDouble(), 
-        pigeon.getAngularVelocityXWorld(true).getValueAsDouble());
+        // LimelightHelpers.SetRobotOrientation(limelightName, 
+        // state.Pose.getRotation().getDegrees(),
+        // state.Speeds.omegaRadiansPerSecond, 
+        // pigeon.getPitch().getValueAsDouble(), 
+        // pigeon.getAngularVelocityYDevice(true).getValueAsDouble(), 
+        // pigeon.getRoll().getValueAsDouble(), 
+        // pigeon.getAngularVelocityXWorld(true).getValueAsDouble());
 
-        PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
+        // PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
 
-        if (mt2.isMegaTag2 && validTag(mt2)) {
-            quest.anchorQuest(new Pose3d(mt2.pose));
-        }
+        // if (mt2.isMegaTag2 && validTag(mt2)) {
+        //     // quest.anchorQuest(new Pose3d(mt2.pose));
+        // }
     }
 
     public boolean validTag(PoseEstimate estimate) {
