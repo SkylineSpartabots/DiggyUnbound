@@ -62,7 +62,8 @@ public class Conveyor extends SubsystemBase {
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         motor.getConfigurator().apply(config);
-        // motor.optimizeBusUtilization();
+        
+        motor.optimizeBusUtilization();
     }
 
     public void setVoltage(double voltage) {

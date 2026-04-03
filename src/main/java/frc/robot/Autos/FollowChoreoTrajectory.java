@@ -35,17 +35,17 @@ public class FollowChoreoTrajectory extends Command {
   private Optional<DriverStation.Alliance> alliance;
   private CommandSwerveDrivetrain s_Swerve;
   private Quest quest;
+
   private Optional<Pose2d> startPose;
   private Timer timer;
   
   private PIDController xController = new PIDController(0.67, 0, 0);
   private PIDController yController = new PIDController(0.67, 0, 0);
+
   private static final PIDController thetaController = new PIDController(2.7, 0, 0.02); //tuned. -ethan
 
 
   public FollowChoreoTrajectory(Optional<Trajectory<SwerveSample>> traj) {
-    // System.out.println(traj);
-
     this.quest = Quest.getInstance();
 
     s_Swerve = CommandSwerveDrivetrain.getInstance();
@@ -69,7 +69,6 @@ public class FollowChoreoTrajectory extends Command {
       System.out.println(" trajectory optinal present");
     }
 
-
     if (trajectory != null){
       startPose = trajectory.getInitialPose(alliance.get() == DriverStation.Alliance.Red);
       s_Swerve.resetOdo(startPose.get());
@@ -78,7 +77,6 @@ public class FollowChoreoTrajectory extends Command {
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if(trajectory != null){
@@ -87,18 +85,12 @@ public class FollowChoreoTrajectory extends Command {
     }
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    timer.stop();
-    Pose2d pose = s_Swerve.getState().Pose;
-    s_Swerve.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds()));
+      timer.stop();
+      s_Swerve.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds()));
+  }
 
-    if (trajectory != null){
-      Optional<Pose2d> goal = trajectory.getFinalPose(alliance.get() == DriverStation.Alliance.Red);
-  }}
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     System.out.println(trajectory);
@@ -118,14 +110,6 @@ public class FollowChoreoTrajectory extends Command {
             sample.omega + thetaController.calculate(pose.getRotation().getRadians(), sample.heading)
             );
 
-        // ff
-        // ChassisSpeeds speeds = new ChassisSpeeds(
-        //     sample.vx,
-        //     sample.vy,
-        //     0
-        // );
-
-            // Apply the generated speeds
         s_Swerve.setControl(
             new SwerveRequest.FieldCentric()
             .withVelocityX(speeds.vxMetersPerSecond)

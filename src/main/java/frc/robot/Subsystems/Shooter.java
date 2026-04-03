@@ -47,16 +47,13 @@ public class Shooter extends SubsystemBase {
         topL_leader = new TalonFX(HardwarePorts.shooterTL, "mechbussy");
         botL = new TalonFX(HardwarePorts.shooterBL, "mechbussy");
         topR = new TalonFX(HardwarePorts.shooterTR, "mechbussy");
-        // botR = new TalonFX(HardwarePorts.shooterBR, "mechbussy");
 
         config(topL_leader, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
         config(botL, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
         config(topR, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
-        // config(botR, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
 
         botL.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Aligned));
         topR.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Opposed));
-        // botR.setControl(new Follower(topL_leader.getDeviceID(), MotorAlignmentValue.Opposed));
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){
@@ -82,6 +79,8 @@ public class Shooter extends SubsystemBase {
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         motor.getConfigurator().apply(config);  
+        
+        motor.optimizeBusUtilization();
     }
 
     // returns rps
@@ -115,6 +114,10 @@ public class Shooter extends SubsystemBase {
     */
     public void setVoltage(double voltage) {
         topL_leader.setControl(voltageRequest.withOutput(voltage));
+    }
+
+    public double loggerProEvilEquationOfDoom(double d) {
+        return (3.52976 * d * d + -5*d + 36);
     }
 
     public void updateAirtime(double airtime) {

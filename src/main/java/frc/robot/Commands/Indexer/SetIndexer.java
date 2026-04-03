@@ -10,8 +10,6 @@ public class SetIndexer extends Command {
     private Indexer s_Indexer;
     IndexerStates state;
 
-
-    // Overloaded Constructor
     public SetIndexer(IndexerStates state) {
         s_Indexer = Indexer.getInstance();
 
@@ -33,7 +31,7 @@ public class SetIndexer extends Command {
     }
 
     @Override
-    public boolean isFinished() { // Return the color sensor result is greater than the threshold or the timer has elapsed, if true end the command
+    public boolean isFinished() {
         return true;
     }
 }

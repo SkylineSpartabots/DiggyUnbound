@@ -83,6 +83,7 @@ public class DriveControlSystems {
                 .withTargetRateFeedforward((calculateGoalHeading()));
         } else {SmartDashboard.putBoolean("aiming", false);}
 
+
         return new SwerveRequest.FieldCentricFacingAngle()
         .withVelocityX(driverLY)
         .withVelocityY(driverLX)
@@ -103,15 +104,6 @@ public class DriveControlSystems {
 
         double currentDistance = state.Pose.getTranslation().getDistance(targetGoal);
 
-        // double airtime = s_Shooter.getAirtime();
-        // ChassisSpeeds velocityOffset = state.Speeds.times(airtime);
-
-        // System.out.println(velocityOffset.toString());
-        
-        // targetHeading = Math.atan2(
-        //     (velocityOffset.vyMetersPerSecond + targetGoal.getY() - state.Pose.getY()),
-        //     (velocityOffset.vxMetersPerSecond + targetGoal.getX() - state.Pose.getX())); 
-
         targetHeading = Math.atan2(
             (targetGoal.getY() - state.Pose.getY()),
             (targetGoal.getX() - state.Pose.getX())); 
@@ -121,7 +113,6 @@ public class DriveControlSystems {
                 0.0,
                 1.0);
 
-        // Calculate theta speed
         double thetaVelocity = thetaController.getSetpoint().velocity * ffScaler
                 + thetaController.calculate(
                         state.Pose.getRotation().getRadians(), targetHeading);
@@ -136,8 +127,6 @@ public class DriveControlSystems {
         else
             return (deadbandFactor * Math.pow(input, 3)) + (1 - deadbandFactor) * input;
     }
-
-    // mode changing
 
     public void turnOnAutoAim() {
         mode_AlignToGoal = true;

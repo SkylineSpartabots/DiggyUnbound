@@ -232,64 +232,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         Quest.getInstance().anchorQuest(new Pose3d(pose));
     }
 
-    public void resetOdoDynamic(resetPose location) {
-        Pose2d pose = this.getState().Pose;
-        if(DriverStation.getAlliance().get().equals(Alliance.Blue)) {
-
-                if (location.equals(resetPose.TRENCH_LEFT)) {
-                pose = new Pose2d(
-                    Constants.ResetPoses.blue_TrenchLeft.getX(),
-                    Constants.ResetPoses.blue_TrenchLeft.getY(),
-                    pose.getRotation());
-                }
-
-                if (location.equals(resetPose.TRENCH_RIGHT)) {
-                pose = new Pose2d(
-                    Constants.ResetPoses.blue_TrenchRight.getX(),
-                    Constants.ResetPoses.blue_TrenchRight.getY(),
-                    pose.getRotation());
-                }
-
-                if (location.equals(resetPose.MIDDLE)) {
-                pose = new Pose2d(
-                    Constants.ResetPoses.blue_TrenchMid.getX(),
-                    Constants.ResetPoses.blue_TrenchMid.getY(),
-                    pose.getRotation());
-                }
-
-            s_Swerve.resetOdo(pose);
-        } else{
-                if (location.equals(resetPose.TRENCH_LEFT)) {
-                pose = new Pose2d(
-                    Constants.ResetPoses.red_TrenchLeft.getX(),
-                    Constants.ResetPoses.red_TrenchLeft.getY(),
-                    pose.getRotation());
-                }
-
-                if (location.equals(resetPose.TRENCH_RIGHT)) {
-                pose = new Pose2d(
-                    Constants.ResetPoses.red_TrenchRight.getX(),
-                    Constants.ResetPoses.red_TrenchRight.getY(),
-                    pose.getRotation());
-                }
-
-                if (location.equals(resetPose.MIDDLE)) {
-                pose = new Pose2d(
-                    Constants.ResetPoses.red_TrenchMid.getX(),
-                    Constants.ResetPoses.red_TrenchMid.getY(),
-                    pose.getRotation());
-                }
-
-            s_Swerve.resetOdo(pose);
-        }
-    }
-
-    public enum resetPose {
-        TRENCH_LEFT,
-        TRENCH_RIGHT,
-        MIDDLE
-    }
-
     public void resetOdo() {
         s_Swerve.resetPose(new Pose2d());
         Quest.getInstance().anchorQuest(new Pose3d());

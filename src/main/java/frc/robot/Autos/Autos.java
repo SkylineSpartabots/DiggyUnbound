@@ -136,29 +136,7 @@ public final class Autos {
             );
     }
 
-    /*
-     * Enum for the different autos. Contains a name and a mechCommands array. The
-     * mechCommands array contains
-     * all the commands that the mechanisms will use (stuff that is unrelated to the
-     * drivetrain). These commands
-     * will be executed in the order they are in the array during the auto path.
-     * Refer to runAutoCommand(AutoType auto).
-     */
     public enum AutoPath {
-        // when writing enums, if you want multiple mechCommands to run before the next
-        // path, put them in a sequential command group
-        // if you want those mechCommands to run in parallel, put them in a
-        // parallelCommandGroup
-        // if you want to run a mechCommand or mechCommandGroup in parallel with a path,
-        // create a boolean array with true values corresponding to the mechCommands you
-        // want to run in parallel.
-
-        depo_simple("depo_simple", depo_simple()),
-        mid("mid", mid()),
-        mid_to_depo("mid_to_depo", mid_to_depo()),
-        mid_tuning("mid_tuning", mid_tuning()),
-        mid_right("mid_right", mid_right()),
-        trench_left_left_mid_chill("trench_left_left_mid_chill", trench_left_left_mid_chill()),
         trench_right_right_mid_chill("trench_right_right_mid_chill", trench_right_right_mid_chill());
 
         String name;

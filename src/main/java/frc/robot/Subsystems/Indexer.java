@@ -58,11 +58,12 @@ public class Indexer extends SubsystemBase {
         motor.getConfigurator().apply(config);
 
 
-    // 20 ms
-    motor.getVelocity().setUpdateFrequency(50);
-    
-    motor.getConfigurator().apply(config);  
-    motor.optimizeBusUtilization();
+        // 20 ms
+        motor.getVelocity().setUpdateFrequency(50);
+        
+        motor.getConfigurator().apply(config);
+
+        motor.optimizeBusUtilization();
     }
 
     public void setVoltage(double voltage) {

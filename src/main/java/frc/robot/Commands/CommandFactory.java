@@ -17,7 +17,6 @@ import frc.robot.Commands.Intake.SetIntake;
 import frc.robot.Commands.Shooter.RampShooterWithDistance;
 import frc.robot.Commands.Shooter.SetShooter;
 import frc.robot.Commands.Shooter.SetShooterAtMeter;
-import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Conveyor.ConveyorStates;
 import frc.robot.Subsystems.Indexer;
@@ -28,6 +27,40 @@ import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 
 public class CommandFactory {
+
+// intake --------------------------
+
+    public static Command IntakeBallsON(){
+        return new SequentialCommandGroup(
+            new SetIntake(IntakeStates.ON)
+        );
+    }
+
+    public static Command IntakeBallsOFF(){
+        return new SequentialCommandGroup(
+            new SetIntake(IntakeStates.OFF)
+        );
+    }
+
+// shooter ----------------------------
+
+    public static Command LobAtMeter(double distance){
+        return new SequentialCommandGroup(
+            new SetShooterAtMeter(distance),
+            new WaitCommand(1),
+            new SetIndexer(IndexerStates.ON),
+            new SetConveyor(ConveyorStates.ON)
+        );
+    }
+
+    public static Command LobAtRps(double rps){
+        return new SequentialCommandGroup(
+            new SetShooter(rps),
+            new WaitCommand(1.25),
+            new SetIndexer(IndexerStates.ON),
+            new SetConveyor(ConveyorStates.ON)
+        );
+    }
 
     public static Command AutoAimShoot(){
         return new SequentialCommandGroup(
@@ -48,43 +81,14 @@ public class CommandFactory {
         ).alongWith(new RampShooterWithDistance());
     }
 
+// misc ---------------------------------
+
     public static Command AllOff(){
         return new SequentialCommandGroup(
             new SetIndexer(IndexerStates.OFF),
             new SetConveyor(ConveyorStates.OFF),
             new SetIntake(IntakeStates.OFF),
             new SetShooter(0)
-        );
-    }
-
-    public static Command IntakeBallsON(){
-        return new SequentialCommandGroup(
-            new SetIntake(IntakeStates.ON)
-        );
-    }
-
-    public static Command IntakeBallsOFF(){
-        return new SequentialCommandGroup(
-            new SetIntake(IntakeStates.OFF)
-        );
-    }
-
-    public static Command LobAtMeter(double distance){
-        return new SequentialCommandGroup(
-            new SetShooterAtMeter(distance),
-            new WaitCommand(1),
-            new SetIndexer(IndexerStates.ON),
-            new SetConveyor(ConveyorStates.ON)
-        );
-    }
-
-
-    public static Command LobAtRps(double rps){
-        return new SequentialCommandGroup(
-            new SetShooter(rps),
-            new WaitCommand(1.25),
-            new SetIndexer(IndexerStates.ON),
-            new SetConveyor(ConveyorStates.ON)
         );
     }
 }

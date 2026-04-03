@@ -19,7 +19,6 @@ import frc.robot.Subsystems.Vision.Quest;
 import gg.questnav.questnav.QuestNav;
 import frc.robot.Autos.Autos;
 import frc.robot.Autos.Autos.AutoPath;
-import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
 import frc.robot.Subsystems.Intake;
@@ -45,13 +44,7 @@ public class Robot extends TimedRobot {
         Conveyor.getInstance();
         Shooter.getInstance();
         Pivot.getInstance();
-        Climb.getInstance();
 
-        autoChooser.setDefaultOption("mid", AutoPath.mid);
-        autoChooser.addOption("mid_to_depo", AutoPath.mid_to_depo);
-        autoChooser.addOption("trench_left_left_mid_chill", AutoPath.trench_left_left_mid_chill);
-        autoChooser.addOption("mid_right", AutoPath.mid_right);
-        
         SmartDashboard.putData("Auto choices", autoChooser);
         
         // SignalLogger.setPath("/media/sdb1/ctre-logs/");
@@ -70,7 +63,6 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledPeriodic() {
         limeLight.updateLimelight();
-        // quest.anchorQuest();
     }
 
     @Override

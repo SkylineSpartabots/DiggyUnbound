@@ -27,6 +27,7 @@ public class Intake extends SubsystemBase {
         if(instance == null) {
             instance = new Intake();
         }
+
         return instance;
     }
 
@@ -64,6 +65,8 @@ public class Intake extends SubsystemBase {
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         motor.getConfigurator().apply(config);
+        
+        motor.optimizeBusUtilization();
     }
 
     public void setVoltage(double voltage) {

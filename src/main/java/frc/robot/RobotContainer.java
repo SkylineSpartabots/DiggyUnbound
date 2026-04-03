@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveControlSystems;
-import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain.resetPose;
 import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
 import frc.robot.Subsystems.Pivot.PivotStates;
@@ -33,7 +32,6 @@ import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
 import frc.robot.Commands.Pivot.ForcePivot;
 import frc.robot.Commands.Shooter.SetShooter;
-import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
 import frc.robot.Subsystems.Intake;
@@ -51,7 +49,6 @@ public class RobotContainer {
     private Shooter shooter = Shooter.getInstance();
 
     private Pivot pivot = Pivot.getInstance();
-    private Climb climb = Climb.getInstance();
 
     private DriveControlSystems control = DriveControlSystems.getInstance();
     public final CommandXboxController driver = new CommandXboxController(0);
@@ -93,7 +90,6 @@ public class RobotContainer {
 
         driver.b().onTrue(CommandFactory.ShootAtDistance());
         
-        driver.povLeft().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_LEFT)));
         
         // driver.povLeft().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_LEFT)));
         // driver.povRight().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_RIGHT)));
@@ -154,20 +150,4 @@ public class RobotContainer {
             new InstantCommand(() -> shooter.setVoltage(0))
         );
     }
-
-    public Command chud() {
-        return new ParallelCommandGroup(
-            conveyor.setState(ConveyorStates.ON),
-            indexer.setState(IndexerStates.ON),
-            new InstantCommand(() -> shooter.setVelocity(15))
-        );
-    }
-
-    public Command chud2() {
-        return new ParallelCommandGroup(
-            conveyor.setState(ConveyorStates.ON),
-            intake.setState(IntakeStates.ON)
-        );
-    }
-
 }

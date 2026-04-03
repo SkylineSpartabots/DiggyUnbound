@@ -70,11 +70,8 @@ public class Quest extends SubsystemBase {
             Pose3d questPose = frame.questPose3d();
             double timestamp = frame.dataTimestamp();
 
-            // System.out.println(QUEST_TO_FIELD.toString());
             Pose3d robotPose = questPose.transformBy(ROBOT_TO_QUEST.inverse());
 
-            SmartDashboard.putString("Quest Pose", robotPose.toPose2d().toString());
-            // System.out.println(robotPose.toString());
             drivetrain.addVisionMeasurement(robotPose.toPose2d(), timestamp, QUESTNAV_STD_DEVS);
         }
     }

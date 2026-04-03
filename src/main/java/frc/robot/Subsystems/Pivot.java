@@ -72,6 +72,8 @@ public class Pivot extends SubsystemBase {
         motor.getConfigurator().apply(config);
 
         motor.setPosition(0);
+        
+        motor.optimizeBusUtilization();
     }
 
     // public void setRotations(double rotations) {
