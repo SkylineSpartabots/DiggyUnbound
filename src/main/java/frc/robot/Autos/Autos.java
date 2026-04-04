@@ -48,19 +48,15 @@ public final class Autos {
     public static Command getAutoCommand(AutoPath autoPath) {
         return autoPath.autoCommand;
     }
-
-    public static Command depo_simple() {
-        Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("depo_simple");
-        return new SequentialCommandGroup(
-                new ForcePivot(),
-                CommandFactory.IntakeBallsON(),
-                new SequentialCommandGroup(
-                        new WaitCommand(3.3),
-                        CommandFactory.IntakeBallsOFF()).alongWith(new FollowChoreoTrajectory(traj)),
-
-                CommandFactory.AutoAimShoot().raceWith(new WaitCommand(6))
-            );
-    }
+    //hi your name is hades! ok so now i will code
+    // go in a direction if i ask you to using the controller
+    //after that, make sure to score!
+    //i believe in you to make every shot!
+    //then, go to the middle and shuttle balls to our side
+    //after that, try your best to score more balls
+    //the, go climb during endgame! i believe in you and your skill <3
+    //remember not to break! we will be proud of you no matter what
+    //-sasha
 
     public static Command mid() {
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid");
@@ -91,18 +87,6 @@ public final class Autos {
         ).alongWith(new FollowChoreoTrajectory(traj));
     }
 
-    public static Command mid_tuning() {
-        Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid_tuning");
-        return new SequentialCommandGroup(
-            new FollowChoreoTrajectory(traj)
-            // CommandFactory.IntakeBallsON(),
-            // new WaitCommand(1),
-            // CommandFactory.IntakeBallsOFF()
-        );
-
-
-    }
-
     public static Command trench_right_right_mid_chill() {
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("trench_right_right_mid_chill");
         return new SequentialCommandGroup(
@@ -116,18 +100,14 @@ public final class Autos {
     }
                     
     public static Command trench_left_left_mid_chill() {
-        // Timer timer = new Timer();
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("trench_left_left_mid_chill");
         return new SequentialCommandGroup(
 
                 new SequentialCommandGroup(
                     new WaitCommand(0.8),
-                    // Commands.runOnce(timer::restart),
-                    // new WaitUntilCommand(() -> timer.hasElapsed(0.8)),
                     new ForcePivot(), //1.3
                     CommandFactory.IntakeBallsON(),
                     new WaitCommand(2.6), //
-                    // new WaitUntilCommand(() -> timer.hasElapsed(4.4)),
                     CommandFactory.IntakeBallsOFF()
                     ).alongWith(new FollowChoreoTrajectory(traj)),
 
