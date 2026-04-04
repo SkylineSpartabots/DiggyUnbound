@@ -12,17 +12,21 @@ public class SetPivot extends Command {
     private Pivot s_Pivot;
     PivotStates state;
 
+    Timer timer;
+
     public SetPivot(PivotStates state) {
         s_Pivot = Pivot.getInstance();
 
         this.state = state;
+        timer = new Timer();
 
         addRequirements(s_Pivot);
     }
 
     @Override
     public void initialize() {
-        s_Pivot.setVoltage(state.getVolts());
+        timer.restart();
+        s_Pivot.setVoltage(state.getVoltage());
     }
 
     @Override
@@ -31,10 +35,11 @@ public class SetPivot extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        s_Pivot.setVoltage(0);
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        return timer.hasElapsed(2.5);
     }
 }

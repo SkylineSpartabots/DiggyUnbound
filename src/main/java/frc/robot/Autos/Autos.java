@@ -36,11 +36,12 @@ import frc.robot.Commands.Automation.JiggleBallsDrivetrain;
 import frc.robot.Commands.Automation.JiggleBallsDrivetrainNoRolla;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
-import frc.robot.Commands.Pivot.ForcePivot;
+import frc.robot.Commands.Pivot.SetPivot;
 import frc.robot.Commands.Shooter.RampShooterWithDistance;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.Indexer.IndexerStates;
 import frc.robot.Subsystems.Intake.IntakeStates;
+import frc.robot.Subsystems.Pivot.PivotStates;
 
 public final class Autos {
     static Timer path_time = new Timer();
@@ -62,7 +63,7 @@ public final class Autos {
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid");
         return new SequentialCommandGroup(
                 new WaitCommand(2.5),
-                new ForcePivot(),
+                new SetPivot(PivotStates.DEPLOY),
                 CommandFactory.ShootAtDistance()
         ).alongWith(new FollowChoreoTrajectory(traj));
     }
@@ -71,7 +72,7 @@ public final class Autos {
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid_to_depo");
         return new SequentialCommandGroup(
                 new WaitCommand(2),
-                new ForcePivot(), //2.5
+                new SetPivot(PivotStates.DEPLOY), //2.5
                 new SetIntake(IntakeStates.ON),
                 new WaitCommand(3), //5.5
                 CommandFactory.ShootAtDistance()
@@ -82,7 +83,7 @@ public final class Autos {
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid_right");
         return new SequentialCommandGroup(
                 new WaitCommand(2.25),
-                new ForcePivot(),
+                new SetPivot(PivotStates.DEPLOY),
                 CommandFactory.ShootAtDistance()
         ).alongWith(new FollowChoreoTrajectory(traj));
     }
@@ -92,7 +93,7 @@ public final class Autos {
         return new SequentialCommandGroup(
             new SequentialCommandGroup(
                 new WaitCommand(0.65),
-                new ForcePivot(),
+                new SetPivot(PivotStates.DEPLOY),
                 CommandFactory.IntakeBallsON(),
                         new WaitCommand(2.2),
                         CommandFactory.IntakeBallsOFF()).alongWith(new FollowChoreoTrajectory(traj)),
@@ -105,7 +106,7 @@ public final class Autos {
 
                 new SequentialCommandGroup(
                     new WaitCommand(0.8),
-                    new ForcePivot(), //1.3
+                    new SetPivot(PivotStates.DEPLOY), //1.3
                     CommandFactory.IntakeBallsON(),
                     new WaitCommand(2.6), //
                     CommandFactory.IntakeBallsOFF()

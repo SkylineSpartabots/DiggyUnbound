@@ -24,7 +24,7 @@ public class Conveyor extends SubsystemBase {
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
     public enum ConveyorStates{
-        ON(4.5), 
+        ON(5.5),
         CYCLE(3), 
         OFF(0),
         REVERSE(-3);
@@ -43,7 +43,7 @@ public class Conveyor extends SubsystemBase {
 
     public Conveyor() {
         conveyorMotor = new TalonFX(Constants.HardwarePorts.conveyor, "mechbussy"); //get real port
-        config(conveyorMotor, NeutralModeValue.Coast, InvertedValue.Clockwise_Positive);
+        config(conveyorMotor, NeutralModeValue.Coast, InvertedValue.CounterClockwise_Positive);
     }
 
     private void config(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction){

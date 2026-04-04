@@ -13,11 +13,11 @@ public class Constants {
     public static final class ResetPoses {
         public static final Pose2d blue_TrenchLeft = new Pose2d(4.4, 7.17, new Rotation2d());
         public static final Pose2d blue_TrenchRight = new Pose2d(4.4, 0.89, new Rotation2d());
-        public static final Pose2d blue_TrenchMid = new Pose2d(3.6, 4.04, new Rotation2d());
+        public static final Pose2d blue_Mid = new Pose2d(3.6, 4.04, new Rotation2d());
 
         public static final Pose2d red_TrenchLeft = new Pose2d(12.13, 0.89, new Rotation2d());
         public static final Pose2d red_TrenchRight = new Pose2d(12.13, 7.17, new Rotation2d());
-        public static final Pose2d red_TrenchMid = new Pose2d(3.6, 4.04, new Rotation2d());
+        public static final Pose2d red_Mid = new Pose2d(12.95, 4.04, Rotation2d.fromDegrees(180));
     }
 
     public static final class HardwarePorts {
@@ -57,7 +57,7 @@ public class Constants {
     public static final double stickDeadband = 0.1;
     public static final double triggerDeadzone = 0.2;
 
-    public static double MaxSpeed = 6; //can be lowered during testing
+    public static double MaxSpeed = 5.5; //can be lowered during testing
     public static double MaxAcceleration = 1.2542976; //can be lowered during testing
     public static double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
     public static double MaxAngularVelocity = 2 * Math.PI;

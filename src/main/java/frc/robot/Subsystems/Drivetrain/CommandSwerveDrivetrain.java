@@ -199,6 +199,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        optimizeCanBus();
+    }
+
+    public void optimizeCanBus() {
+        for (var mod : getModules()) {
+            mod.getDriveMotor().optimizeBusUtilization();
+            mod.getDriveMotor().getPosition().setUpdateFrequency(250);
+            mod.getDriveMotor().getVelocity().setUpdateFrequency(250);
+
+            mod.getSteerMotor().optimizeBusUtilization();
+            mod.getSteerMotor().getPosition().setUpdateFrequency(250);
+        }
     }
 
     private static Matrix<N3, N1> odo_sdv = VecBuilder.fill(0.1, 0.1, 0.005);

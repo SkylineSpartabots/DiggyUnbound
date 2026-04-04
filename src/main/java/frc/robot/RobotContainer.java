@@ -9,6 +9,7 @@ import javax.tools.DocumentationTool.Location;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -30,7 +31,7 @@ import frc.robot.Commands.Automation.JiggleBallsDrivetrain;
 import frc.robot.Commands.Convayor.SetConveyor;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
-import frc.robot.Commands.Pivot.ForcePivot;
+import frc.robot.Commands.Pivot.SetPivot;
 import frc.robot.Commands.Shooter.SetShooter;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
@@ -49,6 +50,7 @@ public class RobotContainer {
     private Shooter shooter = Shooter.getInstance();
 
     private Pivot pivot = Pivot.getInstance();
+    private Quest quest = Quest.getInstance();
 
     private DriveControlSystems control = DriveControlSystems.getInstance();
     public final CommandXboxController driver = new CommandXboxController(0);
@@ -79,16 +81,20 @@ public class RobotContainer {
         driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim())); //bottom buttons
         driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
-        // driver.povDown().onTrue(new JiggleBallsDrivetrain(driver));
-        driver.povDown().onTrue(CommandFactory.LobAtRps(15));
+        driver.povDown().onTrue(new InstantCommand(() -> quest.anchorQuest(new Pose3d(Constants.ResetPoses.red_Mid))));
+        
+        driver.povRight().onTrue(new SetPivot(PivotStates.STOW));
+        driver.povLeft().onTrue(new SetPivot(PivotStates.JIGGLE));
 
         driver.start().onTrue(new InstantCommand(() -> drivetrain.resetOdo()));
 
         driver.a().onTrue(CommandFactory.AllOff());
-        driver.y().onTrue(new ForcePivot());
-        driver.x().onTrue(new ForcePivot(5));
+
+        driver.y().onTrue(new SetPivot(PivotStates.DEPLOY));
 
         driver.b().onTrue(CommandFactory.ShootAtDistance());
+
+        driver.x().onTrue(CommandFactory.LobAtRps(25));
         
         
         // driver.povLeft().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_LEFT)));
@@ -147,7 +153,8 @@ public class RobotContainer {
             intake.setState(IntakeStates.OFF),
             conveyor.setState(ConveyorStates.OFF),
             indexer.setState(IndexerStates.OFF),
-            new InstantCommand(() -> shooter.setVoltage(0))
+            new InstantCommand(() -> shooter.setVoltage(0)),
+            new InstantCommand(() -> pivot.setVoltage(0))
         );
     }
 }

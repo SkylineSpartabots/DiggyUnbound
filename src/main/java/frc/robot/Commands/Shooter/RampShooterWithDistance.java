@@ -40,7 +40,7 @@ public class RampShooterWithDistance extends Command {
     public void execute() {
         
         Translation2d currPose = s_Swerve.getState().Pose.getTranslation();
-        double d = currPose.getDistance(Constants.FieldConstants.blueGoal.toTranslation2d()) + 1.778;
+        double d = currPose.getDistance(targetGoal.toTranslation2d());
 
         double v = s_Shooter.loggerProEvilEquationOfDoom(d);
 

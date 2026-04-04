@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,17 +29,17 @@ public class Pivot extends SubsystemBase {
     }
 
     public enum PivotStates {
-        DEPLOYED(-4),
-        MIDDLE(-2), //TODO
-        STOWED(0);
+        DEPLOY(4),
+        JIGGLE(-3.25),
+        STOW(-2.25);
 
-        double volts;
-        private PivotStates(double volts) {
-            this.volts = volts;
+        double voltage;
+        private PivotStates(double voltage) {
+            this.voltage = voltage;
         }
 
-        public double getVolts() {
-            return volts;
+        public double getVoltage() {
+            return voltage;
         }   
     }
 
@@ -48,7 +49,7 @@ public class Pivot extends SubsystemBase {
     public Pivot() {
         pivotMotor = new TalonFX(Constants.HardwarePorts.pivot, "mechbussy"); //get real port
         
-        configureMotor(pivotMotor, NeutralModeValue.Brake, InvertedValue.Clockwise_Positive);
+        configureMotor(pivotMotor, NeutralModeValue.Brake, InvertedValue.CounterClockwise_Positive);
     }
 
     private void configureMotor(TalonFX motor, NeutralModeValue neutralMode, InvertedValue direction) {
@@ -56,13 +57,12 @@ public class Pivot extends SubsystemBase {
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
-        // config.Slot0.kP = 0.01;
-        // config.Slot0.kD = 0.01;
+        // config.Slot0.kP = 0.5;
+        // // config.Slot0.kD = 0.001;
         // config.Slot0.kG = 0.5;
 
         config.MotorOutput.Inverted = direction;
         config.MotorOutput.NeutralMode = neutralMode;
-
 
         config.CurrentLimits.SupplyCurrentLimit = Constants.CurrentLimits.pivotSupply;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -71,8 +71,9 @@ public class Pivot extends SubsystemBase {
 
         motor.getConfigurator().apply(config);
 
-        motor.setPosition(0);
-        
+        motor.getPosition().setUpdateFrequency(150);
+        motor.getStatorCurrent().setUpdateFrequency(150);
+        motor.getSupplyCurrent().setUpdateFrequency(150);
         motor.optimizeBusUtilization();
     }
 
@@ -89,12 +90,16 @@ public class Pivot extends SubsystemBase {
     }
 
     public Command setState(PivotStates state){
-        return Commands.runOnce(() -> setVoltage(state.getVolts()), this);
+        return Commands.runOnce(() -> setVoltage(state.getVoltage()), this);
     }
 
-    public void zeroPivot() {
-        pivotMotor.setPosition(0);
-    }
+    // public void zeroPivot() {
+    //     pivotMotor.setPosition(0);
+    // }
+
+    // public double getPosition() {
+    //     return pivotMotor.getPosition().getValueAsDouble();
+    // }
 
     public StatusSignal<Current> getCurrent() {
         return pivotMotor.getStatorCurrent();
@@ -102,6 +107,6 @@ public class Pivot extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        // SmartDashboard.putNumber("pivot pos", getPosition());
     }
 }

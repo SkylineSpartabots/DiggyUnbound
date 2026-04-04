@@ -70,7 +70,8 @@ public class Shooter extends SubsystemBase {
         config.Slot0.kD = 0;
 
         // 20 ms
-        // motor.getVelocity().setUpdateFrequency(50);
+        motor.getVelocity().setUpdateFrequency(75);
+        motor.getPosition().setUpdateFrequency(75);
 
         // Current Limits
         config.CurrentLimits.SupplyCurrentLimit = Constants.CurrentLimits.shooterSupply;
