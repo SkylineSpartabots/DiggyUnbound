@@ -40,7 +40,7 @@ public class DriveControlSystems {
     private static Shooter s_Shooter;
 
     private final ProfiledPIDController thetaController = new ProfiledPIDController(
-            2, 0, 0.04, new TrapezoidProfile.Constraints(Constants.MaxAngularVelocity, Constants.MaxAngularRate), 0.02);
+            3, 0.01, 0.1, new TrapezoidProfile.Constraints(Constants.MaxAngularVelocity, Constants.MaxAngularRate), 0.02);
 
     Boolean mode_AlignToGoal = false;
     Translation2d targetGoal;
@@ -102,16 +102,18 @@ public class DriveControlSystems {
 
         var state = s_Swerve.getState();
 
-        // double currentDistance = state.Pose.getTranslation().getDistance(targetGoal);
+        double airtime = s_Shooter.getAirtime();
+        ChassisSpeeds velocityOffset = state.Speeds.times(airtime);
+
+        System.out.println(velocityOffset.toString());
+        
+        // targetHeading = Math.atan2(
+        //     (velocityOffset.vyMetersPerSecond + targetGoal.getY() - state.Pose.getY()),
+        //     (velocityOffset.vxMetersPerSecond + targetGoal.getX() - state.Pose.getX()));
 
         targetHeading = Math.atan2(
             (targetGoal.getY() - state.Pose.getY()),
-            (targetGoal.getX() - state.Pose.getX())); 
-        
-        // double ffScaler = MathUtil.clamp(
-        //         (currentDistance - ffMinRadius) / (ffMaxRadius - ffMinRadius),
-        //         0.0,
-        //         1.0);
+            (targetGoal.getX() - state.Pose.getX()));
 
         double thetaVelocity = thetaController.getSetpoint().velocity
                 + thetaController.calculate(

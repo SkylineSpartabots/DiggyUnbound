@@ -90,14 +90,7 @@ public final class Autos {
 
     public static Command trench_right_right_mid_chill() {
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("trench_right_right_mid_chill");
-        return new SequentialCommandGroup(
-            new SequentialCommandGroup(
-                new WaitCommand(0.65),
-                new SetPivot(PivotStates.DEPLOY),
-                CommandFactory.IntakeBallsON(),
-                        new WaitCommand(2.2),
-                        CommandFactory.IntakeBallsOFF()).alongWith(new FollowChoreoTrajectory(traj)),
-                        CommandFactory.AutoAimShoot().raceWith(new WaitCommand(6)));
+        return new SequentialCommandGroup();
     }
                     
     public static Command trench_left_left_mid_chill() {
@@ -105,20 +98,20 @@ public final class Autos {
         return new SequentialCommandGroup(
 
                 new SequentialCommandGroup(
-                    new WaitCommand(0.8),
-                    new SetPivot(PivotStates.DEPLOY), //1.3
+                    new WaitCommand(1),
+                    // new SetPivot(PivotStates.DEPLOY), //1.3
                     CommandFactory.IntakeBallsON(),
                     new WaitCommand(2.6), //
                     CommandFactory.IntakeBallsOFF()
                     ).alongWith(new FollowChoreoTrajectory(traj)),
 
-                CommandFactory.AutoAimShoot(),
-                new JiggleBallsDrivetrainNoRolla()
+                CommandFactory.AutoAimShoot()
+                // new JiggleBallsDrivetrainNoRolla()
             );
     }
 
     public enum AutoPath {
-        trench_right_right_mid_chill("trench_right_right_mid_chill", trench_right_right_mid_chill());
+        trench_right_right_mid_chill("trench_left_left_mid_chill", trench_left_left_mid_chill());
 
         String name;
         Command autoCommand;

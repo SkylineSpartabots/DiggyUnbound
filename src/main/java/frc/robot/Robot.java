@@ -46,6 +46,8 @@ public class Robot extends TimedRobot {
         Pivot.getInstance();
 
         SmartDashboard.putData("Auto choices", autoChooser);
+
+        autoChooser.setDefaultOption("trench_left_left_mid_chill", AutoPath.trench_right_right_mid_chill);
         
         // SignalLogger.setPath("/media/sdb1/ctre-logs/");
 
