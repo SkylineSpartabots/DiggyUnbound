@@ -94,7 +94,7 @@ public class RobotContainer {
 
         driver.b().onTrue(CommandFactory.ShootAtDistance());
 
-        driver.x().onTrue(CommandFactory.LobAtRps(25));
+        driver.x().onTrue(CommandFactory.LobAtRps(75));
         
         
         // driver.povLeft().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_LEFT)));

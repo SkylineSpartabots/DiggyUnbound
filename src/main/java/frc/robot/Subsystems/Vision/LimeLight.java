@@ -84,7 +84,7 @@ public class LimeLight extends SubsystemBase {
     }
 
     public LimeLight() {
-        this("limelight-alpha");
+        this("");
     }
 
     public LimeLight(String name) {

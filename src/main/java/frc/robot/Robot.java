@@ -19,6 +19,7 @@ import frc.robot.Subsystems.Vision.Quest;
 import gg.questnav.questnav.QuestNav;
 import frc.robot.Autos.Autos;
 import frc.robot.Autos.Autos.AutoPath;
+import frc.robot.Commands.CommandFactory;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
 import frc.robot.Subsystems.Intake;
@@ -37,7 +38,7 @@ public class Robot extends TimedRobot {
     
     public Robot() {
         drivetrain = CommandSwerveDrivetrain.getInstance(); 
-        limeLight = LimeLight.getInstance();
+        // limeLight = LimeLight.getInstance();
         quest = Quest.getInstance();
         Indexer.getInstance();
         Intake.getInstance();
@@ -47,7 +48,10 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData("Auto choices", autoChooser);
 
-        autoChooser.setDefaultOption("trench_left_left_mid_chill", AutoPath.trench_right_right_mid_chill);
+        autoChooser.setDefaultOption("trench_left_mid", AutoPath.trench_left_mid);
+        autoChooser.addOption("trench_left_evil", AutoPath.trench_left_evil);
+        autoChooser.addOption("trench_right_mid", AutoPath.trench_right_mid);
+        autoChooser.addOption("mid", AutoPath.mid);
         
         // SignalLogger.setPath("/media/sdb1/ctre-logs/");
 
@@ -64,7 +68,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        limeLight.updateLimelight();
+        // limeLight.updateLimelight();
     }
 
     @Override
@@ -83,7 +87,9 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {}
 
     @Override
-    public void autonomousExit() {}
+    public void autonomousExit() {
+        CommandScheduler.getInstance().schedule(CommandFactory.AllOff());
+    }
 
     @Override
     public void teleopInit() {

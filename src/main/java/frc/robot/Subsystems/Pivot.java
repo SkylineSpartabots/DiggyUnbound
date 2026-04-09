@@ -29,9 +29,10 @@ public class Pivot extends SubsystemBase {
     }
 
     public enum PivotStates {
-        DEPLOY(3.5),
-        JIGGLE(-2),
-        STOW(2);
+        DEPLOY(4),
+        JIGGLE(-1.5),
+        STOW(2),
+        OFF(0);
 
         double voltage;
         private PivotStates(double voltage) {

@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Subsystems.Drivetrain.CommandSwerveDrivetrain;
@@ -32,7 +33,6 @@ public class FollowChoreoTrajectory extends Command {
   private Optional<Trajectory<SwerveSample>> trajectoryOpt;
   private Trajectory<SwerveSample> trajectory = null;
 
-  private Optional<DriverStation.Alliance> alliance;
   private CommandSwerveDrivetrain s_Swerve;
   private Quest quest;
 
@@ -49,7 +49,6 @@ public class FollowChoreoTrajectory extends Command {
     this.quest = Quest.getInstance();
 
     s_Swerve = CommandSwerveDrivetrain.getInstance();
-    alliance = DriverStation.getAlliance();
     timer = new Timer();
 
     trajectoryOpt = traj;
@@ -66,11 +65,11 @@ public class FollowChoreoTrajectory extends Command {
 
     if (trajectoryOpt.isPresent()) {
       trajectory = trajectoryOpt.get();
-      System.out.println(" trajectory optinal present");
+      System.out.println(" trajectory optinales present");
     }
 
     if (trajectory != null){
-      startPose = trajectory.getInitialPose(alliance.get() == DriverStation.Alliance.Red);
+      startPose = trajectory.getInitialPose(DriverStation.getAlliance().equals(Alliance.Red));
       s_Swerve.resetOdo(startPose.get());
       quest.anchorQuest(new Pose3d(startPose.get()));
     }
@@ -80,7 +79,7 @@ public class FollowChoreoTrajectory extends Command {
   @Override
   public void execute() {
     if(trajectory != null){
-      Optional<SwerveSample> sample = trajectory.sampleAt(timer.get(), alliance.get() == DriverStation.Alliance.Red);
+      Optional<SwerveSample> sample = trajectory.sampleAt(timer.get(), DriverStation.getAlliance().equals(Alliance.Red));
       FollowChoreoSample(sample.get());
     }
   }
@@ -93,7 +92,7 @@ public class FollowChoreoTrajectory extends Command {
 
   @Override
   public boolean isFinished() {
-    System.out.println(trajectory);
+    // System.out.println(trajectory);
     return trajectory != null ? timer.hasElapsed(trajectory.getTotalTime()+ 0.2) : true;
   }
 

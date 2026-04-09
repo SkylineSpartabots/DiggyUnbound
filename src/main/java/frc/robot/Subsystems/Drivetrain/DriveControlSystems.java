@@ -103,9 +103,9 @@ public class DriveControlSystems {
         var state = s_Swerve.getState();
 
         double airtime = s_Shooter.getAirtime();
-        ChassisSpeeds velocityOffset = state.Speeds.times(airtime);
+        // ChassisSpeeds velocityOffset = state.Speeds.times(airtime);
 
-        System.out.println(velocityOffset.toString());
+        // System.out.println(velocityOffset.toString());
         
         // targetHeading = Math.atan2(
         //     (velocityOffset.vyMetersPerSecond + targetGoal.getY() - state.Pose.getY()),
