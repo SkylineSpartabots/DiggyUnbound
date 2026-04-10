@@ -65,21 +65,26 @@ public class FollowChoreoTrajectory extends Command {
 
     if (trajectoryOpt.isPresent()) {
       trajectory = trajectoryOpt.get();
+      if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
+        trajectory = trajectory.flipped(); //flip for red
+      }
       System.out.println(" trajectory optinales present");
     }
 
     if (trajectory != null){
-      startPose = trajectory.getInitialPose(DriverStation.getAlliance().get().equals(Alliance.Red));
+      startPose = trajectory.getInitialPose(false);
+
       s_Swerve.resetOdo(startPose.get());
-      quest.anchorQuest(new Pose3d(startPose.get()));
+      // quest.anchorQuest(new Pose3d(startPose.get()));
     }
+
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   @Override
   public void execute() {
     if(trajectory != null){
-      Optional<SwerveSample> sample = trajectory.sampleAt(timer.get(), DriverStation.getAlliance().get().equals(Alliance.Red));
+      Optional<SwerveSample> sample = trajectory.sampleAt(timer.get(), false);
       FollowChoreoSample(sample.get());
     }
   }
@@ -115,14 +120,14 @@ public class FollowChoreoTrajectory extends Command {
 
 
 
-        s_Swerve.setControl(
-            new SwerveRequest.FieldCentric()
-            .withVelocityX(speeds.vxMetersPerSecond)
-            .withVelocityY(speeds.vyMetersPerSecond)
-            .withRotationalRate(speeds.omegaRadiansPerSecond)
-            .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
-            .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
-        );
+        // s_Swerve.setControl(
+        //     new SwerveRequest.FieldCentric()
+        //     .withVelocityX(speeds.vxMetersPerSecond)
+        //     .withVelocityY(speeds.vyMetersPerSecond)
+        //     .withRotationalRate(speeds.omegaRadiansPerSecond)
+        //     .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
+        //     .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
+        // );
 
     }
 

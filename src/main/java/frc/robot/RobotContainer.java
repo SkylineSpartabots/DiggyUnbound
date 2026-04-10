@@ -55,7 +55,7 @@ public class RobotContainer {
 
     private DriveControlSystems control = DriveControlSystems.getInstance();
     public final CommandXboxController driver = new CommandXboxController(0);
-    public final CommandXboxController opp = new CommandXboxController(1);
+    // public final CommandXboxController opp = new CommandXboxController(1);
 
     public RobotContainer() {
         configureBindings();
@@ -82,10 +82,10 @@ public class RobotContainer {
         driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim())); //bottom buttons
         driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
-        driver.povDown().onTrue(new InstantCommand(() -> quest.anchorQuest(new Pose3d(Constants.ResetPoses.red_Mid))));
+        driver.povDown().onTrue(new InstantCommand(() -> quest.anchorQuest(new Pose3d(Constants.ResetPoses.blue_Mid))));
         
-        driver.povRight().onTrue(new SetPivotTimed(PivotStates.RETRACT));
-        driver.povLeft().onTrue(new SetPivotTimed(PivotStates.DEPLOY));
+        driver.povRight().onTrue(new SetPivotTimed(PivotStates.DEPLOY));
+        driver.povLeft().onTrue(new SetPivotTimed(PivotStates.RETRACT));
 
         driver.start().onTrue(new InstantCommand(() -> drivetrain.resetOdo()));
 
@@ -93,10 +93,12 @@ public class RobotContainer {
 
         driver.b().onTrue(CommandFactory.ShootAtDistance());
         
-        driver.y().onTrue(CommandFactory.LobAtRps(45));
+        // driver.y().onTrue(new SetPivotTimed(PivotStates.HARD_DEPLOY));
+        // driver.y().onTrue(CommandFactory.LobAtRps(45));
         // driver.y().onTrue(CommandFactory.chud());
 
-        driver.x().onTrue(CommandFactory.LobAtRps(80));
+        driver.y().onTrue(CommandFactory.LobAtRps(60));
+        driver.x().onTrue(CommandFactory.LobAtRps(40));
         
         
         // driver.povLeft().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_LEFT)));

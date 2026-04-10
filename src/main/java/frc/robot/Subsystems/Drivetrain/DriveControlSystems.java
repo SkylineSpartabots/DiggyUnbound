@@ -40,7 +40,7 @@ public class DriveControlSystems {
     private static Shooter s_Shooter;
 
     private final ProfiledPIDController thetaController = new ProfiledPIDController(
-            3, 0.01, 0.1, new TrapezoidProfile.Constraints(Constants.MaxAngularVelocity, Constants.MaxAngularRate), 0.02);
+            2.8, 0, 0.1, new TrapezoidProfile.Constraints(Constants.MaxAngularVelocity, Constants.MaxAngularRate), 0.02);
 
     Boolean mode_AlignToGoal = false;
     Translation2d targetGoal;

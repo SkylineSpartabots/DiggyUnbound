@@ -96,7 +96,7 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new SetIndexer(IndexerStates.OFF),
             new SetConveyor(ConveyorStates.OFF),
-            new SetPivot(PivotStates.OFF),
+            new SetPivot(pivo.OFF),
             new SetIntake(IntakeStates.OFF),
             new SetShooter(0)
         );
