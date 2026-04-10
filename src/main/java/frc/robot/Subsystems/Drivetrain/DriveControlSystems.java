@@ -102,7 +102,7 @@ public class DriveControlSystems {
 
         var state = s_Swerve.getState();
 
-        double airtime = s_Shooter.getAirtime();
+        // double airtime = s_Shooter.getAirtime();
         // ChassisSpeeds velocityOffset = state.Speeds.times(airtime);
 
         // System.out.println(velocityOffset.toString());

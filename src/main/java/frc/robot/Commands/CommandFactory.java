@@ -83,12 +83,20 @@ public class CommandFactory {
         ).alongWith(new RampShooterWithDistance());
     }
 
+    public static Command chud(){
+        return new SequentialCommandGroup(
+            new SetIndexer(IndexerStates.ON),
+            new SetConveyor(ConveyorStates.ON)
+        );
+    }
+
 // misc ---------------------------------
 
     public static Command AllOff(){
         return new SequentialCommandGroup(
             new SetIndexer(IndexerStates.OFF),
             new SetConveyor(ConveyorStates.OFF),
+            new SetPivot(PivotStates.OFF),
             new SetIntake(IntakeStates.OFF),
             new SetShooter(0)
         );

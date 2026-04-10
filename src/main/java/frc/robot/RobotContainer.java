@@ -32,6 +32,7 @@ import frc.robot.Commands.Convayor.SetConveyor;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
 import frc.robot.Commands.Pivot.SetPivot;
+import frc.robot.Commands.Pivot.SetPivotTimed;
 import frc.robot.Commands.Shooter.SetShooter;
 import frc.robot.Subsystems.Conveyor;
 import frc.robot.Subsystems.Indexer;
@@ -83,18 +84,19 @@ public class RobotContainer {
 
         driver.povDown().onTrue(new InstantCommand(() -> quest.anchorQuest(new Pose3d(Constants.ResetPoses.red_Mid))));
         
-        driver.povRight().onTrue(new SetPivot(PivotStates.STOW));
-        driver.povLeft().onTrue(new SetPivot(PivotStates.JIGGLE));
+        driver.povRight().onTrue(new SetPivotTimed(PivotStates.RETRACT));
+        driver.povLeft().onTrue(new SetPivotTimed(PivotStates.DEPLOY));
 
         driver.start().onTrue(new InstantCommand(() -> drivetrain.resetOdo()));
 
         driver.a().onTrue(CommandFactory.AllOff());
 
-        driver.y().onTrue(new SetPivot(PivotStates.DEPLOY));
-
         driver.b().onTrue(CommandFactory.ShootAtDistance());
+        
+        driver.y().onTrue(CommandFactory.LobAtRps(45));
+        // driver.y().onTrue(CommandFactory.chud());
 
-        driver.x().onTrue(CommandFactory.LobAtRps(75));
+        driver.x().onTrue(CommandFactory.LobAtRps(80));
         
         
         // driver.povLeft().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_LEFT)));
@@ -146,15 +148,5 @@ public class RobotContainer {
         // driver.b().whileTrue(shooter.sysIdDynamic(Direction.kReverse));
         // driver.y().whileTrue(shooter.sysIdQuasistatic(Direction.kForward));
         // driver.a().whileTrue(shooter.sysIdQuasistatic(Direction.kReverse));
-    }
-
-    public Command allOff() {
-        return new ParallelCommandGroup(
-            intake.setState(IntakeStates.OFF),
-            conveyor.setState(ConveyorStates.OFF),
-            indexer.setState(IndexerStates.OFF),
-            new InstantCommand(() -> shooter.setVoltage(0)),
-            new InstantCommand(() -> pivot.setVoltage(0))
-        );
     }
 }

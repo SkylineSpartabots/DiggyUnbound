@@ -30,7 +30,7 @@ public class RampShooterWithDistance extends Command {
 
     @Override
     public void initialize() {
-    targetGoal = DriverStation.getAlliance().equals(Alliance.Blue)
+    targetGoal = DriverStation.getAlliance().get().equals(Alliance.Blue)
         ? Constants.FieldConstants.blueGoal : Constants.FieldConstants.redGoal;
     }
 

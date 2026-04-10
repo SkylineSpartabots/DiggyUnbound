@@ -49,9 +49,11 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Auto choices", autoChooser);
 
         autoChooser.setDefaultOption("trench_left_mid", AutoPath.trench_left_mid);
+        autoChooser.addOption("trench_left_mid_freakazoid", AutoPath.trench_left_mid_freakazoid);
         autoChooser.addOption("trench_left_evil", AutoPath.trench_left_evil);
         autoChooser.addOption("trench_right_mid", AutoPath.trench_right_mid);
         autoChooser.addOption("mid", AutoPath.mid);
+        autoChooser.addOption("mid_evil_depo", AutoPath.mid_evil_depo);
         
         // SignalLogger.setPath("/media/sdb1/ctre-logs/");
 

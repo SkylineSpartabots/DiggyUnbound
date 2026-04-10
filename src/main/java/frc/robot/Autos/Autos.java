@@ -59,16 +59,7 @@ public final class Autos {
     //remember not to break! we will be proud of you no matter what
     //-sasha
 
-    // public static Command mid_to_depo() {
-    //     Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid_to_depo");
-    //     return new SequentialCommandGroup(
-    //             new WaitCommand(2),
-    //             new SetPivot(PivotStates.DEPLOY), //2.5
-    //             new SetIntake(IntakeStates.ON),
-    //             new WaitCommand(3), //5.5
-    //             CommandFactory.ShootAtDistance()
-    //     ).alongWith(new FollowChoreoTrajectory(traj));
-    // }
+
 
     // public static Command mid_right() {
     //     Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid_right");
@@ -80,6 +71,23 @@ public final class Autos {
     // }
 
     // used autos -----------------------------------
+
+
+    public static Command mid_evil_depo() {
+        Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("mid_evil_depo");
+        return new SequentialCommandGroup(
+            new SequentialCommandGroup( 
+                new WaitCommand(1.8),
+                new SetPivot(PivotStates.DEPLOY),
+                new WaitCommand(1),
+                new SetPivot(PivotStates.OFF),
+                new SetIntake(IntakeStates.ON),
+                new WaitCommand(3)
+                ).alongWith(new FollowChoreoTrajectory(traj)),
+
+                CommandFactory.ShootAtDistance()
+                );
+    }
 
     public static Command trench_left_mid() {
         Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("trench_left_mid");
@@ -95,7 +103,25 @@ public final class Autos {
                     ).alongWith(new FollowChoreoTrajectory(traj)),
 
                 CommandFactory.ShootAtDistance(),
-                new SetPivot(PivotStates.STOW)
+                new SetPivot(PivotStates.RETRACT)
+            );
+    }
+
+    public static Command trench_left_mid_freakazoid() {
+        Optional<Trajectory<SwerveSample>> traj = Choreo.loadTrajectory("trench_left_mid_freakazoid");
+        return new SequentialCommandGroup(
+                new SequentialCommandGroup(
+                    new SetPivot(PivotStates.DEPLOY),   
+                    new WaitCommand(1),
+                    CommandFactory.IntakeBallsON(),
+                    new WaitCommand(0.6),
+                    new SetPivot(PivotStates.OFF),
+                    new WaitCommand(1.7), // 3
+                    CommandFactory.IntakeBallsOFF()
+                    ).alongWith(new FollowChoreoTrajectory(traj)),
+
+                CommandFactory.ShootAtDistance(),
+                new SetPivot(PivotStates.RETRACT)
             );
     }
 
@@ -104,16 +130,16 @@ public final class Autos {
         return new SequentialCommandGroup(
                 new SequentialCommandGroup(
                     new SetPivot(PivotStates.DEPLOY),   
-                    new WaitCommand(1),
+                    new WaitCommand(0.9),
                     CommandFactory.IntakeBallsON(),
-                    new WaitCommand(0.3),
+                    new WaitCommand(0.1),
                     new SetPivot(PivotStates.OFF),
                     new WaitCommand(1.7), // 3
                     CommandFactory.IntakeBallsOFF()
                     ).alongWith(new FollowChoreoTrajectory(traj)),
 
                 CommandFactory.ShootAtDistance(),
-                new SetPivot(PivotStates.STOW)
+                new SetPivot(PivotStates.RETRACT)
             );
     }
 
@@ -131,7 +157,7 @@ public final class Autos {
                     ).alongWith(new FollowChoreoTrajectory(traj)),
 
                 CommandFactory.ShootAtDistance(),
-                new SetPivot(PivotStates.STOW)
+                new SetPivot(PivotStates.RETRACT)
             );
     }
 
@@ -148,9 +174,11 @@ public final class Autos {
 
     public enum AutoPath {
         trench_left_mid("trench_left_mid", trench_left_mid()),
+        trench_left_mid_freakazoid("trench_left_mid_freakazoid", trench_left_mid_freakazoid()),
         trench_right_mid("trench_right_mid", trench_right_mid()),
         trench_left_evil("trench_left_evil", trench_left_evil()),
-        mid("mid", mid());
+        mid("mid", mid()),
+        mid_evil_depo("mid_evil_depo", mid_evil_depo());
 
         String name;
         Command autoCommand;

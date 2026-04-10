@@ -69,7 +69,7 @@ public class FollowChoreoTrajectory extends Command {
     }
 
     if (trajectory != null){
-      startPose = trajectory.getInitialPose(DriverStation.getAlliance().equals(Alliance.Red));
+      startPose = trajectory.getInitialPose(DriverStation.getAlliance().get().equals(Alliance.Red));
       s_Swerve.resetOdo(startPose.get());
       quest.anchorQuest(new Pose3d(startPose.get()));
     }
@@ -79,7 +79,7 @@ public class FollowChoreoTrajectory extends Command {
   @Override
   public void execute() {
     if(trajectory != null){
-      Optional<SwerveSample> sample = trajectory.sampleAt(timer.get(), DriverStation.getAlliance().equals(Alliance.Red));
+      Optional<SwerveSample> sample = trajectory.sampleAt(timer.get(), DriverStation.getAlliance().get().equals(Alliance.Red));
       FollowChoreoSample(sample.get());
     }
   }
@@ -99,6 +99,8 @@ public class FollowChoreoTrajectory extends Command {
     public void FollowChoreoSample(SwerveSample sample) {
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
+        // System.out.println(sample.x + " " + sample.y + " " + sample.heading);
+
         // Get the current pose of the robot
         Pose2d pose = s_Swerve.getState().Pose;
 
@@ -109,6 +111,10 @@ public class FollowChoreoTrajectory extends Command {
             sample.omega + thetaController.calculate(pose.getRotation().getRadians(), sample.heading)
             );
 
+        // System.out.println(speeds.toString());
+
+
+
         s_Swerve.setControl(
             new SwerveRequest.FieldCentric()
             .withVelocityX(speeds.vxMetersPerSecond)
@@ -116,8 +122,6 @@ public class FollowChoreoTrajectory extends Command {
             .withRotationalRate(speeds.omegaRadiansPerSecond)
             .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
             .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
-            // .withSteerRequestType(com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType.MotionMagicExpo)
-            // .withDesaturateWheelSpeeds(true)
         );
 
     }

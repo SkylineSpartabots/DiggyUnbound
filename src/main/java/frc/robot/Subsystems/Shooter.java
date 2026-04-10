@@ -118,7 +118,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public double loggerProEvilEquationOfDoom(double d) {
-        return (3.52976 * d * d + -5*d + 35.5);
+        System.out.println(d);
+        return (7.2 * d + 25.8);
     }
 
     public void updateAirtime(double airtime) {
