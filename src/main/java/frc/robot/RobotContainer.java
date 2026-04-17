@@ -26,8 +26,6 @@ import frc.robot.Subsystems.Pivot.PivotStates;
 import frc.robot.Subsystems.Vision.Quest;
 import pabeles.concurrency.ConcurrencyOps.Reset;
 import frc.robot.Commands.CommandFactory;
-import frc.robot.Commands.Automation.AlignToGoal;
-import frc.robot.Commands.Automation.JiggleBallsDrivetrain;
 import frc.robot.Commands.Convayor.SetConveyor;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
@@ -82,7 +80,10 @@ public class RobotContainer {
         driver.leftTrigger().onTrue(new InstantCommand(() -> control.turnOnAutoAim())); //bottom buttons
         driver.rightTrigger().onTrue(new InstantCommand(() -> control.turnOffAutoAim()));
 
+        // blue
         driver.povDown().onTrue(new InstantCommand(() -> quest.anchorQuest(new Pose3d(Constants.ResetPoses.blue_Mid))));
+        //red
+        driver.povUp().onTrue(new InstantCommand(() -> quest.anchorQuest(new Pose3d(Constants.ResetPoses.red_Mid))));
         
         driver.povRight().onTrue(new SetPivotTimed(PivotStates.DEPLOY));
         driver.povLeft().onTrue(new SetPivotTimed(PivotStates.RETRACT));
@@ -93,12 +94,12 @@ public class RobotContainer {
 
         driver.b().onTrue(CommandFactory.ShootAtDistance());
         
-        // driver.y().onTrue(new SetPivotTimed(PivotStates.HARD_DEPLOY));
+        driver.y().onTrue(new SetPivotTimed(PivotStates.HARD_DEPLOY));
         // driver.y().onTrue(CommandFactory.LobAtRps(45));
         // driver.y().onTrue(CommandFactory.chud());
 
-        driver.y().onTrue(CommandFactory.LobAtRps(60));
-        driver.x().onTrue(CommandFactory.LobAtRps(40));
+        driver.x().onTrue(CommandFactory.LobAtMeter(2.5));
+        // driver.x().onTrue(CommandFactory.LobAtRps(40));
         
         
         // driver.povLeft().onTrue(new InstantCommand(() -> drivetrain.resetOdoDynamic(resetPose.TRENCH_LEFT)));

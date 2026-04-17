@@ -56,7 +56,6 @@ public class FollowChoreoTrajectory extends Command {
     addRequirements(s_Swerve);
   }
 
-  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -65,14 +64,20 @@ public class FollowChoreoTrajectory extends Command {
 
     if (trajectoryOpt.isPresent()) {
       trajectory = trajectoryOpt.get();
+
       if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
         trajectory = trajectory.flipped(); //flip for red
       }
+
       System.out.println(" trajectory optinales present");
     }
 
+    System.out.println("AAAAAAAAAAAAAA");
+
     if (trajectory != null){
-      startPose = trajectory.getInitialPose(false);
+      startPose = trajectory.getInitialPose(false); 
+
+      System.out.println("lala" + startPose.toString());
 
       s_Swerve.resetOdo(startPose.get());
       // quest.anchorQuest(new Pose3d(startPose.get()));
@@ -118,16 +123,19 @@ public class FollowChoreoTrajectory extends Command {
 
         // System.out.println(speeds.toString());
 
+Alliance alliance = DriverStation.getAlliance().get();
+ForwardPerspectiveValue perspective = alliance == Alliance.Red 
+    ? ForwardPerspectiveValue.OperatorPerspective  // or red-specific
+    : ForwardPerspectiveValue.BlueAlliance;
 
-
-        // s_Swerve.setControl(
-        //     new SwerveRequest.FieldCentric()
-        //     .withVelocityX(speeds.vxMetersPerSecond)
-        //     .withVelocityY(speeds.vyMetersPerSecond)
-        //     .withRotationalRate(speeds.omegaRadiansPerSecond)
-        //     .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
-        //     .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
-        // );
+        s_Swerve.setControl(
+            new SwerveRequest.FieldCentric()
+            .withVelocityX(speeds.vxMetersPerSecond)
+            .withVelocityY(speeds.vyMetersPerSecond)
+            .withRotationalRate(speeds.omegaRadiansPerSecond)
+            .withForwardPerspective(perspective)
+            .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.Velocity)
+        );
 
     }
 

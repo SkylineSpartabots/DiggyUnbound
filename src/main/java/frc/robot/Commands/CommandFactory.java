@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Commands.Automation.AlignToGoal;
 import frc.robot.Commands.Convayor.SetConveyor;
 import frc.robot.Commands.Indexer.SetIndexer;
 import frc.robot.Commands.Intake.SetIntake;
@@ -96,7 +95,7 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new SetIndexer(IndexerStates.OFF),
             new SetConveyor(ConveyorStates.OFF),
-            new SetPivot(pivo.OFF),
+            new SetPivot(PivotStates.OFF),
             new SetIntake(IntakeStates.OFF),
             new SetShooter(0)
         );

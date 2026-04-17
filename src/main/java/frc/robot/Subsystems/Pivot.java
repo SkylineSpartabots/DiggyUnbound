@@ -31,7 +31,7 @@ public class Pivot extends SubsystemBase {
     public enum PivotStates {
         HARD_DEPLOY(3.5),
         DEPLOY(2.2), 
-        RETRACT(-2.2),
+        RETRACT(-2.5),
         OFF(0);
 
         double voltage;
